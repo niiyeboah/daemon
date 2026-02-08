@@ -1,6 +1,6 @@
 # Daemon
 
-<p align="left">
+<p align="center">
   <img src="assets/daemon-logo.png" alt="Daemon logo" width="400" />
 </p>
 
