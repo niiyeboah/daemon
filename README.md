@@ -4,7 +4,17 @@
   <img src="assets/daemon-logo.png" alt="Daemon logo" width="400" />
 </p>
 
-**Daemon** is a local, privacy-first personal assistant bot that runs entirely on your own hardware. No cloud APIs, no subscriptions, no data leaving your network -- just a small, capable language model answering your questions on a quiet mini PC sitting on your desk.
+**Daemon** is a local, privacy-first personal assistant bot that runs entirely on your own hardware. No cloud APIs, no subscriptions, no data leaving your network — just a small, capable language model answering your questions on a quiet mini PC sitting on your desk.
+
+## Table of contents
+
+- [Stack](#stack)
+- [What You Get](#what-you-get)
+- [Setup Guides](#setup-guides)
+- [Prerequisites](#prerequisites)
+- [Setup with the CLI](#setup-with-the-cli)
+- [Development](#development)
+- [License](#license)
 
 ## Stack
 
@@ -50,9 +60,9 @@ Read these in order. Each guide picks up where the previous one left off.
 
 Once Ubuntu and Ollama are installed and the base model is pulled (see [Setup Guides](#setup-guides) above), you can use the **daemon-setup** CLI to configure the Daemon bot.
 
-**Interactive mode:** In a terminal, run `./daemon-setup` with no arguments to start an interactive menu where you can pick an action (check, init, modelfile, alias, full setup, or guide) and be prompted for options with sensible defaults. Subcommands and flags still work for scripting (e.g. `./daemon-setup check`, `./daemon-setup setup --yes`).
+**Interactive mode:** In a terminal, run `./daemon-setup` with no arguments to start an interactive menu where you can pick an action (check, init, modelfile, alias, full setup, or guide) and be prompted for options with sensible defaults. Subcommands and flags still work for scripting (e.g. `./daemon-setup check`, `./daemon-setup setup --yes`). For full workflow help, run `./daemon-setup guide`.
 
-1. **Install Go** (if needed): `sudo apt install -y golang-go` (or [download](https://go.dev/dl/) for your OS).
+1. **Install Go** (if needed): Go 1.21+ is required. On Ubuntu: `sudo apt install -y golang-go`, or [download](https://go.dev/dl/) for your OS.
 
 2. **Build the CLI** (from this repo):
 
@@ -79,9 +89,11 @@ Once Ubuntu and Ollama are installed and the base model is pulled (see [Setup Gu
    This writes the Modelfile to `~/Modelfile` and runs `ollama create daemon -f ~/Modelfile`.
 
 5. **Optional — add a shell alias** so you can run `daemon` instead of `ollama run daemon`:
+
    ```bash
    ./daemon-setup alias
    ```
+
    Then run `source ~/.bashrc` (or `~/.zshrc`) or open a new terminal.
 
 **One-shot setup:** To run check, init, and alias in sequence (with optional prompts), use:
@@ -93,6 +105,15 @@ Once Ubuntu and Ollama are installed and the base model is pulled (see [Setup Gu
 Use `--yes` to skip confirmations.
 
 For full manual steps and alternatives (e.g. Python API script), see [Daemon Bot](docs/05-daemon-bot.md) and [Ollama + Llama 3.2 3B](docs/04-ollama-llama.md).
+
+## Development
+
+| Command         | Description                          |
+| --------------- | ------------------------------------ |
+| `make build`    | Build `daemon-setup` for current OS  |
+| `make build-macos` | Build for macOS (darwin)          |
+| `make test`     | Run tests                            |
+| `make clean`    | Remove the built binary              |
 
 ## License
 
