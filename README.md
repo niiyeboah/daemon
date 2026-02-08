@@ -42,6 +42,44 @@ Read these in order. Each guide picks up where the previous one left off.
 - A keyboard and monitor for initial setup (can be removed after SSH is configured).
 - A wired Ethernet connection is recommended for installation; Wi-Fi can be configured afterwards.
 
+## Setup with the CLI
+
+Once Ubuntu and Ollama are installed and the base model is pulled (see [Setup Guides](#setup-guides) above), you can use the **daemon-setup** CLI to configure the Daemon bot:
+
+1. **Install Go** (if needed): `sudo apt install -y golang-go` (or [download](https://go.dev/dl/) for your OS).
+
+2. **Build the CLI** (from this repo):
+   ```bash
+   go build -o daemon-setup ./cmd/daemon-setup
+   ```
+   Or use the Makefile: `make build`.
+
+3. **Check prerequisites:**
+   ```bash
+   ./daemon-setup check
+   ```
+   This verifies Ollama is in PATH and that the API is reachable, and that `llama3.2:3b` (and optionally the `daemon` model) are available. If something is missing, the command prints what to do.
+
+4. **Create the Daemon model:**
+   ```bash
+   ./daemon-setup init
+   ```
+   This writes the Modelfile to `~/Modelfile` and runs `ollama create daemon -f ~/Modelfile`.
+
+5. **Optional — add a shell alias** so you can run `daemon` instead of `ollama run daemon`:
+   ```bash
+   ./daemon-setup alias
+   ```
+   Then run `source ~/.bashrc` (or `~/.zshrc`) or open a new terminal.
+
+**One-shot setup:** To run check, init, and alias in sequence (with optional prompts), use:
+```bash
+./daemon-setup setup
+```
+Use `--yes` to skip confirmations.
+
+For full manual steps and alternatives (e.g. Python API script), see [Daemon Bot](docs/05-daemon-bot.md) and [Ollama + Llama 3.2 3B](docs/04-ollama-llama.md).
+
 ## License
 
 This documentation is provided as-is for personal use. See individual tool and model licenses (Ollama, Llama 3.2) for their respective terms.

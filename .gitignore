@@ -17,3 +17,6 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+# Build (binary at repo root only; do not ignore cmd/daemon-setup/)
+/daemon-setup
