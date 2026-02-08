@@ -5,12 +5,15 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/niiyeboah/daemon-bot/internal/modelfile"
 	"github.com/niiyeboah/daemon-bot/internal/ollama"
 	"github.com/niiyeboah/daemon-bot/internal/shell"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
+	"golang.org/x/term"
 )
 
 func main() {
@@ -18,14 +21,23 @@ func main() {
 		Use:   "daemon-setup",
 		Short: "Setup the Daemon personal assistant bot (Ollama + Modelfile)",
 		Long:  "Daemon-setup helps you configure the Daemon bot on your PC: check prerequisites, write the Modelfile, create the daemon model, and optionally add a shell alias.",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if term.IsTerminal(int(os.Stdin.Fd())) {
+				return runInteractive(cmd.OutOrStdout(), cmd.ErrOrStderr())
+			}
+			printMenu(cmd.OutOrStdout())
+			return nil
+		},
 	}
 	root.CompletionOptions.DisableDefaultCmd = true
+	root.SilenceUsage = true
 
 	root.AddCommand(newCheckCmd())
 	root.AddCommand(newInitCmd())
 	root.AddCommand(newModelfileCmd())
 	root.AddCommand(newAliasCmd())
 	root.AddCommand(newSetupCmd())
+	root.AddCommand(newGuideCmd())
 
 	if err := root.Execute(); err != nil {
 		os.Exit(1)
@@ -49,6 +61,153 @@ func modelfilePathOrDefault(override string) (string, error) {
 		return override, nil
 	}
 	return defaultModelfilePath()
+}
+
+func printMenu(w io.Writer) {
+	fmt.Fprintln(w, "Daemon setup – configure your local assistant")
+	fmt.Fprintln(w, "")
+	fmt.Fprintln(w, "Commands:")
+	fmt.Fprintln(w, "  check     Verify Ollama and required models")
+	fmt.Fprintln(w, "  init      Write Modelfile and create daemon model")
+	fmt.Fprintln(w, "  modelfile Write Modelfile only")
+	fmt.Fprintln(w, "  alias     Add shell alias so you can run 'daemon'")
+	fmt.Fprintln(w, "  setup     Full setup (check → init → alias)")
+	fmt.Fprintln(w, "  guide     Show full setup guide and workflow")
+	fmt.Fprintln(w, "")
+	fmt.Fprintln(w, "Run without arguments in a terminal for interactive mode.")
+	fmt.Fprintln(w, "Run daemon-setup guide for full help.")
+}
+
+const (
+	menuCheck     = "Check prerequisites"
+	menuInit      = "Init (write Modelfile and create model)"
+	menuModelfile = "Write Modelfile only"
+	menuAlias     = "Add shell alias"
+	menuSetup     = "Full setup (check → init → alias)"
+	menuGuide     = "Show guide"
+	menuExit      = "Exit"
+)
+
+func runInteractive(stdout, stderr io.Writer) error {
+	mainOpt := ""
+	prompt := &survey.Select{
+		Message: "What do you want to do?",
+		Options: []string{menuCheck, menuInit, menuModelfile, menuAlias, menuSetup, menuGuide, menuExit},
+	}
+	if err := survey.AskOne(prompt, &mainOpt); err != nil {
+		return err
+	}
+	switch mainOpt {
+	case menuExit:
+		return nil
+	case menuGuide:
+		printGuide(stdout)
+		return nil
+	case menuCheck:
+		return runInteractiveCheck(stdout)
+	case menuInit:
+		return runInteractiveInit(stdout, stderr)
+	case menuModelfile:
+		return runInteractiveModelfile(stdout)
+	case menuAlias:
+		return runInteractiveAlias(stdout)
+	case menuSetup:
+		return runInteractiveSetup(stdout, stderr)
+	default:
+		return nil
+	}
+}
+
+func runInteractiveCheck(stdout io.Writer) error {
+	skipAPI := false
+	if err := survey.AskOne(&survey.Confirm{
+		Message: "Skip API check? (only check ollama in PATH)",
+		Default: false,
+	}, &skipAPI); err != nil {
+		return err
+	}
+	return ollama.Check(stdout, skipAPI)
+}
+
+func defaultModelfilePathString() string {
+	path, err := defaultModelfilePath()
+	if err != nil {
+		return "~/Modelfile"
+	}
+	return path
+}
+
+func runInteractiveInit(stdout, stderr io.Writer) error {
+	path, err := promptPathModelBase()
+	if err != nil {
+		return err
+	}
+	return runInit(stdout, stderr, path.Modelfile, path.ModelName, path.BaseModel)
+}
+
+func runInteractiveModelfile(stdout io.Writer) error {
+	path, err := promptPathModelBase()
+	if err != nil {
+		return err
+	}
+	return runModelfile(stdout, path.Modelfile, path.ModelName, path.BaseModel)
+}
+
+type pathModelBase struct {
+	Modelfile string `survey:"modelfile"`
+	ModelName string `survey:"modelName"`
+	BaseModel string `survey:"baseModel"`
+}
+
+func promptPathModelBase() (*pathModelBase, error) {
+	defaultPath := defaultModelfilePathString()
+	out := &pathModelBase{}
+	qs := []*survey.Question{
+		{
+			Name: "modelfile",
+			Prompt: &survey.Input{Message: "Modelfile path:", Default: defaultPath},
+			Transform: survey.TransformString(func(s string) string {
+				return strings.TrimSpace(s)
+			}),
+		},
+		{
+			Name: "modelName",
+			Prompt: &survey.Input{Message: "Model name:", Default: "daemon"},
+			Transform: survey.TransformString(func(s string) string {
+				return strings.TrimSpace(s)
+			}),
+		},
+		{
+			Name: "baseModel",
+			Prompt: &survey.Input{Message: "Base model (FROM):", Default: "llama3.2:3b"},
+			Transform: survey.TransformString(func(s string) string {
+				return strings.TrimSpace(s)
+			}),
+		},
+	}
+	if err := survey.Ask(qs, out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func runInteractiveAlias(stdout io.Writer) error {
+	dryRun := false
+	if err := survey.AskOne(&survey.Confirm{
+		Message: "Dry run? (only print what would be added)",
+		Default: false,
+	}, &dryRun); err != nil {
+		return err
+	}
+	return shell.AddAlias(stdout, "daemon", "ollama run daemon", dryRun)
+}
+
+func runInteractiveSetup(stdout, stderr io.Writer) error {
+	path, err := promptPathModelBase()
+	if err != nil {
+		return err
+	}
+	return runSetup(stdout, stderr, false, path.Modelfile, path.ModelName, path.BaseModel)
 }
 
 func runInit(stdout, stderr io.Writer, modelfilePath, modelName, baseModel string) error {
@@ -200,4 +359,47 @@ func newSetupCmd() *cobra.Command {
 	cmd.Flags().StringVar(&modelName, "model-name", "daemon", "Name of the custom model to create")
 	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:3b", "Base model in the Modelfile (FROM)")
 	return cmd
+}
+
+func newGuideCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "guide",
+		Short: "Show full setup guide and workflow",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			printGuide(cmd.OutOrStdout())
+			return nil
+		},
+	}
+}
+
+func printGuide(w io.Writer) {
+	fmt.Fprintln(w, "Daemon setup – full guide")
+	fmt.Fprintln(w, "")
+	fmt.Fprintln(w, "daemon-setup configures the Daemon personal assistant bot on your PC: it checks")
+	fmt.Fprintln(w, "prerequisites (Ollama and models), writes the Modelfile, creates the daemon model,")
+	fmt.Fprintln(w, "and can add a shell alias so you can run 'daemon' to start the bot.")
+	fmt.Fprintln(w, "")
+	fmt.Fprintln(w, "Prerequisites")
+	fmt.Fprintln(w, "  • Ollama installed and in PATH")
+	fmt.Fprintln(w, "  • Base model pulled (e.g. llama3.2:3b)")
+	fmt.Fprintln(w, "")
+	fmt.Fprintln(w, "Commands")
+	fmt.Fprintln(w, "  check     Verify Ollama is installed and required models are available")
+	fmt.Fprintln(w, "  init      Write the Modelfile and create the daemon model with ollama")
+	fmt.Fprintln(w, "  modelfile Write the Modelfile only (no ollama create)")
+	fmt.Fprintln(w, "  alias     Add shell alias so you can run 'daemon' to start the bot")
+	fmt.Fprintln(w, "  setup     Run check, then init, then alias (full setup)")
+	fmt.Fprintln(w, "")
+	fmt.Fprintln(w, "Typical workflow")
+	fmt.Fprintln(w, "  1. daemon-setup check     # verify Ollama and models")
+	fmt.Fprintln(w, "  2. daemon-setup init      # create the daemon model")
+	fmt.Fprintln(w, "  3. daemon-setup alias    # add 'daemon' alias, then source ~/.bashrc or ~/.zshrc")
+	fmt.Fprintln(w, "")
+	fmt.Fprintln(w, "  Or one-shot:  daemon-setup setup --yes")
+	fmt.Fprintln(w, "")
+	fmt.Fprintln(w, "Examples")
+	fmt.Fprintln(w, "  daemon-setup check")
+	fmt.Fprintln(w, "  daemon-setup setup --yes")
+	fmt.Fprintln(w, "")
+	fmt.Fprintln(w, "For more details, see the README and docs/05-daemon-bot.md in the repo.")
 }

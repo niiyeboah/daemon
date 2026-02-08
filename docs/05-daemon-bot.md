@@ -11,6 +11,12 @@ This guide covers two approaches -- pick the one that fits your needs:
 
 ---
 
+## Interactive mode (CLI)
+
+When you run **daemon-setup** with no arguments in a terminal, it starts an interactive menu. You can choose to check prerequisites, write the Modelfile, create the daemon model, add the shell alias, run a full setup, or view the guide. You will be prompted for paths and model names with sensible defaults (e.g. `~/Modelfile`, model name `daemon`, base model `llama3.2:3b`). To use the CLI non-interactively (e.g. in scripts), run a subcommand directly: `daemon-setup check`, `daemon-setup init`, `daemon-setup setup --yes`, etc.
+
+---
+
 ## Option A -- Modelfile (Simplest)
 
 An Ollama **Modelfile** lets you create a custom model alias with a system prompt, temperature, and other parameters pre-set. No code required.
