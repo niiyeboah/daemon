@@ -1,5 +1,9 @@
 # Daemon
 
+<p align="left">
+  <img src="assets/daemon-logo.png" alt="Daemon logo" width="400" />
+</p>
+
 **Daemon** is a local, privacy-first personal assistant bot that runs entirely on your own hardware. No cloud APIs, no subscriptions, no data leaving your network -- just a small, capable language model answering your questions on a quiet mini PC sitting on your desk.
 
 ## Stack
