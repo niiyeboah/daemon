@@ -30,6 +30,15 @@ This guide covers the Beelink S13 Pro mini PC and explains why it is a good fit 
 
 ---
 
+## Hardware You'll Need
+
+Besides the Beelink S13 Pro (or equivalent mini PC), you will need:
+
+- **Wired keyboard** — Required for initial setup and BIOS. A wired USB keyboard avoids wireless dongle or Bluetooth issues during install and boot.
+- **USB drive** — At least 4 GB, for the Ubuntu Server installer. You will use it to create a bootable USB; see [Ubuntu Server Installation](02-ubuntu-server.md) for flashing options (Ventoy is recommended).
+
+---
+
 ## Why This Device Fits
 
 1. **Right-sized for 3B parameters.** Llama 3.2 3B quantised (Q4) uses roughly 2--4 GB of RAM. A 16 GB machine can comfortably host the model, the OS, and lightweight services without swapping.
@@ -56,7 +65,7 @@ This guide covers the Beelink S13 Pro mini PC and explains why it is a good fit 
 
 1. Unbox the Beelink S13 Pro.
 2. Connect an Ethernet cable (recommended) or plan to configure Wi-Fi during OS install.
-3. Connect a monitor via HDMI and a USB keyboard.
+3. Connect a monitor via HDMI and a wired keyboard.
 4. Power on and enter BIOS (usually by pressing `Del` or `F7` during boot) to verify:
    - **Boot mode** is set to UEFI.
    - **Secure Boot** is disabled (Ubuntu Server will install more smoothly).

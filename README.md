@@ -53,7 +53,7 @@ Read these in order. Each guide picks up where the previous one left off.
 
 - A Beelink S13 Pro (or similar mini PC with at least 8 GB RAM; 16 GB recommended).
 - A USB flash drive (4 GB+) for the Ubuntu Server installer.
-- A keyboard and monitor for initial setup (can be removed after SSH is configured).
+- A wired keyboard and monitor for initial setup (can be removed after SSH is configured).
 - A wired Ethernet connection is recommended for installation; Wi-Fi can be configured afterwards.
 
 ## Setup with the CLI

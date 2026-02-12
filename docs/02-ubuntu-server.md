@@ -19,17 +19,25 @@ sha256sum ubuntu-24.04-live-server-amd64.iso
 
 You need a USB flash drive of at least 4 GB.
 
-### Option A -- balenaEtcher (Windows / macOS / Linux)
+### Option A -- Ventoy (recommended)
+
+[Ventoy](https://www.ventoy.net/) lets you set up the USB once, then copy one or more `.iso` files onto it and choose which to boot. You can add or replace ISOs without re-flashing the drive.
+
+1. Download Ventoy from <https://www.ventoy.net/en/download.html> for your OS.
+2. Run the Ventoy installer and install Ventoy to your USB drive (this will format the drive; see [Ventoy documentation](https://www.ventoy.net/en/doc_start.html) for details).
+3. Copy the Ubuntu Server `.iso` file onto the Ventoy partition (drag-and-drop or any file manager). No need to "flash" the ISO — Ventoy boots it directly.
+
+### Option B -- balenaEtcher (Windows / macOS / Linux)
 
 1. Download [balenaEtcher](https://etcher.balena.io/).
 2. Open Etcher, select the `.iso` file, select your USB drive, and click **Flash!**
 
-### Option B -- Rufus (Windows)
+### Option C -- Rufus (Windows)
 
 1. Download [Rufus](https://rufus.ie/).
 2. Select the USB drive, select the `.iso`, choose **GPT** partition scheme and **UEFI** target, then click **Start**.
 
-### Option C -- dd (Linux / macOS)
+### Option D -- dd (Linux / macOS)
 
 > **Warning:** Double-check the device path. `dd` will overwrite the target without confirmation.
 
