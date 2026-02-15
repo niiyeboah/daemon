@@ -18,21 +18,23 @@
 
 ## Stack
 
-| Layer             | Component                                           |
-| ----------------- | --------------------------------------------------- |
-| Hardware          | [Beelink S13 Pro](docs/01-hardware.md) mini PC      |
-| Operating System  | [Ubuntu Server 24.04 LTS](docs/02-ubuntu-server.md) |
-| Inference Runtime | [Ollama](docs/04-ollama-llama.md)                   |
-| Language Model    | [Llama 3.2 3B](docs/04-ollama-llama.md)             |
-| Interface         | [Daemon bot](docs/05-daemon-bot.md) (CLI / API)     |
+| Layer             | Component                                                                                                                |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Hardware          | [Beelink S13 Pro](docs/01-hardware.md) mini PC                                                                           |
+| Operating System  | [Ubuntu Server 24.04 LTS](docs/02-ubuntu-server.md) or [Windows](docs/02b-windows-setup.md) (e.g. Beelink S13 preloaded) |
+| Inference Runtime | [Ollama](docs/04-ollama-llama.md)                                                                                        |
+| Language Model    | [Llama 3.2 3B](docs/04-ollama-llama.md)                                                                                  |
+| Interface         | [Daemon bot](docs/05-daemon-bot.md) (CLI / API)                                                                          |
 
 ## What You Get
 
 After following the guides below you will have:
 
-- A headless Ubuntu Server running 24/7 on low-power hardware.
+- A headless Ubuntu Server (or Windows) running 24/7 on low-power hardware.
 - Llama 3.2 3B served locally by Ollama on port `11434`.
 - A personal assistant named **Daemon** reachable from the terminal or via a simple HTTP API from any device on your LAN.
+
+Alternatively, run on **Windows** (e.g. Beelink S13 with Windows preloaded); see [Windows setup](docs/02b-windows-setup.md).
 
 ## Setup Guides
 
@@ -42,6 +44,7 @@ Read these in order. Each guide picks up where the previous one left off.
 | --- | ------------------------------------------------ | ----------------------------------------------------------- |
 | 1   | [Hardware](docs/01-hardware.md)                  | Beelink S13 Pro variants, specs, and why this device fits   |
 | 2   | [Ubuntu Server](docs/02-ubuntu-server.md)        | Download, create a bootable USB, install, and first boot    |
+| 2b  | [Windows](docs/02b-windows-setup.md)             | Run Daemon on Windows (Beelink S13 preloaded)               |
 | 3   | [Post-Install](docs/03-post-install.md)          | System updates, dependencies, timezone, and user setup      |
 | 4   | [Ollama + Llama 3.2 3B](docs/04-ollama-llama.md) | Install Ollama, pull the model, run it as a service         |
 | 5   | [Daemon Bot](docs/05-daemon-bot.md)              | Configure the "Daemon" personality via CLI and optional API |
@@ -65,12 +68,8 @@ Once Ubuntu and Ollama are installed and the base model is pulled (see [Setup Gu
 1. **Install Go** (if needed): Go 1.21+ is required. On Ubuntu: `sudo apt install -y golang-go`, or [download](https://go.dev/dl/) for your OS.
 
 2. **Build the CLI** (from this repo):
-
-   ```bash
-   go build -o daemon-setup ./cmd/daemon-setup
-   ```
-
-   Or use the Makefile: `make build`.
+   - **Linux / macOS:** `go build -o daemon-setup ./cmd/daemon-setup` or `make build`.
+   - **Windows:** `go build -o daemon-setup.exe ./cmd/daemon-setup`. From Linux/macOS for Windows: `make build-windows`.
 
 3. **Check prerequisites:**
 
@@ -94,7 +93,7 @@ Once Ubuntu and Ollama are installed and the base model is pulled (see [Setup Gu
    ./daemon-setup alias
    ```
 
-   Then run `source ~/.bashrc` (or `~/.zshrc`) or open a new terminal.
+   Then run `source ~/.bashrc` (or `~/.zshrc`) or open a new terminal. On Windows (PowerShell), restart PowerShell or run `. $PROFILE`.
 
 **One-shot setup:** To run check, init, and alias in sequence (with optional prompts), use:
 
@@ -108,12 +107,13 @@ For full manual steps and alternatives (e.g. Python API script), see [Daemon Bot
 
 ## Development
 
-| Command         | Description                          |
-| --------------- | ------------------------------------ |
-| `make build`    | Build `daemon-setup` for current OS  |
-| `make build-macos` | Build for macOS (darwin)          |
-| `make test`     | Run tests                            |
-| `make clean`    | Remove the built binary              |
+| Command              | Description                                  |
+| -------------------- | -------------------------------------------- |
+| `make build`         | Build `daemon-setup` for current OS          |
+| `make build-macos`   | Build for macOS (darwin)                     |
+| `make build-windows` | Build `daemon-setup.exe` for Windows (amd64) |
+| `make test`          | Run tests                                    |
+| `make clean`         | Remove the built binary(ies)                 |
 
 ## License
 

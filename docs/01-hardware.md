@@ -8,10 +8,10 @@ This guide covers the Beelink S13 Pro mini PC and explains why it is a good fit 
 
 "Beelink S13 Pro" can refer to different SKUs depending on the release year. The two most common variants are:
 
-| Variant | CPU | RAM | Storage | Notes |
-|---------|-----|-----|---------|-------|
-| **Mini S13** (budget) | Intel N100 / N150 (4 cores, up to 3.4--3.6 GHz) | 16 GB DDR4 | 500 GB SSD | Low power (~15 W TDP), fanless or near-silent |
-| **SEi13 Pro** (performance) | Intel Core i5-13500H or i9-13900HK | 16--32 GB DDR5 | 500 GB--1 TB NVMe | Higher TDP (~45 W), active fan cooling |
+| Variant                     | CPU                                             | RAM            | Storage           | Notes                                         |
+| --------------------------- | ----------------------------------------------- | -------------- | ----------------- | --------------------------------------------- |
+| **Mini S13** (budget)       | Intel N100 / N150 (4 cores, up to 3.4--3.6 GHz) | 16 GB DDR4     | 500 GB SSD        | Low power (~15 W TDP), fanless or near-silent |
+| **SEi13 Pro** (performance) | Intel Core i5-13500H or i9-13900HK              | 16--32 GB DDR5 | 500 GB--1 TB NVMe | Higher TDP (~45 W), active fan cooling        |
 
 > **This guide assumes the budget Mini S13 variant** (Intel N100/N150, 16 GB RAM). If you have the SEi13 Pro or a similar higher-end model, everything below still applies -- you will simply get faster inference.
 
@@ -19,14 +19,14 @@ This guide covers the Beelink S13 Pro mini PC and explains why it is a good fit 
 
 ## Key Specs for Running Llama 3.2 3B
 
-| Requirement | Mini S13 (N100/N150) | Notes |
-|-------------|----------------------|-------|
-| **CPU** | 4 cores, up to 3.6 GHz | Ollama runs on CPU by default; 4 cores is enough for 3B |
-| **RAM** | 16 GB DDR4 | Model uses ~2--4 GB; 16 GB leaves room for the OS and services |
-| **Disk** | 500 GB SSD | Model is ~2 GB on disk; plenty of room |
-| **Networking** | Gigabit Ethernet + Wi-Fi 6 | Ethernet recommended for always-on server use |
-| **TDP** | ~15 W | Low electricity cost for 24/7 operation |
-| **Noise** | Fanless or near-silent | Can sit on a desk or shelf without distraction |
+| Requirement    | Mini S13 (N100/N150)       | Notes                                                          |
+| -------------- | -------------------------- | -------------------------------------------------------------- |
+| **CPU**        | 4 cores, up to 3.6 GHz     | Ollama runs on CPU by default; 4 cores is enough for 3B        |
+| **RAM**        | 16 GB DDR4                 | Model uses ~2--4 GB; 16 GB leaves room for the OS and services |
+| **Disk**       | 500 GB SSD                 | Model is ~2 GB on disk; plenty of room                         |
+| **Networking** | Gigabit Ethernet + Wi-Fi 6 | Ethernet recommended for always-on server use                  |
+| **TDP**        | ~15 W                      | Low electricity cost for 24/7 operation                        |
+| **Noise**      | Fanless or near-silent     | Can sit on a desk or shelf without distraction                 |
 
 ---
 
@@ -36,6 +36,8 @@ Besides the Beelink S13 Pro (or equivalent mini PC), you will need:
 
 - **Wired keyboard** — Required for initial setup and BIOS. A wired USB keyboard avoids wireless dongle or Bluetooth issues during install and boot.
 - **USB drive** — At least 4 GB, for the Ubuntu Server installer. You will use it to create a bootable USB; see [Ubuntu Server Installation](02-ubuntu-server.md) for flashing options (Ventoy is recommended).
+
+> The Beelink S13 often ships with **Windows** preloaded. If you prefer to keep Windows, see [Windows setup](02b-windows-setup.md) instead of installing Ubuntu Server.
 
 ---
 

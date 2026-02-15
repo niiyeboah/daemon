@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os/exec"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -43,7 +44,11 @@ func Check(out io.Writer, skipAPI bool) error {
 	resp, err := client.Get(DefaultHost + "/api/tags")
 	if err != nil {
 		fmt.Fprintf(out, "Ollama API not reachable at %s.\n", DefaultHost)
-		fmt.Fprintf(out, "Start Ollama (e.g. systemctl start ollama) or run 'ollama serve'.\n")
+		if runtime.GOOS == "windows" {
+			fmt.Fprintf(out, "Start Ollama from the Start menu or run 'ollama serve' in a terminal.\n")
+		} else {
+			fmt.Fprintf(out, "Start Ollama (e.g. systemctl start ollama) or run 'ollama serve'.\n")
+		}
 		return err
 	}
 	defer resp.Body.Close()

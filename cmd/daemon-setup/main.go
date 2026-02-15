@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/niiyeboah/daemon-bot/internal/modelfile"
@@ -393,7 +394,11 @@ func printGuide(w io.Writer) {
 	fmt.Fprintln(w, "Typical workflow")
 	fmt.Fprintln(w, "  1. daemon-setup check     # verify Ollama and models")
 	fmt.Fprintln(w, "  2. daemon-setup init      # create the daemon model")
-	fmt.Fprintln(w, "  3. daemon-setup alias    # add 'daemon' alias, then source ~/.bashrc or ~/.zshrc")
+	if runtime.GOOS == "windows" {
+		fmt.Fprintln(w, "  3. daemon-setup alias    # add 'daemon' function, then restart PowerShell or run . $PROFILE")
+	} else {
+		fmt.Fprintln(w, "  3. daemon-setup alias    # add 'daemon' alias, then source ~/.bashrc or ~/.zshrc")
+	}
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "  Or one-shot:  daemon-setup setup --yes")
 	fmt.Fprintln(w, "")

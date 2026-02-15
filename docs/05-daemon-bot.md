@@ -4,9 +4,9 @@ With Ollama running and Llama 3.2 3B downloaded, it is time to give your assista
 
 This guide covers two approaches -- pick the one that fits your needs:
 
-| Approach | What You Get | Complexity |
-|----------|-------------|------------|
-| **A -- Modelfile (CLI)** | A named model with a baked-in system prompt; use via `ollama run daemon` | Minimal -- just a text file |
+| Approach                   | What You Get                                                                           | Complexity                      |
+| -------------------------- | -------------------------------------------------------------------------------------- | ------------------------------- |
+| **A -- Modelfile (CLI)**   | A named model with a baked-in system prompt; use via `ollama run daemon`               | Minimal -- just a text file     |
 | **B -- Python API script** | A CLI chat loop (or HTTP endpoint) that calls Ollama's API with a Daemon system prompt | Moderate -- small Python script |
 
 ---
@@ -86,6 +86,10 @@ Now simply run:
 ```bash
 daemon
 ```
+
+### On Windows
+
+If you are on Windows (see [Windows setup](02b-windows-setup.md)), `daemon-setup alias` adds a **PowerShell function** to your profile (`Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1`). Restart PowerShell or run `. $PROFILE` to load it, then run `daemon`. You can also run `ollama run daemon` in any terminal (PowerShell or CMD).
 
 ---
 
@@ -267,13 +271,13 @@ Edit the `SYSTEM_PROMPT` variable in `daemon.py` and restart the script (or the 
 
 ## Summary
 
-| What | Where |
-|------|-------|
-| Modelfile | `~/Modelfile` |
-| Custom model name | `daemon` (via `ollama run daemon`) |
-| Python script | `~/daemon-bot/daemon.py` |
-| Systemd service | `/etc/systemd/system/daemon-bot.service` |
-| System prompt | Inside the Modelfile or `SYSTEM_PROMPT` in `daemon.py` |
+| What              | Where                                                  |
+| ----------------- | ------------------------------------------------------ |
+| Modelfile         | `~/Modelfile`                                          |
+| Custom model name | `daemon` (via `ollama run daemon`)                     |
+| Python script     | `~/daemon-bot/daemon.py`                               |
+| Systemd service   | `/etc/systemd/system/daemon-bot.service`               |
+| System prompt     | Inside the Modelfile or `SYSTEM_PROMPT` in `daemon.py` |
 
 ---
 
