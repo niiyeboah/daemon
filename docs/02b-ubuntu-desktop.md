@@ -1,16 +1,18 @@
-# 2 -- Ubuntu Server Installation
+# 2b -- Ubuntu Desktop Installation
 
-This guide walks through installing Ubuntu Server 24.04 LTS on the Beelink S13 Pro.
+This guide walks through installing Ubuntu Desktop 24.04 LTS on the Beelink S13 Pro. Ubuntu **Desktop** is recommended over Server for the Beelink S13 — the Server installer has known compatibility issues with this hardware, while Desktop installs reliably.
+
+> **Note:** The Beelink S13 Pro comes preloaded with Windows. If you prefer to keep Windows, see [Windows Setup](02-windows-setup.md) instead — it is the simpler path.
 
 ---
 
 ## Download the Installer
 
-1. Go to <https://ubuntu.com/download/server> and download **Ubuntu Server 24.04 LTS** (the `.iso` file).
+1. Go to <https://ubuntu.com/download/desktop> and download **Ubuntu Desktop 24.04 LTS** (the `.iso` file).
 2. Optionally verify the download checksum against the SHA256 hash listed on the download page:
 
 ```bash
-sha256sum ubuntu-24.04-live-server-amd64.iso
+sha256sum ubuntu-24.04.2-desktop-amd64.iso
 ```
 
 ---
@@ -25,7 +27,7 @@ You need a USB flash drive of at least 4 GB.
 
 1. Download Ventoy from <https://www.ventoy.net/en/download.html> for your OS.
 2. Run the Ventoy installer and install Ventoy to your USB drive (this will format the drive; see [Ventoy documentation](https://www.ventoy.net/en/doc_start.html) for details).
-3. Copy the Ubuntu Server `.iso` file onto the Ventoy partition (drag-and-drop or any file manager). No need to "flash" the ISO — Ventoy boots it directly.
+3. Copy the Ubuntu Desktop `.iso` file onto the Ventoy partition (drag-and-drop or any file manager). No need to "flash" the ISO — Ventoy boots it directly.
 
 ### Option B -- balenaEtcher (Windows / macOS / Linux)
 
@@ -47,7 +49,7 @@ lsblk            # Linux
 diskutil list    # macOS
 
 # Write the image (replace /dev/sdX with your USB device)
-sudo dd if=ubuntu-24.04-live-server-amd64.iso of=/dev/sdX bs=4M status=progress
+sudo dd if=ubuntu-24.04.2-desktop-amd64.iso of=/dev/sdX bs=4M status=progress
 sync
 ```
 
@@ -58,7 +60,7 @@ sync
 1. Insert the USB drive into the Beelink S13 Pro.
 2. Power on (or reboot) and press `F7` (or `Del`) to open the boot menu.
 3. Select the USB drive as the boot device.
-4. You should see the Ubuntu Server installer (GRUB menu). Select **Try or Install Ubuntu Server**.
+4. You should see the Ubuntu Desktop installer (GRUB menu). Select **Try or Install Ubuntu**.
 
 ---
 
@@ -70,25 +72,27 @@ Follow the on-screen prompts. Recommended choices:
 |------|---------------------|
 | **Language** | English (or your preference) |
 | **Keyboard** | Match your physical keyboard layout |
-| **Installation type** | Ubuntu Server (not minimised) |
+| **Installation type** | "Erase disk and install Ubuntu" -- select the internal SSD |
 | **Network** | Use the detected Ethernet interface; DHCP is fine for now |
-| **Proxy** | Leave blank unless you are behind a corporate proxy |
-| **Mirror** | Accept the default archive mirror |
-| **Storage** | "Use an entire disk" -- select the internal SSD. The installer will create an ext4 root partition and a small boot partition. Optionally set up a swap file or partition (2--4 GB is plenty). |
 | **Profile** | **Your name**: your name |
-| | **Server name (hostname)**: `daemon` |
+| | **Computer name (hostname)**: `daemon` |
 | | **Username**: pick a username (e.g. `admin`, your name, etc.) |
 | | **Password**: choose a strong password |
-| **SSH** | Check **Install OpenSSH server**. Optionally import your GitHub SSH keys now. |
-| **Featured snaps** | Skip all -- you do not need any pre-installed snaps. |
 
-The installer will write to disk, install packages, and prompt you to **Reboot Now**. Remove the USB drive when instructed.
+The installer will write to disk, install packages, and prompt you to **Restart Now**. Remove the USB drive when instructed.
+
+After installation, install OpenSSH server so you can manage the machine remotely:
+
+```bash
+sudo apt install -y openssh-server
+sudo systemctl enable ssh
+```
 
 ---
 
 ## First Boot
 
-1. After reboot the machine will display a text login prompt. Log in with the username and password you chose.
+1. After reboot the machine will display the Ubuntu Desktop login screen. Log in with the username and password you chose.
 
 2. Verify your network connection:
 
@@ -148,4 +152,4 @@ If this works, you can disconnect the monitor and keyboard from the Beelink -- a
 
 ---
 
-Next: [Post-Install Setup](03-post-install.md)
+Next: [Post-Install Setup](03-post-install.md) (for Ubuntu-specific system configuration)

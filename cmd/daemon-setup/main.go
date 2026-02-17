@@ -380,6 +380,11 @@ func printGuide(w io.Writer) {
 	fmt.Fprintln(w, "prerequisites (Ollama and models), writes the Modelfile, creates the daemon model,")
 	fmt.Fprintln(w, "and can add a shell alias so you can run 'daemon' to start the bot.")
 	fmt.Fprintln(w, "")
+	fmt.Fprintln(w, "Supported platforms")
+	fmt.Fprintln(w, "  • Windows (default — Beelink S13 Pro comes preloaded with Windows)")
+	fmt.Fprintln(w, "  • Ubuntu Desktop 24.04 LTS (alternative — Desktop recommended over Server)")
+	fmt.Fprintln(w, "  • macOS")
+	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Prerequisites")
 	fmt.Fprintln(w, "  • Ollama installed and in PATH")
 	fmt.Fprintln(w, "  • Base model pulled (e.g. llama3.2:3b)")
@@ -403,8 +408,13 @@ func printGuide(w io.Writer) {
 	fmt.Fprintln(w, "  Or one-shot:  daemon-setup setup --yes")
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Examples")
-	fmt.Fprintln(w, "  daemon-setup check")
-	fmt.Fprintln(w, "  daemon-setup setup --yes")
+	if runtime.GOOS == "windows" {
+		fmt.Fprintln(w, "  .\\daemon-setup check")
+		fmt.Fprintln(w, "  .\\daemon-setup setup --yes")
+	} else {
+		fmt.Fprintln(w, "  daemon-setup check")
+		fmt.Fprintln(w, "  daemon-setup setup --yes")
+	}
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "For more details, see the README and docs/05-daemon-bot.md in the repo.")
 }

@@ -35,9 +35,9 @@ This guide covers the Beelink S13 Pro mini PC and explains why it is a good fit 
 Besides the Beelink S13 Pro (or equivalent mini PC), you will need:
 
 - **Wired keyboard** — Required for initial setup and BIOS. A wired USB keyboard avoids wireless dongle or Bluetooth issues during install and boot.
-- **USB drive** — At least 4 GB, for the Ubuntu Server installer. You will use it to create a bootable USB; see [Ubuntu Server Installation](02-ubuntu-server.md) for flashing options (Ventoy is recommended).
+- **USB drive** — At least 4 GB, only needed if you want to replace Windows with Ubuntu. See [Ubuntu Desktop Installation](02b-ubuntu-desktop.md) for flashing options (Ventoy is recommended).
 
-> The Beelink S13 often ships with **Windows** preloaded. If you prefer to keep Windows, see [Windows setup](02b-windows-setup.md) instead of installing Ubuntu Server.
+> The Beelink S13 Pro comes preloaded with **Windows**. This is the recommended setup — see [Windows Setup](02-windows-setup.md). If you prefer Linux, see [Ubuntu Desktop](02b-ubuntu-desktop.md).
 
 ---
 
@@ -70,9 +70,9 @@ Besides the Beelink S13 Pro (or equivalent mini PC), you will need:
 3. Connect a monitor via HDMI and a wired keyboard.
 4. Power on and enter BIOS (usually by pressing `Del` or `F7` during boot) to verify:
    - **Boot mode** is set to UEFI.
-   - **Secure Boot** is disabled (Ubuntu Server will install more smoothly).
-5. Save and exit BIOS. You are now ready to install Ubuntu Server.
+   - **Secure Boot** is disabled (recommended for Ubuntu; not required for Windows).
+5. Save and exit BIOS. You are now ready to proceed with setup.
 
 ---
 
-Next: [Ubuntu Server Installation](02-ubuntu-server.md)
+Next: [Windows Setup](02-windows-setup.md) (recommended) or [Ubuntu Desktop](02b-ubuntu-desktop.md)

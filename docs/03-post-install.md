@@ -1,6 +1,8 @@
-# 3 -- Post-Install System Setup
+# 3 -- Post-Install System Setup (Ubuntu)
 
-With Ubuntu Server installed and SSH access confirmed, prepare the system for Ollama and Daemon.
+> **Windows users:** Skip this guide. Post-install steps are covered in [Windows Setup](02-windows-setup.md). This guide is for Ubuntu Desktop installations only.
+
+With Ubuntu Desktop installed, prepare the system for Ollama and Daemon.
 
 ---
 

@@ -89,7 +89,7 @@ daemon
 
 ### On Windows
 
-If you are on Windows (see [Windows setup](02b-windows-setup.md)), `daemon-setup alias` adds a **PowerShell function** to your profile (`Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1`). Restart PowerShell or run `. $PROFILE` to load it, then run `daemon`. You can also run `ollama run daemon` in any terminal (PowerShell or CMD).
+If you are on Windows (see [Windows Setup](02-windows-setup.md)), `daemon-setup alias` adds a **PowerShell function** to your profile (`Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1`). Restart PowerShell or run `. $PROFILE` to load it, then run `daemon`. You can also run `ollama run daemon` in any terminal (PowerShell or CMD).
 
 ---
 

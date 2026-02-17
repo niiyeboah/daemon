@@ -21,7 +21,7 @@
 | Layer             | Component                                                                                                                |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | Hardware          | [Beelink S13 Pro](docs/01-hardware.md) mini PC                                                                           |
-| Operating System  | [Ubuntu Server 24.04 LTS](docs/02-ubuntu-server.md) or [Windows](docs/02b-windows-setup.md) (e.g. Beelink S13 preloaded) |
+| Operating System  | [Windows](docs/02-windows-setup.md) (Beelink S13 preloaded) or [Ubuntu Desktop 24.04 LTS](docs/02b-ubuntu-desktop.md) |
 | Inference Runtime | [Ollama](docs/04-ollama-llama.md)                                                                                        |
 | Language Model    | [Llama 3.2 3B](docs/04-ollama-llama.md)                                                                                  |
 | Interface         | [Daemon bot](docs/05-daemon-bot.md) (CLI / API)                                                                          |
@@ -30,11 +30,11 @@
 
 After following the guides below you will have:
 
-- A headless Ubuntu Server (or Windows) running 24/7 on low-power hardware.
+- A Windows (or Ubuntu Desktop) machine running 24/7 on low-power hardware.
 - Llama 3.2 3B served locally by Ollama on port `11434`.
 - A personal assistant named **Daemon** reachable from the terminal or via a simple HTTP API from any device on your LAN.
 
-Alternatively, run on **Windows** (e.g. Beelink S13 with Windows preloaded); see [Windows setup](docs/02b-windows-setup.md).
+The Beelink S13 Pro comes preloaded with Windows, making it the simplest setup path. Alternatively, install [Ubuntu Desktop](docs/02b-ubuntu-desktop.md) if you prefer Linux.
 
 ## Setup Guides
 
@@ -43,9 +43,9 @@ Read these in order. Each guide picks up where the previous one left off.
 | #   | Guide                                            | Description                                                 |
 | --- | ------------------------------------------------ | ----------------------------------------------------------- |
 | 1   | [Hardware](docs/01-hardware.md)                  | Beelink S13 Pro variants, specs, and why this device fits   |
-| 2   | [Ubuntu Server](docs/02-ubuntu-server.md)        | Download, create a bootable USB, install, and first boot    |
-| 2b  | [Windows](docs/02b-windows-setup.md)             | Run Daemon on Windows (Beelink S13 preloaded)               |
-| 3   | [Post-Install](docs/03-post-install.md)          | System updates, dependencies, timezone, and user setup      |
+| 2   | [Windows](docs/02-windows-setup.md)              | Run Daemon on Windows (Beelink S13 preloaded, recommended)  |
+| 2b  | [Ubuntu Desktop](docs/02b-ubuntu-desktop.md)     | Install Ubuntu Desktop 24.04 LTS as an alternative to Windows |
+| 3   | [Post-Install](docs/03-post-install.md)          | System updates, dependencies, timezone, and user setup (Ubuntu) |
 | 4   | [Ollama + Llama 3.2 3B](docs/04-ollama-llama.md) | Install Ollama, pull the model, run it as a service         |
 | 5   | [Daemon Bot](docs/05-daemon-bot.md)              | Configure the "Daemon" personality via CLI and optional API |
 | 6   | [Security](docs/06-security.md)                  | Firewall, SSH hardening, and automatic updates              |
@@ -54,14 +54,14 @@ Read these in order. Each guide picks up where the previous one left off.
 
 ## Prerequisites
 
-- A Beelink S13 Pro (or similar mini PC with at least 8 GB RAM; 16 GB recommended).
-- A USB flash drive (4 GB+) for the Ubuntu Server installer.
-- A wired keyboard and monitor for initial setup (can be removed after SSH is configured).
-- A wired Ethernet connection is recommended for installation; Wi-Fi can be configured afterwards.
+- A Beelink S13 Pro (or similar mini PC with at least 8 GB RAM; 16 GB recommended). Comes preloaded with Windows.
+- A USB flash drive (4 GB+) only if installing Ubuntu Desktop.
+- A wired keyboard and monitor for initial setup (can be removed after SSH/remote access is configured).
+- A wired Ethernet connection is recommended; Wi-Fi can be configured afterwards.
 
 ## Setup with the CLI
 
-Once Ubuntu and Ollama are installed and the base model is pulled (see [Setup Guides](#setup-guides) above), you can use the **daemon-setup** CLI to configure the Daemon bot.
+Once Ollama is installed and the base model is pulled (see [Setup Guides](#setup-guides) above), you can use the **daemon-setup** CLI to configure the Daemon bot.
 
 **Interactive mode:** In a terminal, run `./daemon-setup` with no arguments to start an interactive menu where you can pick an action (check, init, modelfile, alias, full setup, or guide) and be prompted for options with sensible defaults. Subcommands and flags still work for scripting (e.g. `./daemon-setup check`, `./daemon-setup setup --yes`). For full workflow help, run `./daemon-setup guide`.
 

@@ -1,6 +1,6 @@
-# 2b -- Windows Setup (Beelink S13 preloaded)
+# 2 -- Windows Setup (Default)
 
-If your Beelink S13 (or any PC) came with **Windows** preloaded and you prefer not to install Ubuntu, you can run the Daemon bot directly on Windows. This guide gets you from a fresh Windows install to a working local assistant.
+The Beelink S13 Pro comes preloaded with **Windows**, so this is the recommended and simplest path. This guide gets you from a fresh Windows install to a working local assistant.
 
 ---
 
@@ -117,8 +117,12 @@ You get an interactive chat. Exit with `/bye` or `Ctrl+D`.
 
 ## Alternative: WSL2
 
-If you prefer the Linux-based setup (Ubuntu Server, systemd, etc.) but want to keep Windows as the host OS, you can install [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) and follow the main guides ([Ubuntu Server](02-ubuntu-server.md) is not needed; use the WSL Ubuntu distro and follow [Post-Install](03-post-install.md), [Ollama + Llama](04-ollama-llama.md), and [Daemon Bot](05-daemon-bot.md) inside WSL).
+If you prefer the Linux-based setup (systemd, etc.) but want to keep Windows as the host OS, you can install [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) and follow [Post-Install](03-post-install.md), [Ollama + Llama](04-ollama-llama.md), and [Daemon Bot](05-daemon-bot.md) inside the WSL Ubuntu distro.
+
+## Alternative: Ubuntu Desktop
+
+If you prefer to replace Windows with Linux entirely, see [Ubuntu Desktop](02b-ubuntu-desktop.md).
 
 ---
 
-Next: [Daemon Bot](05-daemon-bot.md) for more on the Modelfile, system prompt, and optional Python API.
+Next: [Ollama + Llama 3.2 3B](04-ollama-llama.md)
