@@ -40,7 +40,7 @@ function App() {
       <Header onMenuToggle={() => setMobileOpen(true)} />
 
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="w-72 p-0">
+        <SheetContent side="left" className="w-80 p-0">
           <Sidebar />
         </SheetContent>
       </Sheet>
