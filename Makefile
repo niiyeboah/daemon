@@ -8,6 +8,11 @@ build:
 build-macos:
 	GOOS=darwin GOARCH=$$(go env GOARCH) go build -o daemon-setup ./cmd/daemon-setup
 
+# Build for Linux (amd64). Use from macOS/Windows to produce a Linux binary.
+.PHONY: build-linux
+build-linux:
+	GOOS=linux GOARCH=amd64 go build -o daemon-setup-linux-amd64 ./cmd/daemon-setup
+
 # Build for Windows (amd64). Use from Linux/macOS to produce daemon-setup.exe.
 .PHONY: build-windows
 build-windows:
@@ -21,4 +26,4 @@ test:
 # Clean built binaries
 .PHONY: clean
 clean:
-	rm -f daemon-setup daemon-setup.exe
+	rm -f daemon-setup daemon-setup.exe daemon-setup-linux-amd64

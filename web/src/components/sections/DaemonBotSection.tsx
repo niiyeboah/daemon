@@ -3,6 +3,7 @@ import { CodeBlock } from '@/components/shared/CodeBlock'
 import { OsFilter } from '@/components/shared/OsFilter'
 import { StepCheckbox } from '@/components/shared/StepCheckbox'
 import { InfoBox } from '@/components/shared/InfoBox'
+import { GITHUB_RELEASES_LATEST_URL } from '@/store/constants'
 
 const modelfile = `FROM llama3.2:3b
 
@@ -78,6 +79,12 @@ export function DaemonBotSection() {
         The <code className="rounded bg-muted px-1.5 py-0.5">daemon-setup</code> CLI
         automates all steps below. Run it interactively or use subcommands:
       </p>
+
+      <InfoBox variant="tip">
+        Pre-built binaries for Windows, Linux, and macOS are available on{' '}
+        <a href={GITHUB_RELEASES_LATEST_URL} className="underline" target="_blank" rel="noopener noreferrer">GitHub Releases</a>.
+        Download the file for your OS and run the commands below.
+      </InfoBox>
 
       <OsFilter os="windows">
         <CodeBlock language="powershell" code={`.\\daemon-setup check\n.\\daemon-setup init\n.\\daemon-setup alias`} />

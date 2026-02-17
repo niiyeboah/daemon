@@ -1,0 +1,66 @@
+name: Build and release daemon-setup CLI
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+
+      - name: Create release directory
+        run: mkdir -p release
+
+      - name: Build Linux amd64
+        run: GOOS=linux GOARCH=amd64 go build -o release/daemon-setup-linux-amd64 ./cmd/daemon-setup
+
+      - name: Build Windows amd64
+        run: GOOS=windows GOARCH=amd64 go build -o release/daemon-setup-windows-amd64.exe ./cmd/daemon-setup
+
+      - name: Build macOS amd64
+        run: GOOS=darwin GOARCH=amd64 go build -o release/daemon-setup-darwin-amd64 ./cmd/daemon-setup
+
+      - name: Build macOS arm64
+        run: GOOS=darwin GOARCH=arm64 go build -o release/daemon-setup-darwin-arm64 ./cmd/daemon-setup
+
+      - name: Upload CLI binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: cli-binaries
+          path: release/
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download CLI binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: cli-binaries
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: daemon-setup ${{ github.ref_name }}
+          files: |
+            daemon-setup-linux-amd64
+            daemon-setup-windows-amd64.exe
+            daemon-setup-darwin-amd64
+            daemon-setup-darwin-arm64
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

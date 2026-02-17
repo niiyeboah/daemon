@@ -1,5 +1,8 @@
 import type { SectionMeta, Step } from '@/types'
 
+export const GITHUB_RELEASES_URL = 'https://github.com/niiyeboah/daemon/releases'
+export const GITHUB_RELEASES_LATEST_URL = 'https://github.com/niiyeboah/daemon/releases/latest'
+
 export const SECTIONS: SectionMeta[] = [
   { id: 'hero', title: 'Introduction' },
   { id: 'hardware', title: 'Hardware' },

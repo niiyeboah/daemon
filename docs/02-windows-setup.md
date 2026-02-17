@@ -57,7 +57,7 @@ go version
 
 ## 4. Build daemon-setup
 
-Clone or download this repo, then from the repo root:
+Download the latest Windows binary from [GitHub Releases](https://github.com/niiyeboah/daemon/releases), or build from source. Clone or download this repo, then from the repo root:
 
 ```powershell
 go build -o daemon-setup.exe ./cmd/daemon-setup

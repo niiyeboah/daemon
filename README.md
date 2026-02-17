@@ -67,7 +67,7 @@ Once Ollama is installed and the base model is pulled (see [Setup Guides](#setup
 
 1. **Install Go** (if needed): Go 1.21+ is required. On Ubuntu: `sudo apt install -y golang-go`, or [download](https://go.dev/dl/) for your OS.
 
-2. **Build the CLI** (from this repo):
+2. **Get the CLI:** Pre-built binaries are available on [GitHub Releases](https://github.com/niiyeboah/daemon/releases) for Windows, Linux, and macOS. Or **build from source** (from this repo):
    - **Linux / macOS:** `go build -o daemon-setup ./cmd/daemon-setup` or `make build`.
    - **Windows:** `go build -o daemon-setup.exe ./cmd/daemon-setup`. From Linux/macOS for Windows: `make build-windows`.
 
@@ -110,6 +110,7 @@ For full manual steps and alternatives (e.g. Python API script), see [Daemon Bot
 | Command              | Description                                  |
 | -------------------- | -------------------------------------------- |
 | `make build`         | Build `daemon-setup` for current OS          |
+| `make build-linux`   | Build for Linux (amd64)                      |
 | `make build-macos`   | Build for macOS (darwin)                     |
 | `make build-windows` | Build `daemon-setup.exe` for Windows (amd64) |
 | `make test`          | Run tests                                    |

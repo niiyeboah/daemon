@@ -2,6 +2,7 @@ import { CodeBlock } from '@/components/shared/CodeBlock'
 import { OsFilter } from '@/components/shared/OsFilter'
 import { StepCheckbox } from '@/components/shared/StepCheckbox'
 import { InfoBox } from '@/components/shared/InfoBox'
+import { GITHUB_RELEASES_LATEST_URL } from '@/store/constants'
 
 export function OsSetupSection() {
   return (
@@ -52,7 +53,12 @@ export function OsSetupSection() {
         </p>
         <CodeBlock language="powershell" code="go version" />
 
-        <h3 className="mt-6 text-xl font-semibold">Build daemon-setup</h3>
+        <h3 className="mt-6 text-xl font-semibold">Get daemon-setup</h3>
+        <p className="mt-2 text-muted-foreground">
+          Download the latest pre-built binary:{' '}
+          <a href={GITHUB_RELEASES_LATEST_URL} className="underline" target="_blank" rel="noopener noreferrer">Windows (amd64)</a>.
+          Or build from source:
+        </p>
         <CodeBlock language="powershell" code="go build -o daemon-setup.exe ./cmd/daemon-setup" />
 
         <InfoBox variant="tip">
@@ -112,6 +118,12 @@ export function OsSetupSection() {
           To set a static IP, edit <code>/etc/netplan/00-installer-config.yaml</code>.
           Once SSH is working, you can disconnect the monitor and keyboard.
         </InfoBox>
+
+        <p className="mt-6 text-muted-foreground">
+          For the daemon-setup CLI, download the Linux binary from{' '}
+          <a href={GITHUB_RELEASES_LATEST_URL} className="underline" target="_blank" rel="noopener noreferrer">GitHub Releases</a>{' '}
+          or build from source in the Daemon Bot step.
+        </p>
       </OsFilter>
 
       {/* macOS */}
@@ -139,7 +151,13 @@ export function OsSetupSection() {
         <CodeBlock language="bash" code="brew install go" />
         <CodeBlock language="bash" code="go version" />
 
-        <h3 className="mt-6 text-xl font-semibold">Build daemon-setup</h3>
+        <h3 className="mt-6 text-xl font-semibold">Get daemon-setup</h3>
+        <p className="mt-2 text-muted-foreground">
+          Download the latest pre-built binary from{' '}
+          <a href={GITHUB_RELEASES_LATEST_URL} className="underline" target="_blank" rel="noopener noreferrer">GitHub Releases</a>:
+          choose <strong>daemon-setup-darwin-arm64</strong> (Apple Silicon) or <strong>daemon-setup-darwin-amd64</strong> (Intel).
+          Or build from source:
+        </p>
         <CodeBlock language="bash" code="go build -o daemon-setup ./cmd/daemon-setup" />
       </OsFilter>
 
