@@ -49,7 +49,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
           </Button>
           <Button variant="ghost" size="icon" asChild>
             <a
-              href="https://github.com/niiyeboah/daemon-bot"
+              href="https://github.com/niiyeboah/daemon"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub repository"

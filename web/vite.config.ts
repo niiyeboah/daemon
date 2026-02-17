@@ -5,7 +5,7 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: '/daemon-bot/',
+  base: '/daemon/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
