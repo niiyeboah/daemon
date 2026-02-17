@@ -21,6 +21,10 @@ logs/
 # Build (binary at repo root only; do not ignore cmd/daemon-setup/)
 /daemon-setup
 
+# Web
+web/node_modules/
+web/dist/
+
 # AI Agents
 .cursor
 .claude
