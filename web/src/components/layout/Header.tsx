@@ -23,11 +23,6 @@ export function Header({ onMenuToggle }: HeaderProps) {
         </Button>
 
         <div className="flex items-center gap-3">
-          <img
-            src={`${import.meta.env.BASE_URL}daemon-logo.png`}
-            alt="Daemon"
-            className="h-8 w-8"
-          />
           <span className="text-lg font-bold">Daemon</span>
           <span className="hidden text-sm text-muted-foreground sm:inline">
             Setup Guide

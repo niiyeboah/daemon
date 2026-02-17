@@ -46,7 +46,7 @@ function App() {
       </Sheet>
 
       <div className="mx-auto flex max-w-7xl">
-        <aside className="hidden w-64 shrink-0 lg:block">
+        <aside className="hidden w-72 shrink-0 lg:block">
           <div className="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto">
             <Sidebar />
           </div>
