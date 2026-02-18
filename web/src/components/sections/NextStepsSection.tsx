@@ -3,6 +3,13 @@ import { CodeBlock } from '@/components/shared/CodeBlock'
 
 const ideas = [
   {
+    title: 'OpenClaw & automation',
+    description:
+      'Make Daemon your personal employee: add OpenClaw for channels, skills, and scheduled jobs so it can work for you 24/7.',
+    link: null,
+    sectionAnchor: '#openclaw',
+  },
+  {
     title: 'Voice Input with Whisper',
     description:
       'Add speech-to-text so you can talk to Daemon. Whisper.cpp is a lightweight C++ port that runs on CPU.',
@@ -61,11 +68,16 @@ export function NextStepsSection() {
       </p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        {ideas.map(({ title, description, link }) => (
+        {ideas.map(({ title, description, link, sectionAnchor }) => (
           <Card key={title}>
             <CardContent className="p-4">
               <h3 className="font-semibold">{title}</h3>
               <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+              {sectionAnchor && (
+                <a href={sectionAnchor} className="mt-2 inline-block text-sm underline">
+                  Go to section
+                </a>
+              )}
               {link && (
                 <a
                   href={link}

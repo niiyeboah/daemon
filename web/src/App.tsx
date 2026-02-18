@@ -13,6 +13,7 @@ import { DaemonBotSection } from '@/components/sections/DaemonBotSection'
 import { SecuritySection } from '@/components/sections/SecuritySection'
 import { TroubleshootingSection } from '@/components/sections/TroubleshootingSection'
 import { NextStepsSection } from '@/components/sections/NextStepsSection'
+import { OpenClawSection } from '@/components/sections/OpenClawSection'
 import { useScrollSpy } from '@/hooks/useScrollSpy'
 import { themeAtom, osAtom } from '@/store/atoms'
 import { SECTIONS } from '@/store/constants'
@@ -63,6 +64,7 @@ function App() {
             <SecuritySection />
             <TroubleshootingSection />
             <NextStepsSection />
+            <OpenClawSection />
           </div>
         </main>
       </div>

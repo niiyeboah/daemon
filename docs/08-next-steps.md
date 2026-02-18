@@ -4,6 +4,12 @@ Daemon is up and running. Here are ideas to extend and improve your personal ass
 
 ---
 
+## OpenClaw & automation
+
+Turn Daemon into a **personal employee** that works on your behalf: add [OpenClaw](09-openclaw-automation.md) to give it messaging channels (Telegram, Discord, Slack), automation skills from ClawHub, and scheduled jobs. Daemon stays the brain (your local LLM); OpenClaw is the layer that lets it act — reply on your channels, run workflows, and execute tasks 24/7. See [OpenClaw & automation](09-openclaw-automation.md) for setup and how to start automating.
+
+---
+
 ## Voice Input with Whisper
 
 Add speech-to-text so you can talk to Daemon instead of typing.

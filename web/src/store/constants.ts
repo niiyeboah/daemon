@@ -21,6 +21,7 @@ export const SECTIONS: SectionMeta[] = [
   { id: 'security', title: 'Security' },
   { id: 'troubleshooting', title: 'Troubleshooting' },
   { id: 'next-steps', title: 'Next Steps' },
+  { id: 'openclaw', title: 'OpenClaw & Automation' },
 ]
 
 export const STEPS: Step[] = [

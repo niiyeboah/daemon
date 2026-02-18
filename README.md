@@ -34,6 +34,8 @@ After following the guides below you will have:
 - Llama 3.2 3B served locally by Ollama on port `11434`.
 - A personal assistant named **Daemon** reachable from the terminal or via a simple HTTP API from any device on your LAN.
 
+Optionally, add [OpenClaw](docs/09-openclaw-automation.md) to give Daemon channels, skills, and schedules so it can work for you like a personal employee.
+
 The Beelink S13 Pro comes preloaded with Windows, making it the simplest setup path. Alternatively, install [Ubuntu Desktop](docs/02b-ubuntu-desktop.md) if you prefer Linux.
 
 ## Setup Guides
@@ -51,6 +53,7 @@ Read these in order. Each guide picks up where the previous one left off.
 | 6   | [Security](docs/06-security.md)                  | Firewall, SSH hardening, and automatic updates              |
 | 7   | [Troubleshooting](docs/07-troubleshooting.md)    | Common issues and how to fix them                           |
 | 8   | [Next Steps](docs/08-next-steps.md)              | Ideas for extending Daemon (voice, integrations, web UI)    |
+| 9   | [OpenClaw & automation](docs/09-openclaw-automation.md) | Set up OpenClaw, automate tasks, and use Daemon like a personal employee |
 
 ## Prerequisites
 
