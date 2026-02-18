@@ -4,11 +4,12 @@ const OPENCLAW_DOC_URL = 'https://github.com/niiyeboah/daemon/blob/main/docs/09-
 const OPENCLAW_SETUP_URL = 'https://docs.openclaw.ai/setup'
 const OPENCLAW_GETTING_STARTED_URL = 'https://docs.openclaw.ai/start/getting-started'
 const OPENCLAW_CHANNELS_URL = 'https://docs.openclaw.ai/channels'
+const OPENCLAW_OLLAMA_PROVIDER_URL = 'https://docs.openclaw.ai/providers/ollama'
 
 export function OpenClawSection() {
   return (
     <section id="openclaw">
-      <h2 className="text-3xl font-bold tracking-tight">9. OpenClaw & Automation</h2>
+      <h2 className="text-3xl font-bold tracking-tight">8. OpenClaw & Automation</h2>
       <p className="mt-2 text-muted-foreground">
         Give Daemon channels, skills, and schedules so it can work for you like
         a personal employee.
@@ -47,6 +48,32 @@ openclaw onboard --install-daemon`}
           className="underline"
         >
           full guide
+        </a>
+        .
+      </p>
+
+      <h3 className="mt-8 text-xl font-semibold">Connect local Ollama (Daemon)</h3>
+      <p className="mt-2 text-sm text-muted-foreground">
+        So that OpenClaw uses your existing Daemon (Ollama), set{' '}
+        <code className="rounded bg-muted px-1.5 py-0.5">OLLAMA_API_KEY</code> (any value works).
+        Optionally set the default model to <code className="rounded bg-muted px-1.5 py-0.5">ollama/daemon</code> in{' '}
+        <code className="rounded bg-muted px-1.5 py-0.5">~/.openclaw/openclaw.json</code>, then restart the gateway.
+      </p>
+      <CodeBlock
+        language="bash"
+        code={`export OLLAMA_API_KEY="ollama-local"
+# Restart gateway and verify
+openclaw gateway restart
+openclaw models list`}
+      />
+      <p className="mt-2 text-sm text-muted-foreground">
+        For setting the default model and explicit config (if your model does not appear), see the{' '}
+        <a href={OPENCLAW_DOC_URL} target="_blank" rel="noopener noreferrer" className="underline">
+          full guide
+        </a>
+        {' '}and the{' '}
+        <a href={OPENCLAW_OLLAMA_PROVIDER_URL} target="_blank" rel="noopener noreferrer" className="underline">
+          OpenClaw Ollama provider docs
         </a>
         .
       </p>
@@ -112,6 +139,16 @@ openclaw onboard --install-daemon`}
             className="text-sm underline"
           >
             OpenClaw Channels
+          </a>
+        </li>
+        <li>
+          <a
+            href={OPENCLAW_OLLAMA_PROVIDER_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm underline"
+          >
+            OpenClaw Ollama provider
           </a>
         </li>
       </ul>

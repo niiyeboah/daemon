@@ -63,8 +63,8 @@ function App() {
             <DaemonBotSection />
             <SecuritySection />
             <TroubleshootingSection />
-            <NextStepsSection />
             <OpenClawSection />
+            <NextStepsSection />
           </div>
         </main>
       </div>

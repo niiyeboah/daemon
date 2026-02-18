@@ -20,8 +20,8 @@ export const SECTIONS: SectionMeta[] = [
   { id: 'daemon-bot', title: 'Daemon Bot' },
   { id: 'security', title: 'Security' },
   { id: 'troubleshooting', title: 'Troubleshooting' },
-  { id: 'next-steps', title: 'Next Steps' },
   { id: 'openclaw', title: 'OpenClaw & Automation' },
+  { id: 'next-steps', title: 'Next Steps' },
 ]
 
 export const STEPS: Step[] = [

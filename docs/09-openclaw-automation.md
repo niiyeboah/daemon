@@ -68,9 +68,80 @@ To have your assistant always on, run the OpenClaw Gateway 24/7 — for example 
 
 ---
 
-## Using Daemon (Ollama) with OpenClaw
+## Connect local Ollama (Daemon) to OpenClaw
 
-OpenClaw supports multiple AI providers. If your OpenClaw build supports a local Ollama backend, point it at your existing Ollama instance (e.g. `http://localhost:11434`) so that the same Daemon model powers your automated tasks. Check the latest [OpenClaw documentation](https://docs.openclaw.ai) for "local" or "Ollama" provider configuration.
+So that OpenClaw uses your existing Daemon (Ollama) instead of a cloud provider, configure the Ollama provider and set the default model. Restart the gateway after any config change: `openclaw gateway restart`.
+
+**Prerequisite:** Ollama must be running and your Daemon model available. Check with `ollama list` (you should see `daemon` or `llama3.2:3b`).
+
+### Option A — Auto-discovery
+
+The simplest way is to let OpenClaw discover models from your local Ollama instance:
+
+1. Set the API key (any non-empty value; Ollama does not validate it):
+
+   ```bash
+   export OLLAMA_API_KEY="ollama-local"
+   ```
+
+   To make it persistent, add that line to your shell profile (`~/.bashrc`, `~/.zshrc`) or set it in OpenClaw’s environment.
+
+2. Do **not** define an explicit `models.providers.ollama` entry in your config. OpenClaw will then auto-discover models at `http://127.0.0.1:11434`. Note: auto-discovery only includes models that report **tool** support. If your Daemon model does not appear, use Option B.
+
+3. Set the default model for the agent so OpenClaw uses your Daemon model. Edit `~/.openclaw/openclaw.json` and set the agent default, for example:
+
+   ```json
+   {
+     "agents": {
+       "defaults": {
+         "model": {
+           "primary": "ollama/daemon"
+         }
+       }
+     }
+   }
+   ```
+
+   Use `ollama/daemon` if you created the custom Daemon model, or `ollama/llama3.2:3b` for the base model. Restart the gateway and verify with `openclaw models list` and `openclaw models status`.
+
+### Option B — Explicit config
+
+If your model does not appear in auto-discovery (e.g. the Daemon model does not advertise tool support), add an explicit Ollama provider in `~/.openclaw/openclaw.json`:
+
+```json
+{
+  "models": {
+    "providers": {
+      "ollama": {
+        "baseUrl": "http://127.0.0.1:11434",
+        "apiKey": "ollama-local",
+        "api": "ollama",
+        "models": [
+          {
+            "id": "daemon",
+            "name": "Daemon",
+            "contextWindow": 2048,
+            "maxTokens": 2048
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": { "primary": "ollama/daemon" }
+    }
+  }
+}
+```
+
+Use the model `id` that matches `ollama list` (e.g. `daemon`, `llama3.2:3b`). For other hosts or the legacy OpenAI-compatible endpoint, see the [OpenClaw Ollama provider docs](https://docs.openclaw.ai/providers/ollama).
+
+### Verification
+
+- `openclaw models list` — should list your Ollama models.
+- `openclaw models status` — checks connectivity and auth.
+- Send a test message in the dashboard (`openclaw dashboard`) or TUI to confirm the assistant replies using your local model.
 
 ---
 
@@ -81,6 +152,7 @@ OpenClaw supports multiple AI providers. If your OpenClaw build supports a local
 | OpenClaw Setup | <https://docs.openclaw.ai/setup> |
 | OpenClaw Getting Started | <https://docs.openclaw.ai/start/getting-started> |
 | OpenClaw Channels | <https://docs.openclaw.ai/channels> |
+| OpenClaw Ollama provider | <https://docs.openclaw.ai/providers/ollama> |
 | Daemon Bot (this repo) | [05-daemon-bot.md](05-daemon-bot.md) |
 | Ollama + Llama (this repo) | [04-ollama-llama.md](04-ollama-llama.md) |
 

@@ -61,7 +61,7 @@ const links = [
 export function NextStepsSection() {
   return (
     <section id="next-steps">
-      <h2 className="text-3xl font-bold tracking-tight">8. Next Steps</h2>
+      <h2 className="text-3xl font-bold tracking-tight">9. Next Steps</h2>
       <p className="mt-2 text-muted-foreground">
         Daemon is up and running. Here are ideas to extend your personal
         assistant.
