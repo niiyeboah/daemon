@@ -2,7 +2,7 @@ import { CodeBlock } from '@/components/shared/CodeBlock'
 import { OsFilter } from '@/components/shared/OsFilter'
 import { StepCheckbox } from '@/components/shared/StepCheckbox'
 import { InfoBox } from '@/components/shared/InfoBox'
-import { GITHUB_RELEASES_LATEST_URL } from '@/store/constants'
+import { GITHUB_RELEASES_LATEST_URL, CLI_BUILD_URLS } from '@/store/constants'
 
 export function OsSetupSection() {
   return (
@@ -56,7 +56,7 @@ export function OsSetupSection() {
         <h3 className="mt-6 text-xl font-semibold">Get daemon-setup</h3>
         <p className="mt-2 text-muted-foreground">
           Download the latest pre-built binary:{' '}
-          <a href={GITHUB_RELEASES_LATEST_URL} className="underline" target="_blank" rel="noopener noreferrer">Windows (amd64)</a>.
+          <a href={CLI_BUILD_URLS.windowsAmd64} className="underline" target="_blank" rel="noopener noreferrer">daemon-setup-windows-amd64.exe</a>.
           Or build from source:
         </p>
         <CodeBlock language="powershell" code="go build -o daemon-setup.exe ./cmd/daemon-setup" />
@@ -120,9 +120,10 @@ export function OsSetupSection() {
         </InfoBox>
 
         <p className="mt-6 text-muted-foreground">
-          For the daemon-setup CLI, download the Linux binary from{' '}
-          <a href={GITHUB_RELEASES_LATEST_URL} className="underline" target="_blank" rel="noopener noreferrer">GitHub Releases</a>{' '}
-          or build from source in the Daemon Bot step.
+          For the daemon-setup CLI, download{' '}
+          <a href={CLI_BUILD_URLS.linuxAmd64} className="underline" target="_blank" rel="noopener noreferrer">daemon-setup-linux-amd64</a>{' '}
+          or see <a href={GITHUB_RELEASES_LATEST_URL} className="underline" target="_blank" rel="noopener noreferrer">GitHub Releases</a>.
+          Or build from source in the Daemon Bot step.
         </p>
       </OsFilter>
 
@@ -153,9 +154,8 @@ export function OsSetupSection() {
 
         <h3 className="mt-6 text-xl font-semibold">Get daemon-setup</h3>
         <p className="mt-2 text-muted-foreground">
-          Download the latest pre-built binary from{' '}
-          <a href={GITHUB_RELEASES_LATEST_URL} className="underline" target="_blank" rel="noopener noreferrer">GitHub Releases</a>:
-          choose <strong>daemon-setup-darwin-arm64</strong> (Apple Silicon) or <strong>daemon-setup-darwin-amd64</strong> (Intel).
+          Download the latest pre-built binary:{' '}
+          <a href={CLI_BUILD_URLS.darwinArm64} className="underline" target="_blank" rel="noopener noreferrer">daemon-setup-darwin-arm64</a>.
           Or build from source:
         </p>
         <CodeBlock language="bash" code="go build -o daemon-setup ./cmd/daemon-setup" />

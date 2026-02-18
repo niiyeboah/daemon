@@ -3,7 +3,7 @@ import { CodeBlock } from '@/components/shared/CodeBlock'
 import { OsFilter } from '@/components/shared/OsFilter'
 import { StepCheckbox } from '@/components/shared/StepCheckbox'
 import { InfoBox } from '@/components/shared/InfoBox'
-import { GITHUB_RELEASES_LATEST_URL } from '@/store/constants'
+import { GITHUB_RELEASES_LATEST_URL, CLI_BUILD_URLS } from '@/store/constants'
 
 const modelfile = `FROM llama3.2:3b
 
@@ -81,9 +81,13 @@ export function DaemonBotSection() {
       </p>
 
       <InfoBox variant="tip">
-        Pre-built binaries for Windows, Linux, and macOS are available on{' '}
-        <a href={GITHUB_RELEASES_LATEST_URL} className="underline" target="_blank" rel="noopener noreferrer">GitHub Releases</a>.
-        Download the file for your OS and run the commands below.
+        Pre-built binaries:{' '}
+        <a href={CLI_BUILD_URLS.windowsAmd64} className="underline" target="_blank" rel="noopener noreferrer">Windows (amd64)</a>
+        {' · '}
+        <a href={CLI_BUILD_URLS.linuxAmd64} className="underline" target="_blank" rel="noopener noreferrer">Linux (amd64)</a>
+        {' · '}
+        <a href={CLI_BUILD_URLS.darwinArm64} className="underline" target="_blank" rel="noopener noreferrer">macOS (Apple Silicon)</a>.
+        Or see all builds on <a href={GITHUB_RELEASES_LATEST_URL} className="underline" target="_blank" rel="noopener noreferrer">GitHub Releases</a>.
       </InfoBox>
 
       <OsFilter os="windows">
