@@ -54,6 +54,45 @@ fn openclaw_config_path() -> PathBuf {
         .join("openclaw.json")
 }
 
+/// Ensures gateway.mode=local in ~/.openclaw/openclaw.json so the gateway can start
+/// (OpenClaw blocks startup unless this is set or --allow-unconfigured is passed).
+fn ensure_gateway_mode() -> Result<(), String> {
+    let config_path = openclaw_config_path();
+
+    if let Some(parent) = config_path.parent() {
+        std::fs::create_dir_all(parent)
+            .map_err(|e| format!("Failed to create config directory: {}", e))?;
+    }
+
+    let mut config: serde_json::Value = if config_path.exists() {
+        let content = std::fs::read_to_string(&config_path)
+            .map_err(|e| format!("Failed to read config: {}", e))?;
+        serde_json::from_str(&content).unwrap_or(serde_json::json!({}))
+    } else {
+        serde_json::json!({})
+    };
+
+    let obj = config
+        .as_object_mut()
+        .ok_or("Config is not a JSON object")?;
+
+    let gateway = obj
+        .entry("gateway")
+        .or_insert_with(|| serde_json::json!({}))
+        .as_object_mut()
+        .ok_or("gateway must be an object")?;
+
+    gateway.insert("mode".to_string(), serde_json::json!("local"));
+
+    let content = serde_json::to_string_pretty(&config)
+        .map_err(|e| format!("Failed to serialize config: {}", e))?;
+
+    std::fs::write(&config_path, content)
+        .map_err(|e| format!("Failed to write config: {}", e))?;
+
+    Ok(())
+}
+
 /// Helper: spawn a shell command and stream stdout/stderr as openclaw-log events.
 /// Returns an error string if the process exits with a non-zero code.
 async fn spawn_and_stream(
@@ -161,6 +200,8 @@ pub async fn openclaw_install(app: AppHandle) -> Result<(), String> {
 
 #[tauri::command]
 pub async fn openclaw_onboard(app: AppHandle) -> Result<(), String> {
+    // Ensure gateway.mode=local before onboarding so the LaunchAgent can start
+    ensure_gateway_mode()?;
     spawn_and_stream(&app, "openclaw", &["onboard", "--install-daemon"]).await
 }
 
@@ -168,6 +209,9 @@ pub async fn openclaw_onboard(app: AppHandle) -> Result<(), String> {
 pub async fn openclaw_connect_whatsapp(app: AppHandle) -> Result<(), String> {
     use tokio::io::{AsyncBufReadExt, BufReader};
     use tokio::process::Command;
+
+    // Ensure gateway.mode=local so the gateway can start
+    ensure_gateway_mode()?;
 
     // Fix invalid config (e.g. legacy root-level provider/model/contextWindow/maxTokens)
     // before attempting login; doctor --fix removes unrecognized keys
@@ -308,6 +352,14 @@ pub async fn openclaw_configure_model(model: String) -> Result<(), String> {
     };
 
     let obj = config.as_object_mut().ok_or("Config is not a JSON object")?;
+
+    // Ensure gateway.mode=local so the gateway can start (required by OpenClaw)
+    let gateway = obj
+        .entry("gateway")
+        .or_insert_with(|| serde_json::json!({}))
+        .as_object_mut()
+        .ok_or("gateway must be an object")?;
+    gateway.insert("mode".to_string(), serde_json::json!("local"));
 
     // Remove legacy root-level keys that OpenClaw no longer accepts
     obj.remove("provider");
