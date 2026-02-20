@@ -1,6 +1,6 @@
-# 4 -- Ollama + Llama 3.2 1B
+# 4 -- Ollama + Llama 3.2 8B
 
-This guide installs Ollama, downloads the Llama 3.2 1B model, and configures Ollama to run as a persistent service.
+This guide installs Ollama, downloads the Llama 3.2 8B model, and configures Ollama to run as a persistent service.
 
 ---
 
@@ -14,11 +14,15 @@ This guide installs Ollama, downloads the Llama 3.2 1B model, and configures Oll
 
 Run the official one-line installer:
 
+**macOS / Linux:**
+
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
-This script will:
+**Windows:** Download the installer from [ollama.com](https://ollama.com).
+
+This script will (Linux):
 - Download the Ollama binary.
 - Place it in `/usr/local/bin/ollama`.
 - Create a systemd service (`ollama.service`) so it can run in the background.
@@ -31,13 +35,13 @@ ollama --version
 
 ---
 
-## Pull the Llama 3.2 1B Model
+## Pull the Llama 3.2 8B Model
 
 ```bash
-ollama pull llama3.2:1b
+ollama pull llama3.2:8b
 ```
 
-This downloads the default quantised (Q4_K_M) version of Llama 3.2 1B. The download is approximately **1 GB**.
+This downloads the default quantised version of Llama 3.2 8B. The download is several GB.
 
 Verify the model is available:
 
@@ -49,7 +53,7 @@ You should see an entry like:
 
 ```
 NAME              ID            SIZE    MODIFIED
-llama3.2:1b       ...           1.3 GB  just now
+llama3.2:8b       ...           ~4.7 GB  just now
 ```
 
 ---
@@ -57,7 +61,7 @@ llama3.2:1b       ...           1.3 GB  just now
 ## Test the Model Interactively
 
 ```bash
-ollama run llama3.2:1b
+ollama run llama3.2:8b
 ```
 
 You will get an interactive prompt. Try a question:
@@ -66,15 +70,15 @@ You will get an interactive prompt. Try a question:
 >>> What is the capital of France?
 ```
 
-The model should respond coherently. Response speed will vary -- on the N100/N150 expect roughly **10--30 tokens per second**.
+The model should respond coherently. On Apple Silicon (M4) expect much faster inference than on CPU-only hardware.
 
 Exit with `/bye` or press `Ctrl+D`.
 
 ---
 
-## Ollama as a Systemd Service
+## Ollama as a Service
 
-The installer script usually creates and enables a systemd service automatically. Confirm it is running:
+**Linux (systemd):** The installer script usually creates and enables a systemd service automatically. Confirm it is running:
 
 ```bash
 sudo systemctl status ollama
@@ -87,6 +91,8 @@ sudo systemctl enable ollama
 sudo systemctl start ollama
 ```
 
+**macOS / Windows:** Ollama runs from the menu bar or system tray; no extra service setup needed.
+
 The service starts Ollama in server mode, listening on **`http://localhost:11434`** by default.
 
 ### Verify the API
@@ -95,13 +101,13 @@ The service starts Ollama in server mode, listening on **`http://localhost:11434
 curl http://localhost:11434/api/tags
 ```
 
-This should return a JSON object listing your installed models (including `llama3.2:1b`).
+This should return a JSON object listing your installed models (including `llama3.2:8b`).
 
 ### Test a Chat Completion via the API
 
 ```bash
 curl -s http://localhost:11434/api/chat -d '{
-  "model": "llama3.2:1b",
+  "model": "llama3.2:8b",
   "messages": [
     {"role": "user", "content": "Hello, who are you?"}
   ],
@@ -113,7 +119,7 @@ You should see a JSON response with the model's reply.
 
 ---
 
-## Ollama Service Configuration
+## Ollama Service Configuration (Linux)
 
 The service configuration lives at `/etc/systemd/system/ollama.service`. Common tweaks:
 
@@ -162,12 +168,12 @@ Reload and restart as above.
 
 | Resource | Approximate Usage |
 |----------|-------------------|
-| **RAM** | 1--2 GB while the model is loaded |
-| **Disk** | ~1 GB for the Q4_K_M quantised model |
-| **CPU** | All cores utilised during inference |
+| **RAM** | 4--6 GB while the 8B model is loaded |
+| **Disk** | ~5 GB for the quantised 8B model |
+| **CPU** | All cores utilised during inference (or GPU on Apple Metal / NVIDIA) |
 | **Idle** | Model is unloaded from RAM after 5 minutes of inactivity (configurable) |
 
-On a 16 GB machine, the OS and Ollama with the 1B model loaded will typically use 3--4 GB total, leaving plenty of headroom.
+On a 16 GB machine, the OS and Ollama with the 8B model loaded will typically use 6--8 GB total, leaving headroom.
 
 ---
 
@@ -176,13 +182,13 @@ On a 16 GB machine, the OS and Ollama with the 1B model loaded will typically us
 | Command | Description |
 |---------|-------------|
 | `ollama list` | Show installed models |
-| `ollama pull llama3.2:1b` | Download or update the model |
-| `ollama rm llama3.2:1b` | Remove the model |
-| `ollama run llama3.2:1b` | Interactive chat |
-| `ollama show llama3.2:1b` | Show model details (parameters, quantisation, etc.) |
+| `ollama pull llama3.2:8b` | Download or update the model |
+| `ollama rm llama3.2:8b` | Remove the model |
+| `ollama run llama3.2:8b` | Interactive chat |
+| `ollama show llama3.2:8b` | Show model details (parameters, quantisation, etc.) |
 | `ollama ps` | Show currently loaded models and their memory usage |
-| `sudo systemctl restart ollama` | Restart the Ollama service |
-| `journalctl -u ollama -f` | Tail the Ollama service logs |
+| `sudo systemctl restart ollama` | Restart the Ollama service (Linux) |
+| `journalctl -u ollama -f` | Tail the Ollama service logs (Linux) |
 
 ---
 

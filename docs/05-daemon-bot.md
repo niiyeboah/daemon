@@ -1,6 +1,6 @@
 # 5 -- Daemon Bot Setup
 
-With Ollama running and Llama 3.2 1B downloaded, it is time to give your assistant its identity. **Daemon** is the personality and interface layer that sits on top of Ollama.
+With Ollama running and Llama 3.2 8B downloaded, it is time to give your assistant its identity. **Daemon** is the personality and interface layer that sits on top of Ollama.
 
 This guide covers two approaches -- pick the one that fits your needs:
 
@@ -15,7 +15,7 @@ This guide covers two approaches -- pick the one that fits your needs:
 
 Pre-built **daemon-setup** binaries for Windows, Linux, and macOS are available on [GitHub Releases](https://github.com/niiyeboah/daemon/releases). Download the file for your OS, or build from source (see the repo README).
 
-When you run **daemon-setup** with no arguments in a terminal, it starts an interactive menu. You can choose to check prerequisites, write the Modelfile, create the daemon model, add the shell alias, run a full setup, or view the guide. You will be prompted for paths and model names with sensible defaults (e.g. `~/Modelfile`, model name `daemon`, base model `llama3.2:1b`). To use the CLI non-interactively (e.g. in scripts), run a subcommand directly: `daemon-setup check`, `daemon-setup init`, `daemon-setup setup --yes`, etc.
+When you run **daemon-setup** with no arguments in a terminal, it starts an interactive menu. You can choose to check prerequisites, write the Modelfile, create the daemon model, add the shell alias, run a full setup, or view the guide. You will be prompted for paths and model names with sensible defaults (e.g. `~/Modelfile`, model name `daemon`, base model `llama3.2:8b`). To use the CLI non-interactively (e.g. in scripts), run a subcommand directly: `daemon-setup check`, `daemon-setup init`, `daemon-setup setup --yes`, etc.
 
 ---
 
@@ -34,7 +34,7 @@ nano ~/Modelfile
 Paste the following:
 
 ```dockerfile
-FROM llama3.2:1b
+FROM llama3.2:8b
 
 PARAMETER temperature 0.7
 PARAMETER top_p 0.9
@@ -57,7 +57,7 @@ Verify:
 ollama list
 ```
 
-You should now see a `daemon` model alongside the base `llama3.2:1b`.
+You should now see a `daemon` model alongside the base `llama3.2:8b`.
 
 ### 3. Run Daemon
 
@@ -122,7 +122,7 @@ nano ~/daemon-bot/daemon.py
 
 ```python
 #!/usr/bin/env python3
-"""Daemon -- local personal assistant powered by Llama 3.2 1B via Ollama."""
+"""Daemon -- local personal assistant powered by Llama 3.2 8B via Ollama."""
 
 import json
 import sys
@@ -130,7 +130,7 @@ import sys
 import requests
 
 OLLAMA_URL = "http://localhost:11434/api/chat"
-MODEL = "llama3.2:1b"
+MODEL = "llama3.2:8b"
 
 SYSTEM_PROMPT = (
     "You are Daemon, a helpful and concise personal assistant running locally "

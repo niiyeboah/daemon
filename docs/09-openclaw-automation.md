@@ -60,7 +60,7 @@ OpenClaw supports **skills** — pre-built workflows (e.g. summarisation, remind
 
 ### 3. Set up scheduled jobs
 
-Configure the Gateway so the assistant runs tasks on a schedule: e.g. daily briefings, reminder digests, or periodic checks. That way your personal employee works in the background even when you are not chatting. Use the OpenClaw dashboard or CLI to define jobs and triggers; see OpenClaw’s docs on job scheduling.
+Configure the Gateway so the assistant runs tasks on a schedule: e.g. daily briefings, reminder digests, or periodic checks. That way your personal employee works in the background even when you are not chatting. Use the OpenClaw dashboard or CLI to define jobs and triggers; see OpenClaw's docs on job scheduling.
 
 ### 4. Run 24/7 (optional)
 
@@ -70,11 +70,10 @@ To have your assistant always on, run the OpenClaw Gateway 24/7 — for example 
 
 ## Model choice
 
-OpenClaw requires a **16k context window** so that skills and system prompts fit comfortably. The recommended model is **Llama 3.2 1B** (`daemon-lite`), which provides fast inference even on low-power CPUs (e.g. Intel N100/N150).
+OpenClaw requires a **16k context window** so that skills and system prompts fit comfortably.
 
-1. Pull the model: `ollama pull llama3.2:1b`
-2. Create the Daemon variant: `daemon-setup init --lite` (creates the `daemon-lite` model with the same system prompt).
-3. Point OpenClaw at `ollama/daemon-lite` in your config (see below). Use `contextWindow: 16384` and `maxTokens: 8192` in the explicit provider config.
+- **Local route (M4 Mac Mini or capable hardware):** Use Ollama + **llama3.2:8b** (or a daemon variant built from it). The 8B model fits well on 16GB and benefits from M4's Metal acceleration (or GPU on other platforms). Pull the model: `ollama pull llama3.2:8b`, then create the Daemon model with `daemon-setup init` and point OpenClaw at `ollama/daemon` or `ollama/llama3.2:8b`.
+- **Beelink / low-power route:** We recommend using **API keys** for Gemini, OpenAI, or Claude instead of local inference to avoid slow inference and "inference too slow" errors. Get keys from [Google AI Studio](https://aistudio.google.com/), [OpenAI Platform](https://platform.openai.com/), or [Anthropic Console](https://console.anthropic.com/), then configure via the desktop app Settings (API Keys card) or via CLI: `openclaw onboard --auth-choice gemini-api-key` (or `openai-api-key` / `anthropic-api-key`).
 
 ---
 
@@ -82,7 +81,7 @@ OpenClaw requires a **16k context window** so that skills and system prompts fit
 
 So that OpenClaw uses your existing Daemon (Ollama) instead of a cloud provider, configure the Ollama provider and set the default model. Restart the gateway after any config change: `openclaw gateway restart`.
 
-**Prerequisite:** Ollama must be running and your chosen model available. Check with `ollama list` (you should see `daemon`, `daemon-lite`, or `llama3.2:1b`).
+**Prerequisite:** Ollama must be running and your chosen model available. Check with `ollama list` (you should see `daemon` or `llama3.2:8b`).
 
 ### Option A — Auto-discovery
 
@@ -94,7 +93,7 @@ The simplest way is to let OpenClaw discover models from your local Ollama insta
    export OLLAMA_API_KEY="ollama-local"
    ```
 
-   To make it persistent, add that line to your shell profile (`~/.bashrc`, `~/.zshrc`) or set it in OpenClaw’s environment.
+   To make it persistent, add that line to your shell profile (`~/.bashrc`, `~/.zshrc`) or set it in OpenClaw's environment.
 
 2. Do **not** define an explicit `models.providers.ollama` entry in your config. OpenClaw will then auto-discover models at `http://127.0.0.1:11434`. Note: auto-discovery only includes models that report **tool** support. If your Daemon model does not appear, use Option B.
 
@@ -112,11 +111,11 @@ The simplest way is to let OpenClaw discover models from your local Ollama insta
    }
    ```
 
-   Use `ollama/daemon` or `ollama/daemon-lite`, or `ollama/llama3.2:1b` for the base model. Restart the gateway and verify with `openclaw models list` and `openclaw models status`.
+   Use `ollama/daemon` or `ollama/llama3.2:8b` for the base model. Restart the gateway and verify with `openclaw models list` and `openclaw models status`.
 
 ### Option B — Explicit config
 
-If your model does not appear in auto-discovery (e.g. the Daemon model does not advertise tool support), add an explicit Ollama provider in `~/.openclaw/openclaw.json`. OpenClaw requires a 16k context window; for **daemon-lite** (1B) use:
+If your model does not appear in auto-discovery (e.g. the Daemon model does not advertise tool support), add an explicit Ollama provider in `~/.openclaw/openclaw.json`. OpenClaw requires a 16k context window; for **daemon** (8B) use:
 
 ```json
 {
@@ -128,8 +127,8 @@ If your model does not appear in auto-discovery (e.g. the Daemon model does not 
         "api": "ollama",
         "models": [
           {
-            "id": "daemon-lite",
-            "name": "Daemon (lite)",
+            "id": "daemon",
+            "name": "Daemon",
             "contextWindow": 16384,
             "maxTokens": 8192
           }
@@ -139,13 +138,13 @@ If your model does not appear in auto-discovery (e.g. the Daemon model does not 
   },
   "agents": {
     "defaults": {
-      "model": { "primary": "ollama/daemon-lite" }
+      "model": { "primary": "ollama/daemon" }
     }
   }
 }
 ```
 
-Use the model `id` that matches `ollama list` (e.g. `daemon`, `daemon-lite`, `llama3.2:1b`). For other hosts or the legacy OpenAI-compatible endpoint, see the [OpenClaw Ollama provider docs](https://docs.openclaw.ai/providers/ollama).
+Use the model `id` that matches `ollama list` (e.g. `daemon`, `llama3.2:8b`). For other hosts or the legacy OpenAI-compatible endpoint, see the [OpenClaw Ollama provider docs](https://docs.openclaw.ai/providers/ollama).
 
 ### Verification
 

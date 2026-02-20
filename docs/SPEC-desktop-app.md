@@ -150,7 +150,7 @@ A step-by-step guided flow that replaces the manual docs. Each step shows progre
 | 1 | **Detect OS** | Auto-detect Windows/Ubuntu/macOS. Display platform badge. | `std::env::consts::OS` in Rust |
 | 2 | **Check Ollama** | Verify Ollama is installed and the API is reachable. | Run `daemon-setup check --skip-api` then `GET http://localhost:11434/api/tags` |
 | 3 | **Install Ollama** (if missing) | Guide user to install Ollama. Show platform-specific instructions and a "Check again" button. On Ubuntu, offer to run the installer script with user confirmation. | Open `https://ollama.com` in browser or run `curl -fsSL https://ollama.com/install.sh \| sh` via shell plugin |
-| 4 | **Pull model** | Download `llama3.2:1b`. Show progress bar with download percentage. | Run `ollama pull llama3.2:1b`, parse progress lines from stdout |
+| 4 | **Pull model** | Download `llama3.2:8b`. Show progress bar with download percentage. | Run `ollama pull llama3.2:8b`, parse progress lines from stdout |
 | 5 | **Create Daemon model** | Write Modelfile and run `ollama create daemon`. | Run `daemon-setup init --yes` sidecar |
 | 6 | **Test inference** | Send a test prompt and display the response. | `POST http://localhost:11434/api/chat` with `{"model":"daemon","messages":[{"role":"user","content":"Hello, who are you?"}],"stream":false}` |
 | 7 | **Add shell alias** (optional) | Offer to add the `daemon` alias. | Run `daemon-setup alias` sidecar |
@@ -173,9 +173,9 @@ A real-time health overview of the entire Daemon stack. Auto-refreshes every 10 
 |-------|--------|---------|-----------|
 | **Ollama installed** | `which ollama` or `where ollama` | Binary found in PATH | Not found -- show install link |
 | **Ollama API running** | `GET http://localhost:11434/` | 200 OK | Connection refused -- show "start Ollama" instructions |
-| **Base model available** | `GET http://localhost:11434/api/tags`, check for `llama3.2:1b` | Present | Missing -- offer "Pull model" button |
+| **Base model available** | `GET http://localhost:11434/api/tags`, check for `llama3.2:8b` | Present | Missing -- offer "Pull model" button |
 | **Daemon model available** | Same endpoint, check for `daemon` | Present | Missing -- offer "Create model" button |
-| **Model loaded in memory** | `GET http://localhost:11434/api/ps` | `daemon` or `llama3.2:1b` listed | Not loaded (normal if idle > 5 min) |
+| **Model loaded in memory** | `GET http://localhost:11434/api/ps` | `daemon` or `llama3.2:8b` listed | Not loaded (normal if idle > 5 min) |
 | **Inference working** | Timed test prompt to `/api/chat` | Response received, latency shown | Timeout or error -- show troubleshooting tips |
 | **Inference speed** | Parse `eval_count` and `eval_duration` from chat response | Show tokens/sec (e.g., "18 tok/s") | Below threshold -- suggest reducing context |
 | **System RAM** | `sysinfo` crate in Rust | Show total/available/used | Warning if < 2 GB available |
@@ -211,7 +211,7 @@ A guided flow for connecting WhatsApp as an OpenClaw channel.
 | 2 | **Install OpenClaw** (if missing) | Run the install script: `curl -fsSL https://openclaw.ai/install.sh \| bash`. Show progress. |
 | 3 | **Run onboarding** (if first time) | Run `openclaw onboard --install-daemon`. Stream output to a terminal view in the app. |
 | 4 | **Connect WhatsApp channel** | Run `openclaw plugins enable whatsapp` (WhatsApp is a disabled-by-default plugin), then `openclaw channels login --channel whatsapp`. Display the QR code (from stdout or the gateway UI) within the app for the user to scan with their phone. |
-| 5 | **Configure Daemon model** | Set `ollama/daemon` (or `ollama/daemon-lite`) as the default model in `~/.openclaw/openclaw.json`. Write the explicit provider config with `contextWindow: 16384` and `maxTokens: 8192`. |
+| 5 | **Configure Daemon model** | Set `ollama/daemon` (or `ollama/llama3.2:8b`) as the default model in `~/.openclaw/openclaw.json`. Write the explicit provider config with `contextWindow: 16384` and `maxTokens: 8192`. |
 | 6 | **Restart gateway** | Run `openclaw gateway restart`. |
 | 7 | **Test** | Send a test message via the OpenClaw dashboard or CLI. Verify response comes back. |
 | 8 | **Done** | Show success screen. Explain that Daemon will now respond to WhatsApp messages. |
@@ -234,7 +234,7 @@ A built-in chat interface for talking to the local Daemon model.
 | **Message input** | Text area with send button. Enter to send, Shift+Enter for newline. |
 | **Streaming responses** | Use Ollama's streaming API (`"stream": true`). Display tokens as they arrive for a responsive feel. |
 | **Conversation history** | Messages persist in the current session. Option to clear chat. History is stored locally via `@tauri-apps/plugin-store`, not sent anywhere. |
-| **Model selector** | Dropdown to switch between available models (e.g., `daemon`, `daemon-lite`, `llama3.2:1b`). Populated from `GET /api/tags`. |
+| **Model selector** | Dropdown to switch between available models (e.g., `daemon`, `llama3.2:8b`). Populated from `GET /api/tags`. |
 | **Inference stats** | After each response, show: tokens generated, time taken, tokens/sec. Parsed from the Ollama API response metadata. |
 | **Connection status** | Indicator showing whether Ollama is reachable. If not, show a reconnect banner. |
 | **System prompt display** | Collapsible section showing the current system prompt. |
@@ -421,8 +421,8 @@ async fn setup_check() -> Result<SetupStatus, String>
 // Runs daemon-setup check via sidecar, parses output
 
 #[tauri::command]
-async fn setup_init(lite: bool) -> Result<(), String>
-// Runs daemon-setup init [--lite] --yes via sidecar
+async fn setup_init() -> Result<(), String>
+// Runs daemon-setup init via sidecar
 
 #[tauri::command]
 async fn setup_alias() -> Result<(), String>

@@ -117,6 +117,17 @@ export interface OpenClawQrEvent {
   data: string;
 }
 
+export interface ApiKeyStatus {
+  configured: boolean;
+  masked: string | null;
+}
+
+export interface ApiKeysStatus {
+  gemini: ApiKeyStatus;
+  openai: ApiKeyStatus;
+  anthropic: ApiKeyStatus;
+}
+
 // Settings types
 
 export type Theme = "light" | "dark" | "system";

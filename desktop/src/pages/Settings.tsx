@@ -1,11 +1,34 @@
-import { useEffect, useState } from "react";
-import { Monitor, Moon, Sun } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { Key, Monitor, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSettings } from "@/hooks/useSettings";
-import { ollamaListModels } from "@/lib/tauri";
+import {
+  ollamaListModels,
+  openclawGetApiKeys,
+  openclawRemoveApiKey,
+  openclawSetApiKey,
+} from "@/lib/tauri";
 import { cn } from "@/lib/utils";
-import type { ModelInfo, Theme } from "@/types";
+import type { ApiKeysStatus, ModelInfo, Theme } from "@/types";
+
+const API_KEY_PROVIDERS = [
+  {
+    id: "gemini" as const,
+    label: "Gemini",
+    getKeyUrl: "https://aistudio.google.com/apikey",
+  },
+  {
+    id: "openai" as const,
+    label: "OpenAI",
+    getKeyUrl: "https://platform.openai.com/api-keys",
+  },
+  {
+    id: "anthropic" as const,
+    label: "Claude (Anthropic)",
+    getKeyUrl: "https://console.anthropic.com/settings/keys",
+  },
+] as const;
 
 const THEME_OPTIONS: { value: Theme; label: string; icon: React.ElementType }[] = [
   { value: "light", label: "Light", icon: Sun },
@@ -26,12 +49,26 @@ export default function Settings() {
 
   const [models, setModels] = useState<ModelInfo[]>([]);
   const [promptDraft, setPromptDraft] = useState(systemPrompt);
+  const [apiKeys, setApiKeys] = useState<ApiKeysStatus | null>(null);
+  const [apiKeyDrafts, setApiKeyDrafts] = useState<Record<string, string>>({});
+  const [apiKeySaving, setApiKeySaving] = useState<string | null>(null);
+  const [apiKeyError, setApiKeyError] = useState<string | null>(null);
+
+  const loadApiKeys = useCallback(() => {
+    openclawGetApiKeys()
+      .then(setApiKeys)
+      .catch(() => setApiKeys(null));
+  }, []);
 
   useEffect(() => {
     ollamaListModels()
       .then(setModels)
       .catch(() => setModels([]));
   }, []);
+
+  useEffect(() => {
+    loadApiKeys();
+  }, [loadApiKeys]);
 
   // Sync draft when settings load
   useEffect(() => {
@@ -128,6 +165,107 @@ export default function Settings() {
                 Save
               </Button>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* API Keys (OpenClaw) */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Key className="size-4" />
+              API Keys (OpenClaw)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-xs text-muted-foreground">
+              Used by OpenClaw for cloud models. For Beelink or low-power devices,
+              use these instead of local Ollama.
+            </p>
+            {apiKeyError && (
+              <p className="text-xs text-destructive">{apiKeyError}</p>
+            )}
+            {API_KEY_PROVIDERS.map(({ id, label, getKeyUrl }) => {
+              const status = apiKeys?.[id];
+              const draft = apiKeyDrafts[id] ?? "";
+              const isSaving = apiKeySaving === id;
+              return (
+                <div
+                  key={id}
+                  className="flex flex-col gap-2 rounded-lg border p-3"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">{label}</span>
+                    {status?.configured && status.masked && (
+                      <span className="text-xs text-muted-foreground">
+                        {status.masked}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <input
+                      type="password"
+                      placeholder={status?.configured ? "Enter new key to replace" : "Paste API key"}
+                      value={draft}
+                      onChange={(e) => {
+                        setApiKeyError(null);
+                        setApiKeyDrafts((prev) => ({ ...prev, [id]: e.target.value }));
+                      }}
+                      className="flex-1 rounded-md border bg-background px-3 py-2 text-sm"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={!draft.trim() || isSaving}
+                      onClick={async () => {
+                        setApiKeySaving(id);
+                        setApiKeyError(null);
+                        try {
+                          await openclawSetApiKey(id, draft.trim());
+                          setApiKeyDrafts((prev) => ({ ...prev, [id]: "" }));
+                          loadApiKeys();
+                        } catch (err) {
+                          setApiKeyError(String(err));
+                        } finally {
+                          setApiKeySaving(null);
+                        }
+                      }}
+                    >
+                      {isSaving ? "…" : "Save"}
+                    </Button>
+                    {status?.configured && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={isSaving}
+                        onClick={async () => {
+                          setApiKeySaving(id);
+                          setApiKeyError(null);
+                          try {
+                            await openclawRemoveApiKey(id);
+                            setApiKeyDrafts((prev) => ({ ...prev, [id]: "" }));
+                            loadApiKeys();
+                          } catch (err) {
+                            setApiKeyError(String(err));
+                          } finally {
+                            setApiKeySaving(null);
+                          }
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    )}
+                  </div>
+                  <a
+                    href={getKeyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-primary underline"
+                  >
+                    Get key
+                  </a>
+                </div>
+              );
+            })}
           </CardContent>
         </Card>
       </div>

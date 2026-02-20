@@ -20,10 +20,10 @@
 
 | Layer             | Component                                                                                                                |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Hardware          | [Beelink S13 Pro](docs/01-hardware.md) mini PC                                                                           |
-| Operating System  | [Windows](docs/02-windows-setup.md) (Beelink S13 preloaded) or [Ubuntu Desktop 24.04 LTS](docs/02b-ubuntu-desktop.md) |
+| Hardware          | [M4 Mac Mini](docs/01-hardware.md) (local route) or [Beelink S13 Pro](docs/01-hardware.md) (cloud API route)          |
+| Operating System  | macOS (M4) or [Windows](docs/02-windows-setup.md) (Beelink S13 preloaded) or [Ubuntu Desktop 24.04 LTS](docs/02b-ubuntu-desktop.md) |
 | Inference Runtime | [Ollama](docs/04-ollama-llama.md)                                                                                        |
-| Language Model    | [Llama 3.2 1B](docs/04-ollama-llama.md)                                                                                  |
+| Language Model    | [Llama 3.2 8B](docs/04-ollama-llama.md)                                                                                  |
 | Interface         | [Daemon bot](docs/05-daemon-bot.md) (CLI / API)                                                                          |
 
 ## What You Get
@@ -31,12 +31,12 @@
 After following the guides below you will have:
 
 - A Windows (or Ubuntu Desktop) machine running 24/7 on low-power hardware.
-- Llama 3.2 1B served locally by Ollama on port `11434`.
+- Llama 3.2 8B served locally by Ollama on port `11434`.
 - A personal assistant named **Daemon** reachable from the terminal or via a simple HTTP API from any device on your LAN.
 
 Optionally, add [OpenClaw](docs/09-openclaw-automation.md) to give Daemon channels, skills, and schedules so it can work for you like a personal employee.
 
-The Beelink S13 Pro comes preloaded with Windows, making it the simplest setup path. Alternatively, install [Ubuntu Desktop](docs/02b-ubuntu-desktop.md) if you prefer Linux.
+For local inference we recommend the **M4 Mac Mini 16GB**; for a low-power always-on gateway with cloud APIs, the **Beelink S13 Pro** (Windows preloaded) is an option. See [Hardware](docs/01-hardware.md). Alternatively, install [Ubuntu Desktop](docs/02b-ubuntu-desktop.md) on Beelink if you prefer Linux.
 
 ## Setup Guides
 
@@ -44,11 +44,11 @@ Read these in order. Each guide picks up where the previous one left off.
 
 | #   | Guide                                            | Description                                                 |
 | --- | ------------------------------------------------ | ----------------------------------------------------------- |
-| 1   | [Hardware](docs/01-hardware.md)                  | Beelink S13 Pro variants, specs, and why this device fits   |
-| 2   | [Windows](docs/02-windows-setup.md)              | Run Daemon on Windows (Beelink S13 preloaded, recommended)  |
+| 1   | [Hardware](docs/01-hardware.md)                  | M4 Mac Mini (local) and Beelink S13 Pro (cloud API option)  |
+| 2   | [Windows](docs/02-windows-setup.md)              | Run Daemon on Windows (Beelink S13 preloaded)                |
 | 2b  | [Ubuntu Desktop](docs/02b-ubuntu-desktop.md)     | Install Ubuntu Desktop 24.04 LTS as an alternative to Windows |
 | 3   | [Post-Install](docs/03-post-install.md)          | System updates, dependencies, timezone, and user setup (Ubuntu) |
-| 4   | [Ollama + Llama 3.2 1B](docs/04-ollama-llama.md) | Install Ollama, pull the model, run it as a service         |
+| 4   | [Ollama + Llama 3.2 8B](docs/04-ollama-llama.md) | Install Ollama, pull the model, run it as a service         |
 | 5   | [Daemon Bot](docs/05-daemon-bot.md)              | Configure the "Daemon" personality via CLI and optional API |
 | 6   | [Security](docs/06-security.md)                  | Firewall, SSH hardening, and automatic updates              |
 | 7   | [Troubleshooting](docs/07-troubleshooting.md)    | Common issues and how to fix them                           |
@@ -57,7 +57,7 @@ Read these in order. Each guide picks up where the previous one left off.
 
 ## Prerequisites
 
-- A Beelink S13 Pro (or similar mini PC with at least 8 GB RAM; 16 GB recommended). Comes preloaded with Windows.
+- An M4 Mac Mini 16GB (recommended for local inference) or a Beelink S13 Pro / similar mini PC (at least 8 GB RAM; 16 GB recommended; for Beelink we recommend cloud API keys). Beelink comes preloaded with Windows.
 - A USB flash drive (4 GB+) only if installing Ubuntu Desktop.
 - A wired keyboard and monitor for initial setup (can be removed after SSH/remote access is configured).
 - A wired Ethernet connection is recommended; Wi-Fi can be configured afterwards.
@@ -80,7 +80,7 @@ Once Ollama is installed and the base model is pulled (see [Setup Guides](#setup
    ./daemon-setup check
    ```
 
-   This verifies Ollama is in PATH and that the API is reachable, and that `llama3.2:1b` (and optionally the `daemon` model) are available. If something is missing, the command prints what to do.
+   This verifies Ollama is in PATH and that the API is reachable, and that `llama3.2:8b` (and optionally the `daemon` model) are available. If something is missing, the command prints what to do.
 
 4. **Create the Daemon model:**
 
@@ -106,7 +106,7 @@ Once Ollama is installed and the base model is pulled (see [Setup Guides](#setup
 
 Use `--yes` to skip confirmations.
 
-For full manual steps and alternatives (e.g. Python API script), see [Daemon Bot](docs/05-daemon-bot.md) and [Ollama + Llama 3.2 1B](docs/04-ollama-llama.md).
+For full manual steps and alternatives (e.g. Python API script), see [Daemon Bot](docs/05-daemon-bot.md) and [Ollama + Llama 3.2 8B](docs/04-ollama-llama.md).
 
 ## Development
 

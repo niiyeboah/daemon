@@ -54,13 +54,10 @@ pub async fn setup_check(app: AppHandle) -> Result<SetupStatus, String> {
 }
 
 #[tauri::command]
-pub async fn setup_init(app: AppHandle, lite: bool) -> Result<(), String> {
+pub async fn setup_init(app: AppHandle) -> Result<(), String> {
     let shell = app.shell();
 
-    let mut args = vec!["init"];
-    if lite {
-        args.push("--lite");
-    }
+    let args = vec!["init"];
 
     let (mut rx, _child) = shell
         .sidecar("daemon-setup")

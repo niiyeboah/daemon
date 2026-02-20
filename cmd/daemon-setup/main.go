@@ -180,7 +180,7 @@ func promptPathModelBase() (*pathModelBase, error) {
 		},
 		{
 			Name: "baseModel",
-			Prompt: &survey.Input{Message: "Base model (FROM):", Default: "llama3.2:1b"},
+			Prompt: &survey.Input{Message: "Base model (FROM):", Default: "llama3.2:8b"},
 			Transform: survey.TransformString(func(s string) string {
 				return strings.TrimSpace(s)
 			}),
@@ -278,7 +278,7 @@ func isOnlyCustomModelMissing(err error) bool {
 		return false
 	}
 	s := err.Error()
-	return s == "daemon model not found" || s == "daemon-lite model not found"
+	return s == "daemon model not found"
 }
 
 func newCheckCmd() *cobra.Command {
@@ -299,23 +299,17 @@ func newInitCmd() *cobra.Command {
 		modelfilePath string
 		modelName     string
 		baseModel     string
-		lite          bool
 	)
 	cmd := &cobra.Command{
 		Use:   "init",
 		Short: "Write the Modelfile and create the daemon model with ollama",
 		RunE: func(c *cobra.Command, args []string) error {
-			name, base := modelName, baseModel
-			if lite {
-				name, base = "daemon-lite", "llama3.2:1b"
-			}
-			return runInit(c.OutOrStdout(), c.ErrOrStderr(), modelfilePath, name, base)
+			return runInit(c.OutOrStdout(), c.ErrOrStderr(), modelfilePath, modelName, baseModel)
 		},
 	}
 	cmd.Flags().StringVar(&modelfilePath, "modelfile", "", "Path to write the Modelfile (default: $HOME/Modelfile)")
 	cmd.Flags().StringVar(&modelName, "model-name", "daemon", "Name of the custom model to create")
-	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:1b", "Base model in the Modelfile (FROM)")
-	cmd.Flags().BoolVar(&lite, "lite", false, "Use llama3.2:1b and create daemon-lite (faster inference for OpenClaw on low-power hardware)")
+	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:8b", "Base model in the Modelfile (FROM)")
 	return cmd
 }
 
@@ -324,23 +318,17 @@ func newModelfileCmd() *cobra.Command {
 		modelfilePath string
 		modelName     string
 		baseModel     string
-		lite          bool
 	)
 	cmd := &cobra.Command{
 		Use:   "modelfile",
 		Short: "Write the Modelfile only (no ollama create)",
 		RunE: func(c *cobra.Command, args []string) error {
-			name, base := modelName, baseModel
-			if lite {
-				name, base = "daemon-lite", "llama3.2:1b"
-			}
-			return runModelfile(c.OutOrStdout(), modelfilePath, name, base)
+			return runModelfile(c.OutOrStdout(), modelfilePath, modelName, baseModel)
 		},
 	}
 	cmd.Flags().StringVar(&modelfilePath, "modelfile", "", "Path to write the Modelfile (default: $HOME/Modelfile)")
 	cmd.Flags().StringVar(&modelName, "model-name", "daemon", "Name of the custom model (for reference)")
-	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:1b", "Base model in the Modelfile (FROM)")
-	cmd.Flags().BoolVar(&lite, "lite", false, "Use llama3.2:1b for daemon-lite (faster inference for OpenClaw on low-power hardware)")
+	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:8b", "Base model in the Modelfile (FROM)")
 	return cmd
 }
 
@@ -363,24 +351,18 @@ func newSetupCmd() *cobra.Command {
 		modelfilePath string
 		modelName     string
 		baseModel     string
-		lite          bool
 	)
 	cmd := &cobra.Command{
 		Use:   "setup",
 		Short: "Run check, then init, then alias (full setup)",
 		RunE: func(c *cobra.Command, args []string) error {
-			name, base := modelName, baseModel
-			if lite {
-				name, base = "daemon-lite", "llama3.2:1b"
-			}
-			return runSetup(c.OutOrStdout(), c.ErrOrStderr(), yes, modelfilePath, name, base)
+			return runSetup(c.OutOrStdout(), c.ErrOrStderr(), yes, modelfilePath, modelName, baseModel)
 		},
 	}
 	cmd.Flags().BoolVar(&yes, "yes", false, "Skip confirmations")
 	cmd.Flags().StringVar(&modelfilePath, "modelfile", "", "Path to write the Modelfile (default: $HOME/Modelfile)")
 	cmd.Flags().StringVar(&modelName, "model-name", "daemon", "Name of the custom model to create")
-	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:1b", "Base model in the Modelfile (FROM)")
-	cmd.Flags().BoolVar(&lite, "lite", false, "Use llama3.2:1b and create daemon-lite (faster inference for OpenClaw on low-power hardware)")
+	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:8b", "Base model in the Modelfile (FROM)")
 	return cmd
 }
 
@@ -409,7 +391,7 @@ func printGuide(w io.Writer) {
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Prerequisites")
 	fmt.Fprintln(w, "  • Ollama installed and in PATH")
-	fmt.Fprintln(w, "  • Base model pulled (e.g. llama3.2:1b)")
+	fmt.Fprintln(w, "  • Base model pulled (e.g. llama3.2:8b)")
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Commands")
 	fmt.Fprintln(w, "  check     Verify Ollama is installed and required models are available")
@@ -429,9 +411,8 @@ func printGuide(w io.Writer) {
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "  Or one-shot:  daemon-setup setup --yes")
 	fmt.Fprintln(w, "")
-	fmt.Fprintln(w, "  For OpenClaw on low-power hardware (e.g. N100), use the 1B model for faster inference:")
-	fmt.Fprintln(w, "  ollama pull llama3.2:1b")
-	fmt.Fprintln(w, "  daemon-setup init --lite   # creates daemon-lite; set OpenClaw default to ollama/daemon-lite")
+	fmt.Fprintln(w, "  For OpenClaw on low-power hardware (e.g. N100), we recommend cloud API keys (Gemini, OpenAI, Claude)")
+	fmt.Fprintln(w, "  instead of local inference. See docs/09-openclaw-automation.md. For local inference use llama3.2:8b.")
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Examples")
 	if runtime.GOOS == "windows" {

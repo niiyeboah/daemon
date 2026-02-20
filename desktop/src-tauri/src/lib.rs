@@ -28,6 +28,9 @@ pub fn run() {
             openclaw::openclaw_connect_whatsapp,
             openclaw::openclaw_configure_model,
             openclaw::openclaw_gateway_restart,
+            openclaw::openclaw_get_api_keys,
+            openclaw::openclaw_set_api_key,
+            openclaw::openclaw_remove_api_key,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

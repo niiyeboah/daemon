@@ -15,6 +15,7 @@ import type {
   OpenClawStatus,
   OpenClawLogEvent,
   OpenClawQrEvent,
+  ApiKeysStatus,
 } from "@/types";
 
 // Ollama commands
@@ -53,8 +54,8 @@ export async function setupCheck(): Promise<SetupStatus> {
   return invoke("setup_check");
 }
 
-export async function setupInit(lite: boolean): Promise<void> {
-  return invoke("setup_init", { lite });
+export async function setupInit(): Promise<void> {
+  return invoke("setup_init");
 }
 
 export async function setupAlias(): Promise<void> {
@@ -115,6 +116,18 @@ export async function openclawConfigureModel(model: string): Promise<void> {
 
 export async function openclawGatewayRestart(): Promise<void> {
   return invoke("openclaw_gateway_restart");
+}
+
+export async function openclawGetApiKeys(): Promise<ApiKeysStatus> {
+  return invoke("openclaw_get_api_keys");
+}
+
+export async function openclawSetApiKey(provider: string, key: string): Promise<void> {
+  return invoke("openclaw_set_api_key", { provider, key });
+}
+
+export async function openclawRemoveApiKey(provider: string): Promise<void> {
+  return invoke("openclaw_remove_api_key", { provider });
 }
 
 // OpenClaw event listeners

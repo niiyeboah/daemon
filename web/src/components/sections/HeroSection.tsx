@@ -1,10 +1,10 @@
 import { Card, CardContent } from '@/components/ui/card'
 
 const stack = [
-  { layer: 'Hardware', component: 'Beelink S13 Pro mini PC' },
-  { layer: 'Operating System', component: 'Windows (preloaded) or Ubuntu Desktop 24.04 LTS' },
+  { layer: 'Hardware', component: 'M4 Mac Mini (local) or Beelink S13 Pro (cloud API option)' },
+  { layer: 'Operating System', component: 'macOS, Windows (Beelink preloaded), or Ubuntu Desktop 24.04 LTS' },
   { layer: 'Inference Runtime', component: 'Ollama' },
-  { layer: 'Language Model', component: 'Llama 3.2 1B' },
+  { layer: 'Language Model', component: 'Llama 3.2 8B' },
   { layer: 'Interface', component: 'Daemon bot (CLI / API)' },
 ]
 

@@ -128,4 +128,4 @@ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 
 ---
 
-Next: [Ollama + Llama 3.2 1B](04-ollama-llama.md)
+Next: [Ollama + Llama 3.2 8B](04-ollama-llama.md)

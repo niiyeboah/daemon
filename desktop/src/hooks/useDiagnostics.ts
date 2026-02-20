@@ -53,7 +53,7 @@ export function useDiagnostics() {
             await ollamaPullModel("llama3.2:1b");
             break;
           case "create-daemon-model":
-            await setupInit(false);
+            await setupInit();
             break;
           default:
             console.warn("Unknown diagnostic action:", command);

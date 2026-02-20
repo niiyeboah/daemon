@@ -54,6 +54,16 @@ fn openclaw_config_path() -> PathBuf {
         .join("openclaw.json")
 }
 
+fn openclaw_agent_auth_path() -> PathBuf {
+    dirs::home_dir()
+        .unwrap_or_else(|| PathBuf::from("~"))
+        .join(".openclaw")
+        .join("agents")
+        .join("main")
+        .join("agent")
+        .join("auth-profiles.json")
+}
+
 /// Ensures gateway.mode=local in ~/.openclaw/openclaw.json so the gateway can start
 /// (OpenClaw blocks startup unless this is set or --allow-unconfigured is passed).
 /// For local mode, removes gateway.auth to avoid "device token mismatch" errors that
@@ -636,4 +646,169 @@ pub async fn openclaw_configure_model(model: String) -> Result<(), String> {
 #[tauri::command]
 pub async fn openclaw_gateway_restart(app: AppHandle) -> Result<(), String> {
     spawn_and_stream(&app, "openclaw", &["gateway", "restart"]).await
+}
+
+// --- API Keys (OpenClaw cloud providers) ---
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ApiKeyStatus {
+    pub configured: bool,
+    pub masked: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ApiKeysStatus {
+    pub gemini: ApiKeyStatus,
+    pub openai: ApiKeyStatus,
+    pub anthropic: ApiKeyStatus,
+}
+
+/// Map our provider id to OpenClaw profile key (e.g. "gemini" -> "google:default").
+fn openclaw_profile_key(provider: &str) -> Option<&'static str> {
+    match provider.to_lowercase().as_str() {
+        "gemini" => Some("google:default"),
+        "openai" => Some("openai:default"),
+        "anthropic" => Some("anthropic:default"),
+        _ => None,
+    }
+}
+
+/// OpenClaw provider name for auth profile (google, openai, anthropic).
+fn openclaw_provider_name(provider: &str) -> Option<&'static str> {
+    match provider.to_lowercase().as_str() {
+        "gemini" => Some("google"),
+        "openai" => Some("openai"),
+        "anthropic" => Some("anthropic"),
+        _ => None,
+    }
+}
+
+fn mask_key(key: &str) -> String {
+    if key.len() <= 4 {
+        return "••••".to_string();
+    }
+    format!("••••••••{}", &key[key.len().saturating_sub(4)..])
+}
+
+#[tauri::command]
+pub fn openclaw_get_api_keys() -> Result<ApiKeysStatus, String> {
+    let auth_path = openclaw_agent_auth_path();
+    let mut gemini = ApiKeyStatus {
+        configured: false,
+        masked: None,
+    };
+    let mut openai = ApiKeyStatus {
+        configured: false,
+        masked: None,
+    };
+    let mut anthropic = ApiKeyStatus {
+        configured: false,
+        masked: None,
+    };
+
+    if auth_path.exists() {
+        let content = std::fs::read_to_string(&auth_path)
+            .map_err(|e| format!("Failed to read auth profiles: {}", e))?;
+        let auth: serde_json::Value =
+            serde_json::from_str(&content).unwrap_or(serde_json::json!({}));
+        let obj = auth.as_object().ok_or("Auth profiles must be a JSON object")?;
+
+        for (profile_key, value) in obj {
+            let key_str = value
+                .get("key")
+                .and_then(|v| v.as_str())
+                .unwrap_or("");
+            if key_str.is_empty() {
+                continue;
+            }
+            let masked = mask_key(key_str);
+            match profile_key.as_str() {
+                "google:default" => {
+                    gemini.configured = true;
+                    gemini.masked = Some(masked);
+                }
+                "openai:default" => {
+                    openai.configured = true;
+                    openai.masked = Some(masked);
+                }
+                "anthropic:default" => {
+                    anthropic.configured = true;
+                    anthropic.masked = Some(masked);
+                }
+                _ => {}
+            }
+        }
+    }
+
+    Ok(ApiKeysStatus {
+        gemini,
+        openai,
+        anthropic,
+    })
+}
+
+#[tauri::command]
+pub fn openclaw_set_api_key(provider: String, key: String) -> Result<(), String> {
+    let profile_key = openclaw_profile_key(&provider)
+        .ok_or_else(|| format!("Unknown provider: {}", provider))?;
+    let openclaw_provider = openclaw_provider_name(&provider)
+        .ok_or_else(|| format!("Unknown provider: {}", provider))?;
+
+    let auth_path = openclaw_agent_auth_path();
+    if let Some(parent) = auth_path.parent() {
+        std::fs::create_dir_all(parent)
+            .map_err(|e| format!("Failed to create agent dir: {}", e))?;
+    }
+
+    let mut auth: serde_json::Value = if auth_path.exists() {
+        let content = std::fs::read_to_string(&auth_path)
+            .map_err(|e| format!("Failed to read auth profiles: {}", e))?;
+        serde_json::from_str(&content).unwrap_or(serde_json::json!({}))
+    } else {
+        serde_json::json!({})
+    };
+
+    let auth_obj = auth
+        .as_object_mut()
+        .ok_or("Auth profiles must be a JSON object")?;
+    auth_obj.insert(
+        profile_key.to_string(),
+        serde_json::json!({
+            "provider": openclaw_provider,
+            "mode": "api_key",
+            "key": key.trim()
+        }),
+    );
+
+    let content = serde_json::to_string_pretty(&auth)
+        .map_err(|e| format!("Failed to serialize auth profiles: {}", e))?;
+    std::fs::write(&auth_path, content)
+        .map_err(|e| format!("Failed to write auth profiles: {}", e))?;
+    Ok(())
+}
+
+#[tauri::command]
+pub fn openclaw_remove_api_key(provider: String) -> Result<(), String> {
+    let profile_key = openclaw_profile_key(&provider)
+        .ok_or_else(|| format!("Unknown provider: {}", provider))?;
+
+    let auth_path = openclaw_agent_auth_path();
+    if !auth_path.exists() {
+        return Ok(());
+    }
+
+    let content = std::fs::read_to_string(&auth_path)
+        .map_err(|e| format!("Failed to read auth profiles: {}", e))?;
+    let mut auth: serde_json::Value =
+        serde_json::from_str(&content).unwrap_or(serde_json::json!({}));
+    let auth_obj = auth
+        .as_object_mut()
+        .ok_or("Auth profiles must be a JSON object")?;
+    auth_obj.remove(profile_key);
+
+    let content = serde_json::to_string_pretty(&auth)
+        .map_err(|e| format!("Failed to serialize auth profiles: {}", e))?;
+    std::fs::write(&auth_path, content)
+        .map_err(|e| format!("Failed to write auth profiles: {}", e))?;
+    Ok(())
 }

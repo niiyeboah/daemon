@@ -174,7 +174,7 @@ export function useSetup() {
               addLog(`[${event.stream}] ${event.line}`);
             });
             try {
-              await setupInit(false);
+              await setupInit();
               addLog("Daemon model created successfully");
               updateStep(stepIndex, "done");
             } finally {

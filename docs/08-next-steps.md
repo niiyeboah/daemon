@@ -62,8 +62,8 @@ Ollama can host several models simultaneously. Consider:
 
 | Model | Use Case |
 |-------|----------|
-| `llama3.2:1b` | General assistant (Daemon default) |
-| `codellama:7b` | Code generation and review (if you upgrade RAM) |
+| `llama3.2:8b` | General assistant (Daemon default) |
+| `codellama:7b` | Code generation and review (if you have RAM) |
 | `mistral:7b` | Alternative general-purpose model (needs 8+ GB free RAM) |
 
 Switch models in the Modelfile or Python script by changing the model name.
@@ -85,7 +85,7 @@ If you later add an eGPU enclosure or move to a machine with a discrete NVIDIA G
 
 1. Install NVIDIA drivers and the CUDA toolkit.
 2. Reinstall Ollama (it auto-detects CUDA).
-3. Inference speed will jump dramatically -- 50--100+ tokens/second on a mid-range GPU with the 1B model.
+3. Inference speed will jump dramatically -- 50--100+ tokens/second on a mid-range GPU with the 8B model.
 
 ---
 

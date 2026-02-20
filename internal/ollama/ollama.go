@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	DefaultBaseModel = "llama3.2:1b"
+	DefaultBaseModel = "llama3.2:8b"
 	DefaultHost     = "http://localhost:11434"
 	apiTimeout      = 5 * time.Second
 )
@@ -26,7 +26,7 @@ type tagsResponse struct {
 
 // Check verifies that ollama is in PATH and optionally that the API is
 // reachable and that the base model and custom model exist.
-// If baseModel or customModel is empty, defaults are used (llama3.2:1b and "daemon").
+// If baseModel or customModel is empty, defaults are used (llama3.2:8b and "daemon").
 // Returns an error (and prints guidance) if something is missing.
 func Check(out io.Writer, skipAPI bool, baseModel, customModel string) error {
 	if baseModel == "" {
@@ -73,7 +73,7 @@ func Check(out io.Writer, skipAPI bool, baseModel, customModel string) error {
 
 	names := make(map[string]bool)
 	for _, m := range tags.Models {
-		// Model names can be "llama3.2:1b" or "daemon"
+		// Model names can be "llama3.2:8b" or "daemon"
 		names[m.Name] = true
 		// Also match without tag for "llama3.2"
 		if idx := strings.Index(m.Name, ":"); idx > 0 {
@@ -93,7 +93,7 @@ func Check(out io.Writer, skipAPI bool, baseModel, customModel string) error {
 
 	hasCustom := names[customModel]
 	if !hasCustom {
-		fmt.Fprintf(out, "Custom model %q not found. Run: daemon-setup init (or daemon-setup init --lite for daemon-lite)\n", customModel)
+		fmt.Fprintf(out, "Custom model %q not found. Run: daemon-setup init\n", customModel)
 		return fmt.Errorf("%s model not found", customModel)
 	}
 	fmt.Fprintf(out, "Custom model %s: present\n", customModel)
