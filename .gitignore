@@ -29,6 +29,7 @@ web/dist/
 desktop/node_modules/
 desktop/dist/
 desktop/src-tauri/bin/
+desktop/src-tauri/gen/
 desktop/src-tauri/target/
 
 # AI Agents
