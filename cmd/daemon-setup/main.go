@@ -127,7 +127,7 @@ func runInteractiveCheck(stdout io.Writer) error {
 	}, &skipAPI); err != nil {
 		return err
 	}
-	return ollama.Check(stdout, skipAPI)
+	return ollama.Check(stdout, skipAPI, "", "")
 }
 
 func defaultModelfilePathString() string {
@@ -242,9 +242,9 @@ func runModelfile(stdout io.Writer, modelfilePath, modelName, baseModel string) 
 }
 
 func runSetup(stdout, stderr io.Writer, yes bool, modelfilePath, modelName, baseModel string) error {
-	if err := ollama.Check(stdout, false); err != nil {
-		// If only daemon is missing, we can continue; if ollama or base model missing, stop
-		if !isOnlyDaemonMissing(err) {
+	if err := ollama.Check(stdout, false, baseModel, modelName); err != nil {
+		// If only the custom model is missing, we can continue; if ollama or base model missing, stop
+		if !isOnlyCustomModelMissing(err) {
 			return err
 		}
 	}
@@ -273,8 +273,12 @@ func runSetup(stdout, stderr io.Writer, yes bool, modelfilePath, modelName, base
 	return shell.AddAlias(stdout, "daemon", "ollama run "+modelName, false)
 }
 
-func isOnlyDaemonMissing(err error) bool {
-	return err != nil && (err.Error() == "daemon model not found" || fmt.Sprintf("%v", err) == "daemon model not found")
+func isOnlyCustomModelMissing(err error) bool {
+	if err == nil {
+		return false
+	}
+	s := err.Error()
+	return s == "daemon model not found" || s == "daemon-lite model not found"
 }
 
 func newCheckCmd() *cobra.Command {
@@ -283,7 +287,7 @@ func newCheckCmd() *cobra.Command {
 		Use:   "check",
 		Short: "Verify Ollama is installed and required models are available",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return ollama.Check(cmd.OutOrStdout(), skipAPI)
+			return ollama.Check(cmd.OutOrStdout(), skipAPI, "", "")
 		},
 	}
 	cmd.Flags().BoolVar(&skipAPI, "skip-api", false, "Only check that ollama is in PATH; do not query the API")
@@ -295,17 +299,23 @@ func newInitCmd() *cobra.Command {
 		modelfilePath string
 		modelName     string
 		baseModel     string
+		lite          bool
 	)
 	cmd := &cobra.Command{
 		Use:   "init",
 		Short: "Write the Modelfile and create the daemon model with ollama",
 		RunE: func(c *cobra.Command, args []string) error {
-			return runInit(c.OutOrStdout(), c.ErrOrStderr(), modelfilePath, modelName, baseModel)
+			name, base := modelName, baseModel
+			if lite {
+				name, base = "daemon-lite", "llama3.2:1b"
+			}
+			return runInit(c.OutOrStdout(), c.ErrOrStderr(), modelfilePath, name, base)
 		},
 	}
 	cmd.Flags().StringVar(&modelfilePath, "modelfile", "", "Path to write the Modelfile (default: $HOME/Modelfile)")
 	cmd.Flags().StringVar(&modelName, "model-name", "daemon", "Name of the custom model to create")
 	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:3b", "Base model in the Modelfile (FROM)")
+	cmd.Flags().BoolVar(&lite, "lite", false, "Use llama3.2:1b and create daemon-lite (faster inference for OpenClaw on low-power hardware)")
 	return cmd
 }
 
@@ -314,17 +324,23 @@ func newModelfileCmd() *cobra.Command {
 		modelfilePath string
 		modelName     string
 		baseModel     string
+		lite          bool
 	)
 	cmd := &cobra.Command{
 		Use:   "modelfile",
 		Short: "Write the Modelfile only (no ollama create)",
 		RunE: func(c *cobra.Command, args []string) error {
-			return runModelfile(c.OutOrStdout(), modelfilePath, modelName, baseModel)
+			name, base := modelName, baseModel
+			if lite {
+				name, base = "daemon-lite", "llama3.2:1b"
+			}
+			return runModelfile(c.OutOrStdout(), modelfilePath, name, base)
 		},
 	}
 	cmd.Flags().StringVar(&modelfilePath, "modelfile", "", "Path to write the Modelfile (default: $HOME/Modelfile)")
 	cmd.Flags().StringVar(&modelName, "model-name", "daemon", "Name of the custom model (for reference)")
 	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:3b", "Base model in the Modelfile (FROM)")
+	cmd.Flags().BoolVar(&lite, "lite", false, "Use llama3.2:1b for daemon-lite (faster inference for OpenClaw on low-power hardware)")
 	return cmd
 }
 
@@ -347,18 +363,24 @@ func newSetupCmd() *cobra.Command {
 		modelfilePath string
 		modelName     string
 		baseModel     string
+		lite          bool
 	)
 	cmd := &cobra.Command{
 		Use:   "setup",
 		Short: "Run check, then init, then alias (full setup)",
 		RunE: func(c *cobra.Command, args []string) error {
-			return runSetup(c.OutOrStdout(), c.ErrOrStderr(), yes, modelfilePath, modelName, baseModel)
+			name, base := modelName, baseModel
+			if lite {
+				name, base = "daemon-lite", "llama3.2:1b"
+			}
+			return runSetup(c.OutOrStdout(), c.ErrOrStderr(), yes, modelfilePath, name, base)
 		},
 	}
 	cmd.Flags().BoolVar(&yes, "yes", false, "Skip confirmations")
 	cmd.Flags().StringVar(&modelfilePath, "modelfile", "", "Path to write the Modelfile (default: $HOME/Modelfile)")
 	cmd.Flags().StringVar(&modelName, "model-name", "daemon", "Name of the custom model to create")
 	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:3b", "Base model in the Modelfile (FROM)")
+	cmd.Flags().BoolVar(&lite, "lite", false, "Use llama3.2:1b and create daemon-lite (faster inference for OpenClaw on low-power hardware)")
 	return cmd
 }
 
@@ -387,7 +409,7 @@ func printGuide(w io.Writer) {
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Prerequisites")
 	fmt.Fprintln(w, "  • Ollama installed and in PATH")
-	fmt.Fprintln(w, "  • Base model pulled (e.g. llama3.2:3b)")
+	fmt.Fprintln(w, "  • Base model pulled (e.g. llama3.2:3b, or llama3.2:1b for --lite)")
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Commands")
 	fmt.Fprintln(w, "  check     Verify Ollama is installed and required models are available")
@@ -406,6 +428,10 @@ func printGuide(w io.Writer) {
 	}
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "  Or one-shot:  daemon-setup setup --yes")
+	fmt.Fprintln(w, "")
+	fmt.Fprintln(w, "  For OpenClaw on low-power hardware (e.g. N100), use the 1B model for faster inference:")
+	fmt.Fprintln(w, "  ollama pull llama3.2:1b")
+	fmt.Fprintln(w, "  daemon-setup init --lite   # creates daemon-lite; set OpenClaw default to ollama/daemon-lite")
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Examples")
 	if runtime.GOOS == "windows" {

@@ -61,6 +61,15 @@ Besides the Beelink S13 Pro (or equivalent mini PC), you will need:
 - **RAM is usually soldered.** Most Mini S13 units ship with 16 GB soldered. You cannot upgrade later, so buy the 16 GB variant.
 - **Storage is upgradeable.** Most units accept a standard M.2 2280 NVMe or SATA SSD, so you can swap in a larger drive if needed.
 
+### Which model for which use?
+
+| Use case | Recommended model | Why |
+| -------- | ----------------- | --- |
+| **Direct CLI/API chat** (`ollama run daemon`) | Llama 3.2 **3B** (default `daemon`) | Good balance of quality and speed at 2048 context; 5--15 tok/s on N100 is fine for terminal use. |
+| **OpenClaw** (channels, skills, 24/7 gateway) on N100/N150 | Llama 3.2 **1B** (`daemon-lite`) | OpenClaw needs a larger context (e.g. 16k) and faster first-token latency. The 3B model at 16k context is too slow on CPU and can trigger "inference too slow" errors; the 1B model is roughly twice as fast and fits this use case. |
+
+You can have both: keep `daemon` (3B) for direct chat and create `daemon-lite` (1B) for OpenClaw. See [Daemon Bot](05-daemon-bot.md#daemon-lite-1b-for-openclaw) and [OpenClaw & automation](09-openclaw-automation.md#model-choice-use-1b-on-low-power-hardware).
+
 ---
 
 ## Physical Setup

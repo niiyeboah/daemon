@@ -56,8 +56,10 @@ openclaw onboard --install-daemon`}
       <p className="mt-2 text-sm text-muted-foreground">
         So that OpenClaw uses your existing Daemon (Ollama), set{' '}
         <code className="rounded bg-muted px-1.5 py-0.5">OLLAMA_API_KEY</code> (any value works).
-        Optionally set the default model to <code className="rounded bg-muted px-1.5 py-0.5">ollama/daemon</code> in{' '}
+        Optionally set the default model to <code className="rounded bg-muted px-1.5 py-0.5">ollama/daemon</code> or{' '}
+        <code className="rounded bg-muted px-1.5 py-0.5">ollama/daemon-lite</code> in{' '}
         <code className="rounded bg-muted px-1.5 py-0.5">~/.openclaw/openclaw.json</code>, then restart the gateway.
+        On low-power hardware (e.g. N100), use <strong>daemon-lite</strong> (1B model) for faster inference and to avoid &quot;inference too slow&quot; errors — see the full guide.
       </p>
       <CodeBlock
         language="bash"

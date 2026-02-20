@@ -89,6 +89,15 @@ Now simply run:
 daemon
 ```
 
+### Daemon-lite (1B) for OpenClaw
+
+If you use **OpenClaw** on **low-power hardware** (e.g. Beelink Mini S13 with N100/N150), the 3B model at OpenClaw’s required context size can be too slow and trigger "inference too slow" errors. Create a lighter model with the same Daemon personality:
+
+1. Pull the 1B base model: `ollama pull llama3.2:1b`
+2. Create the lite model: `daemon-setup init --lite`
+
+This creates the **daemon-lite** model (same system prompt, smaller/faster). Use `ollama/daemon-lite` as the default model in OpenClaw and set `contextWindow: 16384` in the explicit provider config. See [OpenClaw & automation](09-openclaw-automation.md#model-choice-use-1b-on-low-power-hardware) and [Hardware](01-hardware.md#which-model-for-which-use).
+
 ### On Windows
 
 If you are on Windows (see [Windows Setup](02-windows-setup.md)), `daemon-setup alias` adds a **PowerShell function** to your profile (`Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1`). Restart PowerShell or run `. $PROFILE` to load it, then run `daemon`. You can also run `ollama run daemon` in any terminal (PowerShell or CMD).

@@ -25,9 +25,16 @@ type tagsResponse struct {
 }
 
 // Check verifies that ollama is in PATH and optionally that the API is
-// reachable and that the base model and "daemon" model exist.
+// reachable and that the base model and custom model exist.
+// If baseModel or customModel is empty, defaults are used (llama3.2:3b and "daemon").
 // Returns an error (and prints guidance) if something is missing.
-func Check(out io.Writer, skipAPI bool) error {
+func Check(out io.Writer, skipAPI bool, baseModel, customModel string) error {
+	if baseModel == "" {
+		baseModel = DefaultBaseModel
+	}
+	if customModel == "" {
+		customModel = "daemon"
+	}
 	path, err := exec.LookPath("ollama")
 	if err != nil {
 		fmt.Fprintf(out, "Ollama not found in PATH.\n")
@@ -74,20 +81,22 @@ func Check(out io.Writer, skipAPI bool) error {
 		}
 	}
 
-	hasBase := names[DefaultBaseModel] || names["llama3.2:3b"]
-	hasDaemon := names["daemon"]
-
+	hasBase := names[baseModel]
+	if !hasBase && strings.Index(baseModel, ":") > 0 {
+		hasBase = names[baseModel[:strings.Index(baseModel, ":")]]
+	}
 	if !hasBase {
-		fmt.Fprintf(out, "Base model %q not found. Run: ollama pull %s\n", DefaultBaseModel, DefaultBaseModel)
-		return fmt.Errorf("base model %s not found", DefaultBaseModel)
+		fmt.Fprintf(out, "Base model %q not found. Run: ollama pull %s\n", baseModel, baseModel)
+		return fmt.Errorf("base model %s not found", baseModel)
 	}
-	fmt.Fprintf(out, "Base model %s: present\n", DefaultBaseModel)
+	fmt.Fprintf(out, "Base model %s: present\n", baseModel)
 
-	if !hasDaemon {
-		fmt.Fprintf(out, "Daemon model not found. Run: daemon-setup init\n")
-		return fmt.Errorf("daemon model not found")
+	hasCustom := names[customModel]
+	if !hasCustom {
+		fmt.Fprintf(out, "Custom model %q not found. Run: daemon-setup init (or daemon-setup init --lite for daemon-lite)\n", customModel)
+		return fmt.Errorf("%s model not found", customModel)
 	}
-	fmt.Fprintf(out, "Daemon model: present\n")
+	fmt.Fprintf(out, "Custom model %s: present\n", customModel)
 	return nil
 }
 
