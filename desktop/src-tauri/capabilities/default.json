@@ -8,6 +8,7 @@
     "shell:allow-execute",
     "shell:allow-stdin-write",
     "store:default",
+    "updater:default",
     {
       "identifier": "shell:allow-open",
       "allow": [

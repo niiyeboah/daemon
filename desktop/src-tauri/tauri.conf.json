@@ -33,6 +33,26 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "externalBin": ["bin/daemon-setup"]
+    "externalBin": ["bin/daemon-setup"],
+    "createUpdaterArtifacts": false,
+    "macOS": {
+      "dmg": {}
+    },
+    "linux": {
+      "appimage": {},
+      "deb": {}
+    },
+    "windows": {
+      "wix": {},
+      "nsis": {}
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "REPLACE_WITH_PUBLIC_KEY",
+      "endpoints": [
+        "https://github.com/niiyeboah/daemon/releases/latest/download/latest.json"
+      ]
+    }
   }
 }
