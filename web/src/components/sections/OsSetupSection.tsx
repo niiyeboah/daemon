@@ -9,6 +9,40 @@ export function OsSetupSection() {
     <section id="os-setup">
       <h2 className="text-3xl font-bold tracking-tight">2. OS Setup</h2>
 
+      {/* macOS */}
+      <OsFilter os="macos">
+        <p className="mt-2 text-muted-foreground">
+          On macOS, the setup is straightforward since Ollama has a native
+          installer.
+        </p>
+
+        <h3 className="mt-6 text-xl font-semibold">Install Ollama</h3>
+        <p className="mt-2 text-muted-foreground">
+          Download from{' '}
+          <a href="https://ollama.com" className="underline" target="_blank" rel="noopener noreferrer">ollama.com</a>{' '}
+          or install via Homebrew:
+        </p>
+        <CodeBlock language="bash" code="brew install ollama" />
+        <CodeBlock language="bash" code="ollama --version" />
+
+        <h3 className="mt-6 text-xl font-semibold">Pull the Base Model</h3>
+        <CodeBlock language="bash" code="ollama pull llama3.2:1b" />
+        <CodeBlock language="bash" code="ollama list" />
+
+        <h3 className="mt-6 text-xl font-semibold">Install Go</h3>
+        <p className="mt-2 text-muted-foreground">Install Go 1.21+ via Homebrew or from go.dev:</p>
+        <CodeBlock language="bash" code="brew install go" />
+        <CodeBlock language="bash" code="go version" />
+
+        <h3 className="mt-6 text-xl font-semibold">Get daemon-setup</h3>
+        <p className="mt-2 text-muted-foreground">
+          Download the latest pre-built binary:{' '}
+          <a href={CLI_BUILD_URLS.darwinArm64} className="underline" target="_blank" rel="noopener noreferrer">daemon-setup-darwin-arm64</a>.
+          Or build from source:
+        </p>
+        <CodeBlock language="bash" code="go build -o daemon-setup ./cmd/daemon-setup" />
+      </OsFilter>
+
       {/* Windows */}
       <OsFilter os="windows">
         <p className="mt-2 text-muted-foreground">
@@ -125,40 +159,6 @@ export function OsSetupSection() {
           or see <a href={GITHUB_RELEASES_LATEST_URL} className="underline" target="_blank" rel="noopener noreferrer">GitHub Releases</a>.
           Or build from source in the Daemon Bot step.
         </p>
-      </OsFilter>
-
-      {/* macOS */}
-      <OsFilter os="macos">
-        <p className="mt-2 text-muted-foreground">
-          On macOS, the setup is straightforward since Ollama has a native
-          installer.
-        </p>
-
-        <h3 className="mt-6 text-xl font-semibold">Install Ollama</h3>
-        <p className="mt-2 text-muted-foreground">
-          Download from{' '}
-          <a href="https://ollama.com" className="underline" target="_blank" rel="noopener noreferrer">ollama.com</a>{' '}
-          or install via Homebrew:
-        </p>
-        <CodeBlock language="bash" code="brew install ollama" />
-        <CodeBlock language="bash" code="ollama --version" />
-
-        <h3 className="mt-6 text-xl font-semibold">Pull the Base Model</h3>
-        <CodeBlock language="bash" code="ollama pull llama3.2:1b" />
-        <CodeBlock language="bash" code="ollama list" />
-
-        <h3 className="mt-6 text-xl font-semibold">Install Go</h3>
-        <p className="mt-2 text-muted-foreground">Install Go 1.21+ via Homebrew or from go.dev:</p>
-        <CodeBlock language="bash" code="brew install go" />
-        <CodeBlock language="bash" code="go version" />
-
-        <h3 className="mt-6 text-xl font-semibold">Get daemon-setup</h3>
-        <p className="mt-2 text-muted-foreground">
-          Download the latest pre-built binary:{' '}
-          <a href={CLI_BUILD_URLS.darwinArm64} className="underline" target="_blank" rel="noopener noreferrer">daemon-setup-darwin-arm64</a>.
-          Or build from source:
-        </p>
-        <CodeBlock language="bash" code="go build -o daemon-setup ./cmd/daemon-setup" />
       </OsFilter>
 
       <StepCheckbox stepId="os-installed" label="Operating system installed" />

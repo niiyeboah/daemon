@@ -3,7 +3,7 @@ import { atomWithStorage } from 'jotai/utils'
 import type { OsChoice } from '@/types'
 import { STEPS } from './constants'
 
-export const osAtom = atomWithStorage<OsChoice>('daemon-os', 'windows')
+export const osAtom = atomWithStorage<OsChoice>('daemon-os', 'macos')
 
 export const progressAtom = atomWithStorage<Record<string, boolean>>('daemon-progress', {})
 

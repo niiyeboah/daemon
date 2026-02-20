@@ -8,9 +8,9 @@ import type { OsChoice } from '@/types'
 import { cn } from '@/lib/utils'
 
 const osOptions: { value: OsChoice; label: string; icon: typeof Monitor }[] = [
+  { value: 'macos', label: 'macOS', icon: Apple },
   { value: 'windows', label: 'Windows', icon: Monitor },
   { value: 'ubuntu', label: 'Ubuntu', icon: Terminal },
-  { value: 'macos', label: 'macOS', icon: Apple },
 ]
 
 export function Sidebar() {

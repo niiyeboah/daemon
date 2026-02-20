@@ -21,7 +21,7 @@
 | Layer             | Component                                                                                                                |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | Hardware          | [M4 Mac Mini](docs/01-hardware.md) (local route) or [Beelink S13 Pro](docs/01-hardware.md) (cloud API route)          |
-| Operating System  | macOS (M4) or [Windows](docs/02-windows-setup.md) (Beelink S13 preloaded) or [Ubuntu Desktop 24.04 LTS](docs/02b-ubuntu-desktop.md) |
+| Operating System  | [macOS](docs/04-ollama-llama.md) (M4 Mac Mini, default) or [Windows](docs/02-windows-setup.md) (Beelink S13 preloaded) or [Ubuntu Desktop 24.04 LTS](docs/02b-ubuntu-desktop.md) |
 | Inference Runtime | [Ollama](docs/04-ollama-llama.md)                                                                                        |
 | Language Model    | [Llama 3.2 8B](docs/04-ollama-llama.md)                                                                                  |
 | Interface         | [Daemon bot](docs/05-daemon-bot.md) (CLI / API)                                                                          |

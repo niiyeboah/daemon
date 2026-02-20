@@ -1,6 +1,6 @@
 # 3 -- Post-Install System Setup (Ubuntu)
 
-> **Windows users:** Skip this guide. Post-install steps are covered in [Windows Setup](02-windows-setup.md). This guide is for Ubuntu Desktop installations only.
+> **Windows and macOS users:** Skip this guide. Post-install steps are covered in [Windows Setup](02-windows-setup.md) for Windows. macOS requires no post-install setup. This guide is for Ubuntu Desktop installations only.
 
 With Ubuntu Desktop installed, prepare the system for Ollama and Daemon.
 

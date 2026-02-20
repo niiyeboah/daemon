@@ -1,20 +1,34 @@
-import { useAtomValue } from 'jotai'
-import { osAtom } from '@/store/atoms'
 import { CodeBlock } from '@/components/shared/CodeBlock'
 import { StepCheckbox } from '@/components/shared/StepCheckbox'
 import { InfoBox } from '@/components/shared/InfoBox'
+import { OsFilter } from '@/components/shared/OsFilter'
 
 export function PostInstallSection() {
-  const os = useAtomValue(osAtom)
-
-  if (os !== 'ubuntu') return null
-
   return (
     <section id="post-install">
       <h2 className="text-3xl font-bold tracking-tight">3. Post-Install Setup</h2>
-      <p className="mt-2 text-muted-foreground">
-        Prepare the Ubuntu system for Ollama and Daemon.
-      </p>
+
+      {/* macOS */}
+      <OsFilter os="macos">
+        <p className="mt-2 text-muted-foreground">
+          macOS is ready to go. No additional post-install steps are needed.
+          Proceed to the Ollama section below.
+        </p>
+      </OsFilter>
+
+      {/* Windows */}
+      <OsFilter os="windows">
+        <p className="mt-2 text-muted-foreground">
+          Windows is ready to go. No additional post-install steps are needed.
+          Proceed to the Ollama section below.
+        </p>
+      </OsFilter>
+
+      {/* Ubuntu */}
+      <OsFilter os="ubuntu">
+        <p className="mt-2 text-muted-foreground">
+          Prepare the Ubuntu system for Ollama and Daemon.
+        </p>
 
       <h3 className="mt-6 text-xl font-semibold">Update the System</h3>
       <CodeBlock language="bash" code="sudo apt update && sudo apt upgrade -y" />
@@ -68,6 +82,7 @@ sudo mkswap /swapfile
 sudo swapon /swapfile
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab`}
       />
+      </OsFilter>
     </section>
   )
 }

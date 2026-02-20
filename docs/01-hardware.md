@@ -42,7 +42,7 @@ Besides the M4 Mac Mini or Beelink S13 Pro (or equivalent), you will need:
 - **Wired keyboard** — Required for initial setup and BIOS (Beelink). A wired USB keyboard avoids wireless dongle or Bluetooth issues during install and boot.
 - **USB drive** — At least 4 GB, only needed if you want to replace Windows with Ubuntu on Beelink. See [Ubuntu Desktop Installation](02b-ubuntu-desktop.md) for flashing options (Ventoy is recommended).
 
-> The Beelink S13 Pro comes preloaded with **Windows**. This is the recommended setup for Beelink — see [Windows Setup](02-windows-setup.md). If you prefer Linux, see [Ubuntu Desktop](02b-ubuntu-desktop.md). For M4 Mac Mini, use macOS.
+> For **M4 Mac Mini**, use macOS — see [Ollama + Llama](04-ollama-llama.md). The Beelink S13 Pro comes preloaded with **Windows** — see [Windows Setup](02-windows-setup.md). If you prefer Linux on Beelink, see [Ubuntu Desktop](02b-ubuntu-desktop.md).
 
 ---
 
@@ -76,4 +76,4 @@ Llama 3.2 **8B** (`daemon` or `llama3.2:8b`) is the recommended model for both d
 
 ---
 
-Next: [Windows Setup](02-windows-setup.md) (Beelink, recommended) or [Ubuntu Desktop](02b-ubuntu-desktop.md) or [Ollama + Llama](04-ollama-llama.md) (M4 Mac Mini)
+Next: [Ollama + Llama](04-ollama-llama.md) (M4 Mac Mini / macOS) or [Windows Setup](02-windows-setup.md) (Beelink) or [Ubuntu Desktop](02b-ubuntu-desktop.md) (Beelink, Linux)
