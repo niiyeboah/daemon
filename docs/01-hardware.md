@@ -1,6 +1,6 @@
 # 1 -- Hardware: Beelink S13 Pro
 
-This guide covers the Beelink S13 Pro mini PC and explains why it is a good fit for running a local Llama 3.2 3B assistant.
+This guide covers the Beelink S13 Pro mini PC and explains why it is a good fit for running a local Llama 3.2 1B assistant.
 
 ---
 
@@ -17,12 +17,12 @@ This guide covers the Beelink S13 Pro mini PC and explains why it is a good fit 
 
 ---
 
-## Key Specs for Running Llama 3.2 3B
+## Key Specs for Running Llama 3.2 1B
 
 | Requirement    | Mini S13 (N100/N150)       | Notes                                                          |
 | -------------- | -------------------------- | -------------------------------------------------------------- |
-| **CPU**        | 4 cores, up to 3.6 GHz     | Ollama runs on CPU by default; 4 cores is enough for 3B        |
-| **RAM**        | 16 GB DDR4                 | Model uses ~2--4 GB; 16 GB leaves room for the OS and services |
+| **CPU**        | 4 cores, up to 3.6 GHz     | Ollama runs on CPU by default; 4 cores is enough for 1B        |
+| **RAM**        | 16 GB DDR4                 | Model uses ~1--2 GB; 16 GB leaves room for the OS and services |
 | **Disk**       | 500 GB SSD                 | Model is ~2 GB on disk; plenty of room                         |
 | **Networking** | Gigabit Ethernet + Wi-Fi 6 | Ethernet recommended for always-on server use                  |
 | **TDP**        | ~15 W                      | Low electricity cost for 24/7 operation                        |
@@ -43,7 +43,7 @@ Besides the Beelink S13 Pro (or equivalent mini PC), you will need:
 
 ## Why This Device Fits
 
-1. **Right-sized for 3B parameters.** Llama 3.2 3B quantised (Q4) uses roughly 2--4 GB of RAM. A 16 GB machine can comfortably host the model, the OS, and lightweight services without swapping.
+1. **Right-sized for 1B parameters.** Llama 3.2 1B quantised (Q4) uses roughly 1--2 GB of RAM. A 16 GB machine can comfortably host the model, the OS, and lightweight services without swapping.
 
 2. **Low power, always-on.** At ~15 W the Mini S13 costs very little to run continuously. That makes it practical as a personal assistant that is always available.
 
@@ -57,18 +57,11 @@ Besides the Beelink S13 Pro (or equivalent mini PC), you will need:
 
 ## Things to Consider
 
-- **No discrete GPU.** The integrated Intel UHD Graphics is not used by Ollama for inference. All computation happens on the CPU. For the 3B model this is fine -- expect roughly 5--15 tokens per second depending on the quantisation level and context length.
+- **No discrete GPU.** The integrated Intel UHD Graphics is not used by Ollama for inference. All computation happens on the CPU. For the 1B model this is fine -- expect roughly 10--30 tokens per second depending on the quantisation level and context length.
 - **RAM is usually soldered.** Most Mini S13 units ship with 16 GB soldered. You cannot upgrade later, so buy the 16 GB variant.
 - **Storage is upgradeable.** Most units accept a standard M.2 2280 NVMe or SATA SSD, so you can swap in a larger drive if needed.
 
-### Which model for which use?
-
-| Use case | Recommended model | Why |
-| -------- | ----------------- | --- |
-| **Direct CLI/API chat** (`ollama run daemon`) | Llama 3.2 **3B** (default `daemon`) | Good balance of quality and speed at 2048 context; 5--15 tok/s on N100 is fine for terminal use. |
-| **OpenClaw** (channels, skills, 24/7 gateway) on N100/N150 | Llama 3.2 **1B** (`daemon-lite`) | OpenClaw needs a larger context (e.g. 16k) and faster first-token latency. The 3B model at 16k context is too slow on CPU and can trigger "inference too slow" errors; the 1B model is roughly twice as fast and fits this use case. |
-
-You can have both: keep `daemon` (3B) for direct chat and create `daemon-lite` (1B) for OpenClaw. See [Daemon Bot](05-daemon-bot.md#daemon-lite-1b-for-openclaw) and [OpenClaw & automation](09-openclaw-automation.md#model-choice-use-1b-on-low-power-hardware).
+Llama 3.2 **1B** (`daemon`) is the recommended model for both direct CLI/API chat and OpenClaw. OpenClaw requires a 16k context window; the 1B model handles this well even on low-power CPUs. See [Daemon Bot](05-daemon-bot.md) and [OpenClaw & automation](09-openclaw-automation.md#model-choice).
 
 ---
 

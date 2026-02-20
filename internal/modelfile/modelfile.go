@@ -21,7 +21,7 @@ type Params struct {
 // DefaultParams returns the defaults from docs/05-daemon-bot.md.
 func DefaultParams(baseModel string) Params {
 	if baseModel == "" {
-		baseModel = "llama3.2:3b"
+		baseModel = "llama3.2:1b"
 	}
 	return Params{
 		BaseModel:    baseModel,

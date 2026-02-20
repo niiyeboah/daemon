@@ -27,16 +27,16 @@ ollama --version
 ## 2. Pull the base model
 
 ```powershell
-ollama pull llama3.2:3b
+ollama pull llama3.2:1b
 ```
 
-This downloads about 2 GB. When it finishes, confirm:
+This downloads about 1 GB. When it finishes, confirm:
 
 ```powershell
 ollama list
 ```
 
-You should see `llama3.2:3b` in the list.
+You should see `llama3.2:1b` in the list.
 
 ---
 
@@ -125,4 +125,4 @@ If you prefer to replace Windows with Linux entirely, see [Ubuntu Desktop](02b-u
 
 ---
 
-Next: [Ollama + Llama 3.2 3B](04-ollama-llama.md)
+Next: [Ollama + Llama 3.2 1B](04-ollama-llama.md)

@@ -1,6 +1,6 @@
-# 4 -- Ollama + Llama 3.2 3B
+# 4 -- Ollama + Llama 3.2 1B
 
-This guide installs Ollama, downloads the Llama 3.2 3B model, and configures Ollama to run as a persistent service.
+This guide installs Ollama, downloads the Llama 3.2 1B model, and configures Ollama to run as a persistent service.
 
 ---
 
@@ -31,13 +31,13 @@ ollama --version
 
 ---
 
-## Pull the Llama 3.2 3B Model
+## Pull the Llama 3.2 1B Model
 
 ```bash
-ollama pull llama3.2:3b
+ollama pull llama3.2:1b
 ```
 
-This downloads the default quantised (Q4_K_M) version of Llama 3.2 3B. The download is approximately **2 GB**.
+This downloads the default quantised (Q4_K_M) version of Llama 3.2 1B. The download is approximately **1 GB**.
 
 Verify the model is available:
 
@@ -49,7 +49,7 @@ You should see an entry like:
 
 ```
 NAME              ID            SIZE    MODIFIED
-llama3.2:3b       ...           2.0 GB  just now
+llama3.2:1b       ...           1.3 GB  just now
 ```
 
 ---
@@ -57,7 +57,7 @@ llama3.2:3b       ...           2.0 GB  just now
 ## Test the Model Interactively
 
 ```bash
-ollama run llama3.2:3b
+ollama run llama3.2:1b
 ```
 
 You will get an interactive prompt. Try a question:
@@ -66,7 +66,7 @@ You will get an interactive prompt. Try a question:
 >>> What is the capital of France?
 ```
 
-The model should respond coherently. Response speed will vary -- on the N100/N150 expect roughly **5--15 tokens per second**.
+The model should respond coherently. Response speed will vary -- on the N100/N150 expect roughly **10--30 tokens per second**.
 
 Exit with `/bye` or press `Ctrl+D`.
 
@@ -95,13 +95,13 @@ The service starts Ollama in server mode, listening on **`http://localhost:11434
 curl http://localhost:11434/api/tags
 ```
 
-This should return a JSON object listing your installed models (including `llama3.2:3b`).
+This should return a JSON object listing your installed models (including `llama3.2:1b`).
 
 ### Test a Chat Completion via the API
 
 ```bash
 curl -s http://localhost:11434/api/chat -d '{
-  "model": "llama3.2:3b",
+  "model": "llama3.2:1b",
   "messages": [
     {"role": "user", "content": "Hello, who are you?"}
   ],
@@ -162,12 +162,12 @@ Reload and restart as above.
 
 | Resource | Approximate Usage |
 |----------|-------------------|
-| **RAM** | 2--4 GB while the model is loaded |
-| **Disk** | ~2 GB for the Q4_K_M quantised model |
+| **RAM** | 1--2 GB while the model is loaded |
+| **Disk** | ~1 GB for the Q4_K_M quantised model |
 | **CPU** | All cores utilised during inference |
 | **Idle** | Model is unloaded from RAM after 5 minutes of inactivity (configurable) |
 
-On a 16 GB machine, the OS and Ollama with the 3B model loaded will typically use 5--6 GB total, leaving plenty of headroom.
+On a 16 GB machine, the OS and Ollama with the 1B model loaded will typically use 3--4 GB total, leaving plenty of headroom.
 
 ---
 
@@ -176,10 +176,10 @@ On a 16 GB machine, the OS and Ollama with the 3B model loaded will typically us
 | Command | Description |
 |---------|-------------|
 | `ollama list` | Show installed models |
-| `ollama pull llama3.2:3b` | Download or update the model |
-| `ollama rm llama3.2:3b` | Remove the model |
-| `ollama run llama3.2:3b` | Interactive chat |
-| `ollama show llama3.2:3b` | Show model details (parameters, quantisation, etc.) |
+| `ollama pull llama3.2:1b` | Download or update the model |
+| `ollama rm llama3.2:1b` | Remove the model |
+| `ollama run llama3.2:1b` | Interactive chat |
+| `ollama show llama3.2:1b` | Show model details (parameters, quantisation, etc.) |
 | `ollama ps` | Show currently loaded models and their memory usage |
 | `sudo systemctl restart ollama` | Restart the Ollama service |
 | `journalctl -u ollama -f` | Tail the Ollama service logs |

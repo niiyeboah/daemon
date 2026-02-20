@@ -3,9 +3,9 @@ import { StepCheckbox } from '@/components/shared/StepCheckbox'
 import { InfoBox } from '@/components/shared/InfoBox'
 
 const specs = [
-  { requirement: 'CPU', value: '4 cores, up to 3.6 GHz', note: 'Ollama runs on CPU; 4 cores is enough for 3B' },
-  { requirement: 'RAM', value: '16 GB DDR4', note: 'Model uses ~2-4 GB; 16 GB leaves room for OS and services' },
-  { requirement: 'Disk', value: '500 GB SSD', note: 'Model is ~2 GB on disk; plenty of room' },
+  { requirement: 'CPU', value: '4 cores, up to 3.6 GHz', note: 'Ollama runs on CPU; 4 cores is enough for 1B' },
+  { requirement: 'RAM', value: '16 GB DDR4', note: 'Model uses ~1-2 GB; 16 GB leaves room for OS and services' },
+  { requirement: 'Disk', value: '500 GB SSD', note: 'Model is ~1 GB on disk; plenty of room' },
   { requirement: 'Networking', value: 'Gigabit Ethernet + Wi-Fi 6', note: 'Ethernet recommended for always-on use' },
   { requirement: 'TDP', value: '~15 W', note: 'Low electricity cost for 24/7 operation' },
   { requirement: 'Noise', value: 'Fanless or near-silent', note: 'Can sit on a desk without distraction' },
@@ -21,7 +21,7 @@ export function HardwareSection() {
         still applies.
       </p>
 
-      <h3 className="mt-6 text-xl font-semibold">Key Specs for Llama 3.2 3B</h3>
+      <h3 className="mt-6 text-xl font-semibold">Key Specs for Llama 3.2 1B</h3>
       <Card className="mt-4">
         <CardContent className="p-0">
           <table className="w-full text-sm">
@@ -47,7 +47,7 @@ export function HardwareSection() {
 
       <h3 className="mt-6 text-xl font-semibold">Why This Device Fits</h3>
       <ul className="mt-3 list-disc space-y-2 pl-6 text-muted-foreground">
-        <li><strong>Right-sized for 3B parameters.</strong> The Q4 model uses ~2-4 GB RAM, leaving plenty for the OS.</li>
+        <li><strong>Right-sized for 1B parameters.</strong> The Q4 model uses ~1-2 GB RAM, leaving plenty for the OS.</li>
         <li><strong>Low power, always-on.</strong> ~15 W means very low running cost for a 24/7 assistant.</li>
         <li><strong>Silent operation.</strong> Fanless N100/N150 variants make no noise.</li>
         <li><strong>Small footprint.</strong> Roughly the size of a paperback book.</li>
@@ -55,8 +55,8 @@ export function HardwareSection() {
       </ul>
 
       <InfoBox variant="note">
-        No discrete GPU — all inference runs on CPU. Expect ~5-15 tokens/sec
-        for the 3B model. RAM is usually soldered at 16 GB (not upgradeable),
+        No discrete GPU — all inference runs on CPU. Expect ~10-30 tokens/sec
+        for the 1B model. RAM is usually soldered at 16 GB (not upgradeable),
         but storage can be swapped.
       </InfoBox>
 

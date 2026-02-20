@@ -26,7 +26,7 @@ const items: TroubleshootItem[] = [
       <>
         <CodeBlock language="bash" code={`free -h    # check available RAM\ndf -h /    # check disk space`} />
         <p className="text-sm text-muted-foreground">Re-pull if corrupted:</p>
-        <CodeBlock language="bash" code={`ollama rm llama3.2:3b\nollama pull llama3.2:3b`} />
+        <CodeBlock language="bash" code={`ollama rm llama3.2:1b\nollama pull llama3.2:1b`} />
       </>
     ),
   },
@@ -36,7 +36,7 @@ const items: TroubleshootItem[] = [
     content: (
       <>
         <p className="mb-2 text-sm text-muted-foreground">
-          On the N100/N150, expect ~5-15 tokens/sec. A 200-token reply may take 15-40 seconds.
+          On the N100/N150, expect ~10-30 tokens/sec. A 200-token reply may take 7-20 seconds.
         </p>
         <ul className="list-disc space-y-1 pl-6 text-sm text-muted-foreground">
           <li>Reduce context length: set <code className="rounded bg-muted px-1 py-0.5">num_ctx</code> to 1024 or 512 in the Modelfile.</li>

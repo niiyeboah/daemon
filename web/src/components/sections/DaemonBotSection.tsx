@@ -5,7 +5,7 @@ import { StepCheckbox } from '@/components/shared/StepCheckbox'
 import { InfoBox } from '@/components/shared/InfoBox'
 import { GITHUB_RELEASES_LATEST_URL, CLI_BUILD_URLS } from '@/store/constants'
 
-const modelfile = `FROM llama3.2:3b
+const modelfile = `FROM llama3.2:1b
 
 PARAMETER temperature 0.7
 PARAMETER top_p 0.9
@@ -16,14 +16,14 @@ You are Daemon, a helpful and concise personal assistant running locally on the 
 """`
 
 const pythonScript = `#!/usr/bin/env python3
-"""Daemon -- local personal assistant powered by Llama 3.2 3B via Ollama."""
+"""Daemon -- local personal assistant powered by Llama 3.2 1B via Ollama."""
 
 import json
 import sys
 import requests
 
 OLLAMA_URL = "http://localhost:11434/api/chat"
-MODEL = "llama3.2:3b"
+MODEL = "llama3.2:1b"
 
 SYSTEM_PROMPT = (
     "You are Daemon, a helpful and concise personal assistant running locally "

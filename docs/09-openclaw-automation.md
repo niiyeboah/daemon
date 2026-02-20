@@ -68,15 +68,13 @@ To have your assistant always on, run the OpenClaw Gateway 24/7 — for example 
 
 ---
 
-## Model choice: use 1B on low-power hardware
+## Model choice
 
-On **low-power CPUs** (e.g. Intel N100/N150 in the Beelink Mini S13), OpenClaw needs a **larger context** (e.g. 16k tokens) and **faster inference**. The default 3B model at 16k context can be too slow and may trigger "inference times too slow" or timeouts. Use the **1B model** instead:
+OpenClaw requires a **16k context window** so that skills and system prompts fit comfortably. The recommended model is **Llama 3.2 1B** (`daemon-lite`), which provides fast inference even on low-power CPUs (e.g. Intel N100/N150).
 
-1. Pull the 1B model: `ollama pull llama3.2:1b`
-2. Create a lighter Daemon variant: `daemon-setup init --lite` (creates the `daemon-lite` model with the same system prompt).
+1. Pull the model: `ollama pull llama3.2:1b`
+2. Create the Daemon variant: `daemon-setup init --lite` (creates the `daemon-lite` model with the same system prompt).
 3. Point OpenClaw at `ollama/daemon-lite` in your config (see below). Use `contextWindow: 16384` and `maxTokens: 8192` in the explicit provider config.
-
-You can keep **3B** (`daemon`) for direct terminal chat and use **1B** (`daemon-lite`) only for OpenClaw. See [Hardware](01-hardware.md#which-model-for-which-use) and [Daemon Bot](05-daemon-bot.md#daemon-lite-1b-for-openclaw).
 
 ---
 
@@ -84,7 +82,7 @@ You can keep **3B** (`daemon`) for direct terminal chat and use **1B** (`daemon-
 
 So that OpenClaw uses your existing Daemon (Ollama) instead of a cloud provider, configure the Ollama provider and set the default model. Restart the gateway after any config change: `openclaw gateway restart`.
 
-**Prerequisite:** Ollama must be running and your chosen model available. Check with `ollama list` (you should see `daemon`, `daemon-lite`, or `llama3.2:3b` / `llama3.2:1b`).
+**Prerequisite:** Ollama must be running and your chosen model available. Check with `ollama list` (you should see `daemon`, `daemon-lite`, or `llama3.2:1b`).
 
 ### Option A — Auto-discovery
 
@@ -114,11 +112,11 @@ The simplest way is to let OpenClaw discover models from your local Ollama insta
    }
    ```
 
-   Use `ollama/daemon` or `ollama/daemon-lite` (for OpenClaw on low-power hardware), or `ollama/llama3.2:3b` / `ollama/llama3.2:1b` for the base models. Restart the gateway and verify with `openclaw models list` and `openclaw models status`.
+   Use `ollama/daemon` or `ollama/daemon-lite`, or `ollama/llama3.2:1b` for the base model. Restart the gateway and verify with `openclaw models list` and `openclaw models status`.
 
 ### Option B — Explicit config
 
-If your model does not appear in auto-discovery (e.g. the Daemon model does not advertise tool support), add an explicit Ollama provider in `~/.openclaw/openclaw.json`. For **OpenClaw** you should set at least 16k context so skills and system prompts fit; for **daemon-lite** (1B) use:
+If your model does not appear in auto-discovery (e.g. the Daemon model does not advertise tool support), add an explicit Ollama provider in `~/.openclaw/openclaw.json`. OpenClaw requires a 16k context window; for **daemon-lite** (1B) use:
 
 ```json
 {
@@ -147,7 +145,7 @@ If your model does not appear in auto-discovery (e.g. the Daemon model does not 
 }
 ```
 
-For the standard 3B `daemon` model (e.g. when not using OpenClaw or on faster hardware), you can use `contextWindow: 2048` and `maxTokens: 2048`. Use the model `id` that matches `ollama list` (e.g. `daemon`, `daemon-lite`, `llama3.2:3b`, `llama3.2:1b`). For other hosts or the legacy OpenAI-compatible endpoint, see the [OpenClaw Ollama provider docs](https://docs.openclaw.ai/providers/ollama).
+Use the model `id` that matches `ollama list` (e.g. `daemon`, `daemon-lite`, `llama3.2:1b`). For other hosts or the legacy OpenAI-compatible endpoint, see the [OpenClaw Ollama provider docs](https://docs.openclaw.ai/providers/ollama).
 
 ### Verification
 

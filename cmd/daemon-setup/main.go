@@ -180,7 +180,7 @@ func promptPathModelBase() (*pathModelBase, error) {
 		},
 		{
 			Name: "baseModel",
-			Prompt: &survey.Input{Message: "Base model (FROM):", Default: "llama3.2:3b"},
+			Prompt: &survey.Input{Message: "Base model (FROM):", Default: "llama3.2:1b"},
 			Transform: survey.TransformString(func(s string) string {
 				return strings.TrimSpace(s)
 			}),
@@ -314,7 +314,7 @@ func newInitCmd() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&modelfilePath, "modelfile", "", "Path to write the Modelfile (default: $HOME/Modelfile)")
 	cmd.Flags().StringVar(&modelName, "model-name", "daemon", "Name of the custom model to create")
-	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:3b", "Base model in the Modelfile (FROM)")
+	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:1b", "Base model in the Modelfile (FROM)")
 	cmd.Flags().BoolVar(&lite, "lite", false, "Use llama3.2:1b and create daemon-lite (faster inference for OpenClaw on low-power hardware)")
 	return cmd
 }
@@ -339,7 +339,7 @@ func newModelfileCmd() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&modelfilePath, "modelfile", "", "Path to write the Modelfile (default: $HOME/Modelfile)")
 	cmd.Flags().StringVar(&modelName, "model-name", "daemon", "Name of the custom model (for reference)")
-	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:3b", "Base model in the Modelfile (FROM)")
+	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:1b", "Base model in the Modelfile (FROM)")
 	cmd.Flags().BoolVar(&lite, "lite", false, "Use llama3.2:1b for daemon-lite (faster inference for OpenClaw on low-power hardware)")
 	return cmd
 }
@@ -379,7 +379,7 @@ func newSetupCmd() *cobra.Command {
 	cmd.Flags().BoolVar(&yes, "yes", false, "Skip confirmations")
 	cmd.Flags().StringVar(&modelfilePath, "modelfile", "", "Path to write the Modelfile (default: $HOME/Modelfile)")
 	cmd.Flags().StringVar(&modelName, "model-name", "daemon", "Name of the custom model to create")
-	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:3b", "Base model in the Modelfile (FROM)")
+	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:1b", "Base model in the Modelfile (FROM)")
 	cmd.Flags().BoolVar(&lite, "lite", false, "Use llama3.2:1b and create daemon-lite (faster inference for OpenClaw on low-power hardware)")
 	return cmd
 }
@@ -409,7 +409,7 @@ func printGuide(w io.Writer) {
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Prerequisites")
 	fmt.Fprintln(w, "  • Ollama installed and in PATH")
-	fmt.Fprintln(w, "  • Base model pulled (e.g. llama3.2:3b, or llama3.2:1b for --lite)")
+	fmt.Fprintln(w, "  • Base model pulled (e.g. llama3.2:1b)")
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Commands")
 	fmt.Fprintln(w, "  check     Verify Ollama is installed and required models are available")

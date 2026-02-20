@@ -38,7 +38,7 @@ export const STEPS: Step[] = [
 
   // Ollama
   { id: 'ollama-installed', section: 'ollama', label: 'Ollama installed and running', os: 'all' },
-  { id: 'model-pulled', section: 'ollama', label: 'Llama 3.2 3B model downloaded', os: 'all' },
+  { id: 'model-pulled', section: 'ollama', label: 'Llama 3.2 1B model downloaded', os: 'all' },
   { id: 'model-tested', section: 'ollama', label: 'Model tested interactively', os: 'all' },
 
   // Daemon Bot

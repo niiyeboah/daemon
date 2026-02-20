@@ -38,7 +38,7 @@ curl -fsSL https://ollama.com/install.sh | sh
 
 ## Model Fails to Load
 
-**Symptoms:** `ollama run llama3.2:3b` exits immediately or prints an out-of-memory error.
+**Symptoms:** `ollama run llama3.2:1b` exits immediately or prints an out-of-memory error.
 
 **Steps:**
 
@@ -48,7 +48,7 @@ curl -fsSL https://ollama.com/install.sh | sh
 free -h
 ```
 
-   The 3B model needs roughly 2--4 GB of free RAM. If the system is low on memory, close other processes or add swap space (see [Post-Install](03-post-install.md)).
+   The 1B model needs roughly 1--2 GB of free RAM. If the system is low on memory, close other processes or add swap space (see [Post-Install](03-post-install.md)).
 
 2. Check disk space:
 
@@ -56,13 +56,13 @@ free -h
 df -h /
 ```
 
-   The model needs ~2 GB on disk. If space is tight, remove unused files or expand the drive.
+   The model needs ~1 GB on disk. If space is tight, remove unused files or expand the drive.
 
 3. Re-pull the model (in case of a corrupted download):
 
 ```bash
-ollama rm llama3.2:3b
-ollama pull llama3.2:3b
+ollama rm llama3.2:1b
+ollama pull llama3.2:1b
 ```
 
 4. Verify:
@@ -77,14 +77,14 @@ ollama list
 
 **Symptoms:** Daemon takes many seconds (or minutes) to respond.
 
-**Context:** On the Intel N100/N150, expect roughly **5--15 tokens per second** for the 3B Q4 model. A 200-token reply may take 15--40 seconds. This is normal for CPU-only inference on a low-power chip.
+**Context:** On the Intel N100/N150, expect roughly **10--30 tokens per second** for the 1B Q4 model. A 200-token reply may take 7--20 seconds. This is normal for CPU-only inference on a low-power chip.
 
 **Ways to improve speed:**
 
 | Technique | How |
 |-----------|-----|
 | Reduce context length | Set `num_ctx` to 1024 or 512 in the Modelfile (`PARAMETER num_ctx 1024`). Shorter context = less memory and faster prefill. |
-| Use a smaller quantisation | Try `llama3.2:3b-q4_0` or `llama3.2:3b-q3_K_S` for a slight speed gain at the cost of quality. |
+| Use a smaller quantisation | Try a lower quantisation variant for a slight speed gain at the cost of quality. |
 | Close other processes | `htop` to see what else is consuming CPU/RAM. |
 | Keep the model loaded | By default Ollama unloads the model after 5 minutes of idle. Set `OLLAMA_KEEP_ALIVE=-1` in the service env to keep it in RAM permanently (uses more memory but avoids reload latency). |
 

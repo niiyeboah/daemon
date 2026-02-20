@@ -5,25 +5,25 @@ import { StepCheckbox } from '@/components/shared/StepCheckbox'
 import { InfoBox } from '@/components/shared/InfoBox'
 
 const resourceUsage = [
-  { resource: 'RAM', usage: '2-4 GB while model is loaded' },
-  { resource: 'Disk', usage: '~2 GB for the Q4_K_M quantised model' },
+  { resource: 'RAM', usage: '1-2 GB while model is loaded' },
+  { resource: 'Disk', usage: '~1 GB for the Q4_K_M quantised model' },
   { resource: 'CPU', usage: 'All cores utilised during inference' },
   { resource: 'Idle', usage: 'Model unloaded after 5 min of inactivity' },
 ]
 
 const commands = [
   { command: 'ollama list', description: 'Show installed models' },
-  { command: 'ollama pull llama3.2:3b', description: 'Download or update the model' },
-  { command: 'ollama rm llama3.2:3b', description: 'Remove the model' },
-  { command: 'ollama run llama3.2:3b', description: 'Interactive chat' },
-  { command: 'ollama show llama3.2:3b', description: 'Show model details' },
+  { command: 'ollama pull llama3.2:1b', description: 'Download or update the model' },
+  { command: 'ollama rm llama3.2:1b', description: 'Remove the model' },
+  { command: 'ollama run llama3.2:1b', description: 'Interactive chat' },
+  { command: 'ollama show llama3.2:1b', description: 'Show model details' },
   { command: 'ollama ps', description: 'Show loaded models and memory usage' },
 ]
 
 export function OllamaSection() {
   return (
     <section id="ollama">
-      <h2 className="text-3xl font-bold tracking-tight">4. Ollama + Llama 3.2 3B</h2>
+      <h2 className="text-3xl font-bold tracking-tight">4. Ollama + Llama 3.2 1B</h2>
       <p className="mt-2 text-muted-foreground">
         Ollama is a lightweight runtime for downloading, running, and managing
         LLMs locally. It exposes an HTTP API that Daemon uses.
@@ -54,18 +54,18 @@ export function OllamaSection() {
       <StepCheckbox stepId="ollama-installed" label="Ollama installed and running" />
 
       <h3 className="mt-6 text-xl font-semibold">Pull the Model</h3>
-      <CodeBlock code="ollama pull llama3.2:3b" />
+      <CodeBlock code="ollama pull llama3.2:1b" />
       <p className="text-sm text-muted-foreground">
-        Downloads the default Q4_K_M quantised version (~2 GB). Verify:
+        Downloads the default Q4_K_M quantised version (~1 GB). Verify:
       </p>
       <CodeBlock code="ollama list" />
 
-      <StepCheckbox stepId="model-pulled" label="Llama 3.2 3B model downloaded" />
+      <StepCheckbox stepId="model-pulled" label="Llama 3.2 1B model downloaded" />
 
       <h3 className="mt-6 text-xl font-semibold">Test Interactively</h3>
-      <CodeBlock code="ollama run llama3.2:3b" />
+      <CodeBlock code="ollama run llama3.2:1b" />
       <p className="text-sm text-muted-foreground">
-        Try a question at the prompt. On the N100/N150 expect ~5-15 tokens/sec.
+        Try a question at the prompt. On the N100/N150 expect ~10-30 tokens/sec.
         Exit with <code className="rounded bg-muted px-1.5 py-0.5">/bye</code> or Ctrl+D.
       </p>
 
