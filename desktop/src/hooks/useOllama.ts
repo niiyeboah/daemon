@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
+import { load } from "@tauri-apps/plugin-store";
 import {
   ollamaStatusAtom,
   modelsAtom,
@@ -15,6 +16,28 @@ import {
 } from "@/lib/tauri";
 import { OLLAMA_POLL_INTERVAL } from "@/store/constants";
 import type { ChatMessage, Message } from "@/types";
+
+const CHAT_STORE_PATH = "chat.json";
+const CHAT_STORE_KEY = "chatHistory";
+
+async function persistMessages(messages: ChatMessage[]) {
+  try {
+    const store = await load(CHAT_STORE_PATH, { defaults: {}, autoSave: true });
+    await store.set(CHAT_STORE_KEY, messages);
+  } catch {
+    // Silently fail — persistence is best-effort
+  }
+}
+
+async function loadPersistedMessages(): Promise<ChatMessage[]> {
+  try {
+    const store = await load(CHAT_STORE_PATH, { defaults: {}, autoSave: true });
+    const history = await store.get<ChatMessage[]>(CHAT_STORE_KEY);
+    return history ?? [];
+  } catch {
+    return [];
+  }
+}
 
 export function useOllamaStatus() {
   const [status, setStatus] = useAtom(ollamaStatusAtom);
@@ -61,6 +84,18 @@ export function useOllamaChat() {
   const [loading, setLoading] = useAtom(chatLoadingAtom);
   const [model] = useAtom(selectedModelAtom);
   const streamContentRef = useRef("");
+  const loadedRef = useRef(false);
+
+  // Load persisted chat history on mount
+  useEffect(() => {
+    if (loadedRef.current) return;
+    loadedRef.current = true;
+    loadPersistedMessages().then((history) => {
+      if (history.length > 0) {
+        setMessages(history);
+      }
+    });
+  }, [setMessages]);
 
   const sendMessage = useCallback(
     async (content: string) => {
@@ -107,9 +142,9 @@ export function useOllamaChat() {
 
         const response = await ollamaChat(model, apiMessages, true);
 
-        // Update with final stats
-        setMessages((prev) =>
-          prev.map((m) =>
+        // Update with final stats and persist
+        setMessages((prev) => {
+          const updated = prev.map((m) =>
             m.id === assistantId
               ? {
                   ...m,
@@ -125,11 +160,13 @@ export function useOllamaChat() {
                     : undefined,
                 }
               : m
-          )
-        );
+          );
+          persistMessages(updated);
+          return updated;
+        });
       } catch (err) {
-        setMessages((prev) =>
-          prev.map((m) =>
+        setMessages((prev) => {
+          const updated = prev.map((m) =>
             m.id === assistantId
               ? {
                   ...m,
@@ -138,8 +175,10 @@ export function useOllamaChat() {
                     `Error: ${err instanceof Error ? err.message : String(err)}`,
                 }
               : m
-          )
-        );
+          );
+          persistMessages(updated);
+          return updated;
+        });
       } finally {
         unlisten();
         setLoading(false);
@@ -150,6 +189,7 @@ export function useOllamaChat() {
 
   const clearChat = useCallback(() => {
     setMessages([]);
+    persistMessages([]);
   }, [setMessages]);
 
   return { messages, loading, sendMessage, clearChat };

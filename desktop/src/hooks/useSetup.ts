@@ -6,6 +6,7 @@ import {
   ollamaPullModel,
   ollamaChat,
   setupInit,
+  setupAlias,
   onPullProgress,
   onSetupLog,
 } from "@/lib/tauri";
@@ -60,6 +61,19 @@ const INITIAL_STEPS: SetupStep[] = [
     description: "Send a test prompt and verify response",
     status: "pending",
     optional: true,
+  },
+  {
+    id: "add-alias",
+    label: "Shell Alias",
+    description: "Add the daemon shell alias",
+    status: "pending",
+    optional: true,
+  },
+  {
+    id: "done",
+    label: "Done",
+    description: "Setup complete!",
+    status: "pending",
   },
 ];
 
@@ -183,6 +197,27 @@ export function useSetup() {
                 `Speed: ${response.tokens_per_second.toFixed(1)} tokens/sec`
               );
             }
+            updateStep(stepIndex, "done");
+            break;
+          }
+
+          case "add-alias": {
+            addLog("Adding shell alias...");
+            const unlistenAlias = await onSetupLog((event) => {
+              addLog(`[${event.stream}] ${event.line}`);
+            });
+            try {
+              await setupAlias();
+              addLog("Shell alias added successfully");
+              updateStep(stepIndex, "done");
+            } finally {
+              unlistenAlias();
+            }
+            break;
+          }
+
+          case "done": {
+            addLog("Setup complete! You're all set.");
             updateStep(stepIndex, "done");
             break;
           }

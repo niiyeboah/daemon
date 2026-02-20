@@ -1,5 +1,6 @@
 mod commands;
 
+use commands::diagnostics;
 use commands::ollama;
 use commands::setup;
 
@@ -13,9 +14,13 @@ pub fn run() {
             ollama::ollama_list_models,
             ollama::ollama_pull_model,
             ollama::ollama_chat,
+            ollama::ollama_running_models,
             setup::detect_os,
             setup::setup_check,
             setup::setup_init,
+            setup::setup_alias,
+            diagnostics::diagnostics_full,
+            diagnostics::system_info,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
