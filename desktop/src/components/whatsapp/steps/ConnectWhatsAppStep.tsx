@@ -9,36 +9,61 @@ interface ConnectWhatsAppStepProps {
   status: string;
 }
 
+// Unicode block chars used in terminal QR codes
+const FULL = "\u2588";   // █ full block
+const LOWER = "\u2584";  // ▄ lower half (2:1 mode)
+const UPPER = "\u2580";  // ▀ upper half (2:1 mode)
+const DARK = "\u2593";   // ▓ dark shade
+const MED = "\u2592";    // ▒ medium shade
+const LIGHT = "\u2591";  // ░ light shade
+
+/** Returns [topBlack, bottomBlack] for a char. In 1:1 mode both are same. */
+function charToPixels(ch: string, halfBlockMode: boolean): [boolean, boolean] {
+  const dark = ch !== " " && ch !== "\u00a0" && ch !== LIGHT;
+  if (!halfBlockMode) return [dark, dark];
+  if (ch === UPPER) return [true, false];
+  if (ch === LOWER) return [false, true];
+  return [dark, dark];
+}
+
 /**
- * Renders ASCII QR code (block characters) onto a canvas as a clean pixel grid.
- * Each character maps to a 2x2 pixel block (dark = block char, light = space).
+ * Renders terminal ASCII QR onto a canvas. Supports:
+ * - 2:1 half-block mode (█▄▀): each terminal line = 2 QR rows
+ * - 1:1 full-block mode (█ + space): each char = 1 module
  */
 function renderAsciiQr(canvas: HTMLCanvasElement, ascii: string) {
   const lines = ascii.split("\n").filter((l) => l.length > 0);
   if (lines.length === 0) return;
 
-  const rows = lines.length;
+  const termRows = lines.length;
   const cols = Math.max(...lines.map((l) => l.length));
-  const scale = Math.max(2, Math.floor(300 / Math.max(rows, cols)));
+  const halfBlockMode = lines.some((l) => l.includes(LOWER) || l.includes(UPPER));
+  const qrRows = halfBlockMode ? termRows * 2 : termRows;
+  const size = Math.max(qrRows, cols);
+  const scale = Math.max(2, Math.floor(300 / size));
 
   canvas.width = cols * scale;
-  canvas.height = rows * scale;
+  canvas.height = qrRows * scale;
 
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  // White background
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.fillStyle = "#000000";
-  for (let y = 0; y < rows; y++) {
-    const line = lines[y];
+  for (let ty = 0; ty < termRows; ty++) {
+    const line = lines[ty];
     for (let x = 0; x < line.length; x++) {
-      const ch = line[x];
-      // Dark module: any block character
-      if (ch !== " " && ch !== "\u00a0") {
-        ctx.fillRect(x * scale, y * scale, scale, scale);
+      const [top, bottom] = charToPixels(line[x], halfBlockMode);
+      const px = x * scale;
+      if (halfBlockMode) {
+        const pyTop = ty * 2 * scale;
+        const pyBottom = (ty * 2 + 1) * scale;
+        if (top) ctx.fillRect(px, pyTop, scale, scale);
+        if (bottom) ctx.fillRect(px, pyBottom, scale, scale);
+      } else {
+        if (top) ctx.fillRect(px, ty * scale, scale, scale);
       }
     }
   }
@@ -87,9 +112,23 @@ export function ConnectWhatsAppStep({
           <div className="rounded-xl border bg-white p-4">
             <canvas ref={canvasRef} className="block" />
           </div>
-          <div className="text-xs text-muted-foreground text-center">
-            Open WhatsApp on your phone, go to Settings &gt; Linked Devices &gt;
-            Link a Device, and scan this code.
+          <div className="text-xs text-muted-foreground text-center space-y-2">
+            <p>
+              Open WhatsApp on your phone, go to Settings &gt; Linked Devices
+              &gt; Link a Device, and scan this code.
+            </p>
+            <p>
+              If the QR doesn&apos;t scan, try the{" "}
+              <a
+                href="http://127.0.0.1:18789/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary underline hover:no-underline"
+              >
+                OpenClaw Control UI
+              </a>{" "}
+              — it shows a proper QR when the gateway is running.
+            </p>
           </div>
           <Button
             onClick={handleRefresh}

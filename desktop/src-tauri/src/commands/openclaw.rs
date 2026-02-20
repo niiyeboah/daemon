@@ -169,8 +169,15 @@ pub async fn openclaw_connect_whatsapp(app: AppHandle) -> Result<(), String> {
     use tokio::io::{AsyncBufReadExt, BufReader};
     use tokio::process::Command;
 
+    // Fix invalid config (e.g. legacy root-level provider/model/contextWindow/maxTokens)
+    // before attempting login; doctor --fix removes unrecognized keys
+    let _ = spawn_and_stream(&app, "openclaw", &["doctor", "--fix", "--yes"]).await;
+
+    // WhatsApp is a plugin that is disabled by default; enable it before login
+    let _ = spawn_and_stream(&app, "openclaw", &["plugins", "enable", "whatsapp"]).await;
+
     let mut child = Command::new("openclaw")
-        .args(["channels", "login", "whatsapp"])
+        .args(["channels", "login", "--channel", "whatsapp"])
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped())
         .spawn()
@@ -204,13 +211,20 @@ pub async fn openclaw_connect_whatsapp(app: AppHandle) -> Result<(), String> {
                     }
                     qr_lines.push(line.clone());
                 } else if in_qr {
-                    // QR block ended — emit the collected QR data
+                    // QR block ended — emit only if it looks like a real QR (square-ish, min size)
                     in_qr = false;
-                    let qr_data = qr_lines.join("\n");
-                    let _ = app_qr.emit(
-                        "openclaw-qr",
-                        OpenClawQrEvent { data: qr_data },
-                    );
+                    let rows = qr_lines.len();
+                    let cols = qr_lines.iter().map(|l| l.len()).max().unwrap_or(0);
+                    let is_squareish = rows >= 15 && cols >= 15
+                        && (rows as f64 / cols as f64) >= 0.4
+                        && (rows as f64 / cols as f64) <= 2.5;
+                    if is_squareish {
+                        let qr_data = qr_lines.join("\n");
+                        let _ = app_qr.emit(
+                            "openclaw-qr",
+                            OpenClawQrEvent { data: qr_data },
+                        );
+                    }
                     qr_lines.clear();
                 }
 
@@ -223,13 +237,20 @@ pub async fn openclaw_connect_whatsapp(app: AppHandle) -> Result<(), String> {
                 );
             }
 
-            // Emit any trailing QR data
+            // Emit any trailing QR data (with same filtering)
             if !qr_lines.is_empty() {
-                let qr_data = qr_lines.join("\n");
-                let _ = app_qr.emit(
-                    "openclaw-qr",
-                    OpenClawQrEvent { data: qr_data },
-                );
+                let rows = qr_lines.len();
+                let cols = qr_lines.iter().map(|l| l.len()).max().unwrap_or(0);
+                let is_squareish = rows >= 15 && cols >= 15
+                    && (rows as f64 / cols as f64) >= 0.4
+                    && (rows as f64 / cols as f64) <= 2.5;
+                if is_squareish {
+                    let qr_data = qr_lines.join("\n");
+                    let _ = app_qr.emit(
+                        "openclaw-qr",
+                        OpenClawQrEvent { data: qr_data },
+                    );
+                }
             }
         }
     });
@@ -286,12 +307,34 @@ pub async fn openclaw_configure_model(model: String) -> Result<(), String> {
         serde_json::json!({})
     };
 
-    // Set model configuration
     let obj = config.as_object_mut().ok_or("Config is not a JSON object")?;
-    obj.insert("provider".to_string(), serde_json::json!("ollama"));
-    obj.insert("model".to_string(), serde_json::json!(format!("ollama/{}", model)));
-    obj.insert("contextWindow".to_string(), serde_json::json!(16384));
-    obj.insert("maxTokens".to_string(), serde_json::json!(8192));
+
+    // Remove legacy root-level keys that OpenClaw no longer accepts
+    obj.remove("provider");
+    obj.remove("model");
+    obj.remove("contextWindow");
+    obj.remove("maxTokens");
+
+    // OpenClaw expects model config under agents.defaults (see docs.openclaw.ai/gateway/configuration)
+    let model_ref = format!("ollama/{}", model);
+    let agents = obj
+        .entry("agents")
+        .or_insert_with(|| serde_json::json!({}))
+        .as_object_mut()
+        .ok_or("agents must be an object")?;
+    let defaults = agents
+        .entry("defaults")
+        .or_insert_with(|| serde_json::json!({}))
+        .as_object_mut()
+        .ok_or("agents.defaults must be an object")?;
+
+    defaults.insert(
+        "model".to_string(),
+        serde_json::json!({ "primary": model_ref }),
+    );
+    let mut models_obj = serde_json::Map::new();
+    models_obj.insert(model_ref.clone(), serde_json::json!({ "alias": "Daemon" }));
+    defaults.insert("models".to_string(), serde_json::Value::Object(models_obj));
 
     let content = serde_json::to_string_pretty(&config)
         .map_err(|e| format!("Failed to serialize config: {}", e))?;
