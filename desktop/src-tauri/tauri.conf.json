@@ -19,7 +19,7 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEM0QjNFRkUzOUJCNjU1MTUKUldRVlZiYWI0Kyt6eEU2L0VyYXU1VkNYVE9LeUVDclVOVHUyMVpQaHZLa3RYaGhBTzRxNmc1MmcK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDYzNUFGN0JCQTExMjhBRjEKUldUeGloS2h1L2RhWThmYnhuVEl5L0pVK1JrSldRYlpuQXhvRkpzbjF5MkZmYlR1R09xZWpvV1AK",
       "endpoints": ["https://github.com/niiyeboah/daemon/releases/latest/download/latest.json"]
     }
   }
