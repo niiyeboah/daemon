@@ -73,6 +73,9 @@ jobs:
 
   build:
     needs: create-release
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
     strategy:
       fail-fast: false
       matrix:
@@ -145,11 +148,7 @@ jobs:
         working-directory: desktop
 
       - name: Build Tauri app
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Sign updater artifacts (optional). Add repo secret TAURI_SIGNING_PRIVATE_KEY to enable.
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        uses: tauri-apps/tauri-action@action-v0.6.1
         with:
           projectPath: desktop
           releaseId: ${{ needs.create-release.outputs.release_id }}
