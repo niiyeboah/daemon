@@ -1,0 +1,25 @@
+{
+  "identifier": "daemon-desktop-default",
+  "description": "Default capabilities for the Daemon desktop app",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "shell:allow-spawn",
+    "shell:allow-execute",
+    "shell:allow-stdin-write",
+    "store:default",
+    {
+      "identifier": "http:default",
+      "allow": [
+        { "url": "http://localhost:11434/**" },
+        { "url": "http://127.0.0.1:11434/**" }
+      ]
+    },
+    {
+      "identifier": "shell:allow-open",
+      "allow": [
+        { "path": "https://ollama.com/**" }
+      ]
+    }
+  ]
+}
