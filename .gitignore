@@ -25,6 +25,12 @@ logs/
 web/node_modules/
 web/dist/
 
+# Desktop (Tauri)
+desktop/node_modules/
+desktop/dist/
+desktop/src-tauri/bin/
+desktop/src-tauri/target/
+
 # AI Agents
 .cursor
 .claude
