@@ -7,6 +7,8 @@ import { InstallOllamaStep } from "@/components/setup/steps/InstallOllamaStep";
 import { PullModelStep } from "@/components/setup/steps/PullModelStep";
 import { CreateModelStep } from "@/components/setup/steps/CreateModelStep";
 import { TestInferenceStep } from "@/components/setup/steps/TestInferenceStep";
+import { AliasStep } from "@/components/setup/steps/AliasStep";
+import { DoneStep } from "@/components/setup/steps/DoneStep";
 
 export default function Setup() {
   const {
@@ -99,6 +101,16 @@ export default function Setup() {
                 status={current.status}
               />
             )}
+
+            {current.id === "add-alias" && (
+              <AliasStep
+                onRun={() => runStep(currentStep)}
+                onSkip={nextStep}
+                status={current.status}
+              />
+            )}
+
+            {current.id === "done" && <DoneStep />}
           </div>
         </div>
       </div>

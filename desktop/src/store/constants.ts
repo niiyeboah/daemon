@@ -9,6 +9,9 @@ export const NAV_ITEMS = [
   { path: "/", label: "Home", icon: "Home" as const },
   { path: "/setup", label: "Setup", icon: "Wand2" as const },
   { path: "/chat", label: "Chat", icon: "MessageSquare" as const },
+  { path: "/diagnostics", label: "Diagnostics", icon: "Activity" as const },
+  { path: "/settings", label: "Settings", icon: "Settings" as const },
 ] as const;
 
 export const OLLAMA_POLL_INTERVAL = 30_000; // 30 seconds
+export const DIAGNOSTICS_POLL_INTERVAL = 10_000; // 10 seconds

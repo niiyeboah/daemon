@@ -9,6 +9,9 @@ import type {
   PullProgressEvent,
   SetupStatus,
   SetupLogEvent,
+  DiagnosticsReport,
+  SystemInfo,
+  RunningModel,
 } from "@/types";
 
 // Ollama commands
@@ -33,6 +36,10 @@ export async function ollamaChat(
   return invoke("ollama_chat", { model, messages, stream });
 }
 
+export async function ollamaRunningModels(): Promise<RunningModel[]> {
+  return invoke("ollama_running_models");
+}
+
 // Setup commands
 
 export async function detectOs(): Promise<string> {
@@ -45,6 +52,20 @@ export async function setupCheck(): Promise<SetupStatus> {
 
 export async function setupInit(lite: boolean): Promise<void> {
   return invoke("setup_init", { lite });
+}
+
+export async function setupAlias(): Promise<void> {
+  return invoke("setup_alias");
+}
+
+// Diagnostics commands
+
+export async function diagnosticsFull(): Promise<DiagnosticsReport> {
+  return invoke("diagnostics_full");
+}
+
+export async function systemInfo(): Promise<SystemInfo> {
+  return invoke("system_info");
 }
 
 // Event listeners

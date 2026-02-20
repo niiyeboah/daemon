@@ -60,3 +60,52 @@ export interface ChatMessage {
 }
 
 export type StepStatus = "pending" | "running" | "done" | "error";
+
+// Diagnostics types
+
+export interface DiagnosticAction {
+  label: string;
+  command: string;
+}
+
+export interface DiagnosticCheck {
+  id: string;
+  name: string;
+  status: "pass" | "warn" | "fail";
+  message: string;
+  metric?: string | null;
+  detail?: string | null;
+  action?: DiagnosticAction | null;
+}
+
+export interface DiagnosticsReport {
+  timestamp: number;
+  checks: DiagnosticCheck[];
+  overall_status: "healthy" | "degraded" | "unhealthy";
+}
+
+export interface SystemInfo {
+  total_ram: number;
+  available_ram: number;
+  used_ram: number;
+  total_disk: number;
+  free_disk: number;
+  cpu_brand: string;
+  cpu_count: number;
+}
+
+export interface RunningModel {
+  name: string;
+  size: number | null;
+  expires_at: string | null;
+}
+
+// Settings types
+
+export type Theme = "light" | "dark" | "system";
+
+export interface AppSettings {
+  theme: Theme;
+  defaultModel: string;
+  systemPrompt: string;
+}

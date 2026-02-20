@@ -3,7 +3,7 @@ use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use tauri::{AppHandle, Emitter};
 
-const OLLAMA_BASE: &str = "http://localhost:11434";
+pub const OLLAMA_BASE: &str = "http://localhost:11434";
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct OllamaStatus {
@@ -81,6 +81,26 @@ struct PullChunk {
     status: String,
     completed: Option<u64>,
     total: Option<u64>,
+}
+
+// Running models types (/api/ps)
+#[derive(Debug, Serialize, Deserialize)]
+pub struct RunningModel {
+    pub name: String,
+    pub size: Option<u64>,
+    pub expires_at: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct PsResponse {
+    models: Option<Vec<PsModel>>,
+}
+
+#[derive(Debug, Deserialize)]
+struct PsModel {
+    name: String,
+    size: Option<u64>,
+    expires_at: Option<String>,
 }
 
 #[tauri::command]
@@ -280,4 +300,33 @@ pub async fn ollama_chat(
 
     final_response.message.content = full_content;
     Ok(final_response)
+}
+
+#[tauri::command]
+pub async fn ollama_running_models() -> Result<Vec<RunningModel>, String> {
+    let client = Client::builder()
+        .timeout(std::time::Duration::from_secs(5))
+        .build()
+        .map_err(|e| e.to_string())?;
+
+    let resp = client
+        .get(format!("{}/api/ps", OLLAMA_BASE))
+        .send()
+        .await
+        .map_err(|e| format!("Failed to reach Ollama API: {}", e))?;
+
+    let ps: PsResponse = resp.json().await.map_err(|e| e.to_string())?;
+
+    let models = ps
+        .models
+        .unwrap_or_default()
+        .into_iter()
+        .map(|m| RunningModel {
+            name: m.name,
+            size: m.size,
+            expires_at: m.expires_at,
+        })
+        .collect();
+
+    Ok(models)
 }
