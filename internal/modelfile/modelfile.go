@@ -28,7 +28,7 @@ func DefaultParams(baseModel string) Params {
 		SystemPrompt: defaultSystemPrompt,
 		Temperature:  0.7,
 		TopP:         0.9,
-		NumCtx:       2048,
+		NumCtx:       16384,
 	}
 }
 

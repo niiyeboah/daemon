@@ -1,30 +1,29 @@
-import { useSetup } from "@/hooks/useSetup";
+import { useWhatsApp } from "@/hooks/useWhatsApp";
 import { SetupStepper } from "@/components/setup/SetupStepper";
 import { LogDrawer } from "@/components/setup/LogDrawer";
-import { DetectOsStep } from "@/components/setup/steps/DetectOsStep";
-import { CheckOllamaStep } from "@/components/setup/steps/CheckOllamaStep";
-import { InstallOllamaStep } from "@/components/setup/steps/InstallOllamaStep";
-import { PullModelStep } from "@/components/setup/steps/PullModelStep";
-import { CreateModelStep } from "@/components/setup/steps/CreateModelStep";
-import { TestInferenceStep } from "@/components/setup/steps/TestInferenceStep";
-import { AliasStep } from "@/components/setup/steps/AliasStep";
-import { DoneStep } from "@/components/setup/steps/DoneStep";
+import { CheckOpenClawStep } from "@/components/whatsapp/steps/CheckOpenClawStep";
+import { InstallOpenClawStep } from "@/components/whatsapp/steps/InstallOpenClawStep";
+import { OnboardStep } from "@/components/whatsapp/steps/OnboardStep";
+import { ConnectWhatsAppStep } from "@/components/whatsapp/steps/ConnectWhatsAppStep";
+import { ConfigureModelStep } from "@/components/whatsapp/steps/ConfigureModelStep";
+import { RestartGatewayStep } from "@/components/whatsapp/steps/RestartGatewayStep";
+import { TestStep } from "@/components/whatsapp/steps/TestStep";
+import { WhatsAppDoneStep } from "@/components/whatsapp/steps/WhatsAppDoneStep";
 
-export default function Setup() {
+export default function WhatsApp() {
   const {
     steps,
     currentStep,
     setCurrentStep,
     logs,
     logsEndRef,
-    detectedOs,
-    ollamaReachable,
-    pullProgress,
-    testResponse,
+    openclawInstalled,
+    gatewayRunning,
+    qrData,
     runStep,
     nextStep,
-    recheckOllama,
-  } = useSetup();
+    recheckOpenClaw,
+  } = useWhatsApp();
 
   const current = steps[currentStep];
 
@@ -33,7 +32,7 @@ export default function Setup() {
       <div className="flex flex-1 overflow-hidden">
         {/* Step list sidebar */}
         <div className="w-64 shrink-0 border-r overflow-auto p-4">
-          <h2 className="text-sm font-semibold mb-4">Setup Wizard</h2>
+          <h2 className="text-sm font-semibold mb-4">WhatsApp Connector</h2>
           <SetupStepper
             steps={steps}
             currentStep={currentStep}
@@ -49,67 +48,68 @@ export default function Setup() {
               Step {currentStep + 1} of {steps.length}
             </p>
 
-            {current.id === "detect-os" && (
-              <DetectOsStep
-                detectedOs={detectedOs}
+            {current.id === "check-openclaw" && (
+              <CheckOpenClawStep
+                openclawInstalled={openclawInstalled}
+                gatewayRunning={gatewayRunning}
                 onRun={() => runStep(currentStep)}
                 onNext={nextStep}
                 status={current.status}
               />
             )}
 
-            {current.id === "check-ollama" && (
-              <CheckOllamaStep
-                ollamaReachable={ollamaReachable}
+            {current.id === "install-openclaw" && (
+              <InstallOpenClawStep
+                openclawInstalled={openclawInstalled}
+                onRun={() => runStep(currentStep)}
+                onRecheck={recheckOpenClaw}
+                onNext={nextStep}
+                status={current.status}
+              />
+            )}
+
+            {current.id === "onboard" && (
+              <OnboardStep
                 onRun={() => runStep(currentStep)}
                 onNext={nextStep}
                 status={current.status}
               />
             )}
 
-            {current.id === "install-ollama" && (
-              <InstallOllamaStep
-                detectedOs={detectedOs}
-                onRecheck={recheckOllama}
-                onNext={nextStep}
-                status={current.status}
-              />
-            )}
-
-            {current.id === "pull-model" && (
-              <PullModelStep
-                pullProgress={pullProgress}
+            {current.id === "connect-whatsapp" && (
+              <ConnectWhatsAppStep
+                qrData={qrData}
                 onRun={() => runStep(currentStep)}
                 onNext={nextStep}
                 status={current.status}
               />
             )}
 
-            {current.id === "create-model" && (
-              <CreateModelStep
+            {current.id === "configure-model" && (
+              <ConfigureModelStep
                 onRun={() => runStep(currentStep)}
                 onNext={nextStep}
                 status={current.status}
               />
             )}
 
-            {current.id === "test-inference" && (
-              <TestInferenceStep
-                testResponse={testResponse}
+            {current.id === "restart-gateway" && (
+              <RestartGatewayStep
                 onRun={() => runStep(currentStep)}
+                onNext={nextStep}
                 status={current.status}
               />
             )}
 
-            {current.id === "add-alias" && (
-              <AliasStep
+            {current.id === "test" && (
+              <TestStep
                 onRun={() => runStep(currentStep)}
-                onSkip={nextStep}
+                onNext={nextStep}
                 status={current.status}
               />
             )}
 
-            {current.id === "done" && <DoneStep />}
+            {current.id === "done" && <WhatsAppDoneStep />}
           </div>
         </div>
       </div>

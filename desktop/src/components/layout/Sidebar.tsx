@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useAtom } from "jotai";
-import { Home, Wand2, MessageSquare, Activity, Settings, PanelLeftClose, PanelLeft } from "lucide-react";
+import { Home, Wand2, MessageSquare, Activity, Settings, Smartphone, PanelLeftClose, PanelLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { sidebarCollapsedAtom } from "@/store/atoms";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ const icons = {
   MessageSquare,
   Activity,
   Settings,
+  Smartphone,
 } as const;
 
 const navItems = [
@@ -18,6 +19,7 @@ const navItems = [
   { path: "/setup", label: "Setup", icon: "Wand2" as const },
   { path: "/chat", label: "Chat", icon: "MessageSquare" as const },
   { path: "/diagnostics", label: "Diagnostics", icon: "Activity" as const },
+  { path: "/whatsapp", label: "WhatsApp", icon: "Smartphone" as const },
   { path: "/settings", label: "Settings", icon: "Settings" as const },
 ];
 

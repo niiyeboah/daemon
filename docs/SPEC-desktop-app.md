@@ -210,7 +210,7 @@ A guided flow for connecting WhatsApp as an OpenClaw channel.
 | 1 | **Check OpenClaw** | Verify OpenClaw is installed and the gateway is running. If not, guide installation. |
 | 2 | **Install OpenClaw** (if missing) | Run the install script: `curl -fsSL https://openclaw.ai/install.sh \| bash`. Show progress. |
 | 3 | **Run onboarding** (if first time) | Run `openclaw onboard --install-daemon`. Stream output to a terminal view in the app. |
-| 4 | **Connect WhatsApp channel** | Run `openclaw channels login whatsapp`. Display the QR code (from stdout or the gateway UI) within the app for the user to scan with their phone. |
+| 4 | **Connect WhatsApp channel** | Run `openclaw plugins enable whatsapp` (WhatsApp is a disabled-by-default plugin), then `openclaw channels login --channel whatsapp`. Display the QR code (from stdout or the gateway UI) within the app for the user to scan with their phone. |
 | 5 | **Configure Daemon model** | Set `ollama/daemon` (or `ollama/daemon-lite`) as the default model in `~/.openclaw/openclaw.json`. Write the explicit provider config with `contextWindow: 16384` and `maxTokens: 8192`. |
 | 6 | **Restart gateway** | Run `openclaw gateway restart`. |
 | 7 | **Test** | Send a test message via the OpenClaw dashboard or CLI. Verify response comes back. |
@@ -454,7 +454,7 @@ async fn openclaw_install() -> Result<(), String>
 
 #[tauri::command]
 async fn openclaw_connect_whatsapp() -> Result<(), String>
-// Run openclaw channels login whatsapp. QR code streamed via events.
+// Run openclaw channels login --channel whatsapp. QR code streamed via events.
 
 #[tauri::command]
 async fn openclaw_configure_model(model: String) -> Result<(), String>

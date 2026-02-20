@@ -57,7 +57,7 @@ pub async fn setup_check(app: AppHandle) -> Result<SetupStatus, String> {
 pub async fn setup_init(app: AppHandle, lite: bool) -> Result<(), String> {
     let shell = app.shell();
 
-    let mut args = vec!["init", "--yes"];
+    let mut args = vec!["init"];
     if lite {
         args.push("--lite");
     }

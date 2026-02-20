@@ -12,6 +12,9 @@ import type {
   DiagnosticsReport,
   SystemInfo,
   RunningModel,
+  OpenClawStatus,
+  OpenClawLogEvent,
+  OpenClawQrEvent,
 } from "@/types";
 
 // Ollama commands
@@ -86,4 +89,44 @@ export function onSetupLog(
   callback: (event: SetupLogEvent) => void
 ): Promise<UnlistenFn> {
   return listen<SetupLogEvent>("setup-log", (e) => callback(e.payload));
+}
+
+// OpenClaw commands
+
+export async function openclawCheck(): Promise<OpenClawStatus> {
+  return invoke("openclaw_check");
+}
+
+export async function openclawInstall(): Promise<void> {
+  return invoke("openclaw_install");
+}
+
+export async function openclawOnboard(): Promise<void> {
+  return invoke("openclaw_onboard");
+}
+
+export async function openclawConnectWhatsapp(): Promise<void> {
+  return invoke("openclaw_connect_whatsapp");
+}
+
+export async function openclawConfigureModel(model: string): Promise<void> {
+  return invoke("openclaw_configure_model", { model });
+}
+
+export async function openclawGatewayRestart(): Promise<void> {
+  return invoke("openclaw_gateway_restart");
+}
+
+// OpenClaw event listeners
+
+export function onOpenClawLog(
+  callback: (event: OpenClawLogEvent) => void
+): Promise<UnlistenFn> {
+  return listen<OpenClawLogEvent>("openclaw-log", (e) => callback(e.payload));
+}
+
+export function onOpenClawQr(
+  callback: (event: OpenClawQrEvent) => void
+): Promise<UnlistenFn> {
+  return listen<OpenClawQrEvent>("openclaw-qr", (e) => callback(e.payload));
 }

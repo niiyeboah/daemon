@@ -5,7 +5,7 @@ use sysinfo::{Disks, System};
 
 use super::ollama::OLLAMA_BASE;
 
-const OPENCLAW_BASE: &str = "http://127.0.0.1:18789";
+pub const OPENCLAW_BASE: &str = "http://127.0.0.1:18789";
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct DiagnosticCheck {

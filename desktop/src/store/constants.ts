@@ -10,6 +10,7 @@ export const NAV_ITEMS = [
   { path: "/setup", label: "Setup", icon: "Wand2" as const },
   { path: "/chat", label: "Chat", icon: "MessageSquare" as const },
   { path: "/diagnostics", label: "Diagnostics", icon: "Activity" as const },
+  { path: "/whatsapp", label: "WhatsApp", icon: "Smartphone" as const },
   { path: "/settings", label: "Settings", icon: "Settings" as const },
 ] as const;
 
