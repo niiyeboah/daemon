@@ -19,7 +19,32 @@ permissions:
   contents: write
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: desktop/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: desktop
+
+      - name: Lint frontend
+        run: npm run lint
+        working-directory: desktop
+
+      - name: Type check
+        run: npx tsc --noEmit
+        working-directory: desktop
+
   create-release:
+    needs: lint
     runs-on: ubuntu-latest
     outputs:
       release_id: ${{ steps.create-release.outputs.release_id }}
@@ -108,9 +133,12 @@ jobs:
           cache-dependency-path: desktop/package-lock.json
 
       - name: Build Go sidecar
+        env:
+          GOOS: ${{ matrix.sidecar_goos }}
+          GOARCH: ${{ matrix.sidecar_goarch }}
         run: |
           mkdir -p desktop/src-tauri/bin
-          GOOS=${{ matrix.sidecar_goos }} GOARCH=${{ matrix.sidecar_goarch }} go build -o desktop/src-tauri/bin/daemon-setup-${{ matrix.target }}${{ matrix.os == 'windows-latest' && '.exe' || '' }} ./cmd/daemon-setup
+          go build -o desktop/src-tauri/bin/daemon-setup-${{ matrix.target }}${{ matrix.os == 'windows-latest' && '.exe' || '' }} ./cmd/daemon-setup
 
       - name: Install frontend dependencies
         run: npm ci

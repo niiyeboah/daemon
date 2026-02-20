@@ -36,6 +36,7 @@ jobs:
         working-directory: desktop
 
   build:
+    needs: lint
     strategy:
       fail-fast: false
       matrix:
@@ -85,9 +86,12 @@ jobs:
           cache-dependency-path: desktop/package-lock.json
 
       - name: Build Go sidecar
+        env:
+          GOOS: ${{ matrix.sidecar_goos }}
+          GOARCH: ${{ matrix.sidecar_goarch }}
         run: |
           mkdir -p desktop/src-tauri/bin
-          GOOS=${{ matrix.sidecar_goos }} GOARCH=${{ matrix.sidecar_goarch }} go build -o desktop/src-tauri/bin/daemon-setup-${{ matrix.target }}${{ matrix.os == 'windows-latest' && '.exe' || '' }} ./cmd/daemon-setup
+          go build -o desktop/src-tauri/bin/daemon-setup-${{ matrix.target }}${{ matrix.os == 'windows-latest' && '.exe' || '' }} ./cmd/daemon-setup
 
       - name: Install frontend dependencies
         run: npm ci
