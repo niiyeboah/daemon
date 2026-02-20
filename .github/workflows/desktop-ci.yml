@@ -1,0 +1,98 @@
+# DAE-5: Desktop app PR validation
+# Lint, type-check, and build-check on PRs touching desktop or daemon-setup.
+
+name: Desktop CI
+
+on:
+  pull_request:
+    paths:
+      - 'desktop/**'
+      - 'cmd/daemon-setup/**'
+      - '.github/workflows/desktop-ci.yml'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: desktop/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: desktop
+
+      - name: Lint frontend
+        run: npm run lint
+        working-directory: desktop
+
+      - name: Type check
+        run: npx tsc --noEmit
+        working-directory: desktop
+
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            sidecar_goos: darwin
+            sidecar_goarch: arm64
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            sidecar_goos: linux
+            sidecar_goarch: amd64
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            sidecar_goos: windows
+            sidecar_goarch: amd64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Linux dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Cache Rust
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: desktop/src-tauri -> target
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: desktop/package-lock.json
+
+      - name: Build Go sidecar
+        run: |
+          mkdir -p desktop/src-tauri/bin
+          GOOS=${{ matrix.sidecar_goos }} GOARCH=${{ matrix.sidecar_goarch }} go build -o desktop/src-tauri/bin/daemon-setup-${{ matrix.target }}${{ matrix.os == 'windows-latest' && '.exe' || '' }} ./cmd/daemon-setup
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: desktop
+
+      - name: Build Tauri app (no release artifacts)
+        run: npm run tauri build -- --target ${{ matrix.target }}
+        working-directory: desktop

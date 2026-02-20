@@ -59,9 +59,10 @@ The app uses the Tauri updater plugin with GitHub Releases. To enable signed upd
    ```
 
 4. **Upload to GitHub Releases:**
-   - Upload the DMG/MSI/AppImage and their `.sig` files
-   - Create `latest.json` with the format from [Tauri updater docs](https://v2.tauri.app/plugin/updater)
-   - Or use GitHub Actions: [tauri-action](https://github.com/tauri-apps/tauri-action)
+   - Automated via `.github/workflows/desktop-release.yml`
+   - Push tag `desktop-v*` (e.g. `desktop-v0.1.0`) or run workflow manually
+   - Builds macOS (aarch64), Linux (x86_64), and Windows (x86_64)
+   - Creates GitHub Release with installers and `latest.json` for auto-updates
 
 ## Code Signing (Future)
 
