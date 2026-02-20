@@ -39,12 +39,6 @@ const INITIAL_STEPS: WhatsAppStep[] = [
     status: "pending",
   },
   {
-    id: "connect-whatsapp",
-    label: "Connect WhatsApp",
-    description: "Scan QR code to link your WhatsApp",
-    status: "pending",
-  },
-  {
     id: "configure-model",
     label: "Configure Model",
     description: "Set Daemon as the default model",
@@ -54,6 +48,12 @@ const INITIAL_STEPS: WhatsAppStep[] = [
     id: "restart-gateway",
     label: "Restart Gateway",
     description: "Restart OpenClaw gateway with new config",
+    status: "pending",
+  },
+  {
+    id: "connect-whatsapp",
+    label: "Connect WhatsApp",
+    description: "Scan QR code to link your WhatsApp",
     status: "pending",
   },
   {
@@ -180,8 +180,28 @@ export function useWhatsApp() {
             addLog("Connecting WhatsApp channel...");
             setQrData(null);
 
+            // Block chars used in terminal QR codes (same as Rust backend)
+            const QR_BLOCK_CHARS = /\u2588|\u2584|\u2580|\u2591|\u2592|\u2593/;
+            let qrLines: string[] = [];
+
             const unlistenLog = await onOpenClawLog((event) => {
-              addLog(`[${event.stream}] ${event.line}`);
+              const line = event.line;
+              addLog(`[${event.stream}] ${line}`);
+
+              // Fallback: parse QR from log stream (in case openclaw-qr event doesn't fire)
+              const isQrLine = QR_BLOCK_CHARS.test(line);
+              if (isQrLine) {
+                qrLines.push(line);
+              } else if (qrLines.length > 0) {
+                const rows = qrLines.length;
+                const cols = Math.max(...qrLines.map((l) => l.length));
+                const aspect = rows / cols;
+                if (rows >= 10 && cols >= 10 && aspect >= 0.3 && aspect <= 3) {
+                  setQrData(qrLines.join("\n"));
+                  addLog("QR code received — scan with your phone");
+                }
+                qrLines = [];
+              }
             });
             const unlistenQr = await onOpenClawQr((event) => {
               setQrData(event.data);
@@ -193,6 +213,15 @@ export function useWhatsApp() {
               addLog("WhatsApp connected successfully");
               updateStep(stepIndex, "done");
             } finally {
+              // Flush any trailing QR from log fallback
+              if (qrLines.length > 0) {
+                const rows = qrLines.length;
+                const cols = Math.max(...qrLines.map((l) => l.length));
+                const aspect = rows / cols;
+                if (rows >= 10 && cols >= 10 && aspect >= 0.3 && aspect <= 3) {
+                  setQrData(qrLines.join("\n"));
+                }
+              }
               unlistenLog();
               unlistenQr();
             }
@@ -202,7 +231,7 @@ export function useWhatsApp() {
           case "configure-model": {
             addLog("Configuring Daemon as default model...");
             await openclawConfigureModel("daemon");
-            addLog("Model configured: ollama/daemon (context: 16384, max tokens: 8192)");
+            addLog("Model configured: ollama/daemon (provider + auth-profiles written)");
             updateStep(stepIndex, "done");
             break;
           }

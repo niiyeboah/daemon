@@ -100,10 +100,24 @@ export function ConnectWhatsAppStep({
       </p>
 
       {status === "running" && !qrData && (
-        <div className="flex items-center justify-center py-12">
+        <div className="flex flex-col items-center gap-4 py-8">
           <div className="text-sm text-muted-foreground">
             Waiting for QR code...
           </div>
+          <p className="text-xs text-muted-foreground text-center max-w-sm">
+            If the QR never appears, the gateway may not be reachable. Try{" "}
+            <a
+              href="http://127.0.0.1:18789/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline hover:no-underline"
+            >
+              OpenClaw Control UI
+            </a>{" "}
+            — it shows the QR when the gateway is running. Or run{" "}
+            <code className="text-xs bg-muted px-1 rounded">openclaw gateway start</code>{" "}
+            in a terminal.
+          </p>
         </div>
       )}
 
