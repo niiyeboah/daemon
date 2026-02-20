@@ -11,7 +11,8 @@
     {
       "identifier": "shell:allow-open",
       "allow": [
-        { "path": "https://ollama.com/**" }
+        { "path": "https://ollama.com/**" },
+        { "path": "https://openclaw.ai/**" }
       ]
     }
   ]

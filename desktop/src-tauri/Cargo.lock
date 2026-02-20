@@ -457,6 +457,7 @@ dependencies = [
 name = "daemon-desktop"
 version = "0.1.0"
 dependencies = [
+ "dirs",
  "futures-util",
  "reqwest 0.12.28",
  "serde",

@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Terminal } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 interface LogDrawerProps {
   logs: string[];

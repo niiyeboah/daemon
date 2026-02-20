@@ -2,6 +2,7 @@ mod commands;
 
 use commands::diagnostics;
 use commands::ollama;
+use commands::openclaw;
 use commands::setup;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -21,6 +22,12 @@ pub fn run() {
             setup::setup_alias,
             diagnostics::diagnostics_full,
             diagnostics::system_info,
+            openclaw::openclaw_check,
+            openclaw::openclaw_install,
+            openclaw::openclaw_onboard,
+            openclaw::openclaw_connect_whatsapp,
+            openclaw::openclaw_configure_model,
+            openclaw::openclaw_gateway_restart,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

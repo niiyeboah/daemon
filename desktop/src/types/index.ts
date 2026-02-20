@@ -100,6 +100,23 @@ export interface RunningModel {
   expires_at: string | null;
 }
 
+// OpenClaw types
+
+export interface OpenClawStatus {
+  installed: boolean;
+  path: string | null;
+  gateway_running: boolean;
+}
+
+export interface OpenClawLogEvent {
+  line: string;
+  stream: "stdout" | "stderr";
+}
+
+export interface OpenClawQrEvent {
+  data: string;
+}
+
 // Settings types
 
 export type Theme = "light" | "dark" | "system";

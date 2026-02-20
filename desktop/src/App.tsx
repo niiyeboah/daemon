@@ -6,6 +6,7 @@ import Setup from "@/pages/Setup";
 import Chat from "@/pages/Chat";
 import Diagnostics from "@/pages/Diagnostics";
 import Settings from "@/pages/Settings";
+import WhatsApp from "@/pages/WhatsApp";
 import { useOllamaStatus, useOllamaModels } from "@/hooks/useOllama";
 
 function StatusPoller() {
@@ -26,6 +27,7 @@ function App() {
             <Route path="/chat" element={<Chat />} />
             <Route path="/diagnostics" element={<Diagnostics />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/whatsapp" element={<WhatsApp />} />
           </Route>
         </Routes>
       </BrowserRouter>
