@@ -74,7 +74,7 @@ jobs:
           workspaces: desktop/src-tauri -> target
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: '1.25'
 
@@ -97,8 +97,7 @@ jobs:
         run: npm ci
         working-directory: desktop
 
-      - name: Disable updater artifacts for fork PRs
-        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == true
+      - name: Disable updater artifacts for PRs (no signing on non-main)
         run: |
           cd src-tauri
           jq '.bundle.createUpdaterArtifacts = false' tauri.conf.json > tauri.conf.tmp && mv tauri.conf.tmp tauri.conf.json
@@ -106,8 +105,6 @@ jobs:
 
       - name: Build Tauri app (no release artifacts)
         env:
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          # If you set a password when generating the key, uncomment and add the secret:
-          # TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          CI: true
         run: npm run tauri build -- --target ${{ matrix.target }}
         working-directory: desktop
