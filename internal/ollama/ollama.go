@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"time"
@@ -24,6 +26,49 @@ type tagsResponse struct {
 	} `json:"models"`
 }
 
+// ollamaPaths returns candidate paths for the ollama binary. Used when the
+// process PATH is minimal (e.g. GUI apps on macOS).
+func ollamaCandidatePaths() []string {
+	if runtime.GOOS != "darwin" {
+		return nil
+	}
+	return []string{
+		"/usr/local/bin/ollama",
+		"/opt/homebrew/bin/ollama",
+		"/Applications/Ollama.app/Contents/Resources/ollama",
+	}
+}
+
+// ollamaPath returns the path to the ollama binary, or an error if not found.
+// It tries exec.LookPath first, then on macOS tries common install locations
+// so that GUI-launched processes (e.g. desktop app) can find ollama even when
+// PATH does not include /usr/local/bin or /opt/homebrew/bin.
+func ollamaPath() (string, error) {
+	if path, err := exec.LookPath("ollama"); err == nil {
+		return path, nil
+	}
+	for _, p := range ollamaCandidatePaths() {
+		if p == "" {
+			continue
+		}
+		info, err := os.Stat(p)
+		if err != nil {
+			continue
+		}
+		if info.Mode().IsRegular() || (info.Mode()&os.ModeSymlink != 0) {
+			// Resolve symlink to get executable path
+			resolved := p
+			if info.Mode()&os.ModeSymlink != 0 {
+				if r, err := filepath.EvalSymlinks(p); err == nil {
+					resolved = r
+				}
+			}
+			return resolved, nil
+		}
+	}
+	return "", fmt.Errorf("ollama: executable file not found in $PATH")
+}
+
 // Check verifies that ollama is in PATH and optionally that the API is
 // reachable and that the base model and custom model exist.
 // If baseModel or customModel is empty, defaults are used (llama3.2:8b and "daemon").
@@ -35,7 +80,7 @@ func Check(out io.Writer, skipAPI bool, baseModel, customModel string) error {
 	if customModel == "" {
 		customModel = "daemon"
 	}
-	path, err := exec.LookPath("ollama")
+	path, err := ollamaPath()
 	if err != nil {
 		fmt.Fprintf(out, "Ollama not found in PATH.\n")
 		fmt.Fprintf(out, "Install from https://ollama.com or see docs/04-ollama-llama.md\n")
@@ -103,7 +148,11 @@ func Check(out io.Writer, skipAPI bool, baseModel, customModel string) error {
 // CreateModel runs `ollama create <name> -f <modelfilePath>` and streams
 // stdout/stderr to the provided writers.
 func CreateModel(modelfilePath, modelName string, stdout, stderr io.Writer) error {
-	cmd := exec.Command("ollama", "create", modelName, "-f", modelfilePath)
+	path, err := ollamaPath()
+	if err != nil {
+		return err
+	}
+	cmd := exec.Command(path, "create", modelName, "-f", modelfilePath)
 	cmd.Stdout = stdout
 	cmd.Stderr = stderr
 	cmd.Stdin = nil
