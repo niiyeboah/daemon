@@ -9,7 +9,6 @@ import { HardwareSection } from '@/components/sections/HardwareSection'
 import { OsSetupSection } from '@/components/sections/OsSetupSection'
 import { PostInstallSection } from '@/components/sections/PostInstallSection'
 import { OllamaSection } from '@/components/sections/OllamaSection'
-import { DaemonBotSection } from '@/components/sections/DaemonBotSection'
 import { SecuritySection } from '@/components/sections/SecuritySection'
 import { TroubleshootingSection } from '@/components/sections/TroubleshootingSection'
 import { NextStepsSection } from '@/components/sections/NextStepsSection'
@@ -70,7 +69,6 @@ function App() {
             <OsSetupSection />
             <PostInstallSection />
             <OllamaSection />
-            <DaemonBotSection />
             <SecuritySection />
             <TroubleshootingSection />
             <OpenClawSection />

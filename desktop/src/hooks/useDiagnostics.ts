@@ -50,7 +50,7 @@ export function useDiagnostics() {
       try {
         switch (command) {
           case "pull-base-model":
-            await ollamaPullModel("llama3.2:1b");
+            await ollamaPullModel("llama3.2:8b");
             break;
           case "create-daemon-model":
             await setupInit();

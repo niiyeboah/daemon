@@ -179,7 +179,7 @@ pub async fn diagnostics_full() -> Result<DiagnosticsReport, String> {
                     if let Some(models) = tags.models {
                         has_base_model = models
                             .iter()
-                            .any(|m| m.name == "llama3.2:1b" || m.name.starts_with("llama3.2:1b:"));
+                            .any(|m| m.name == "llama3.2:8b" || m.name.starts_with("llama3.2:8b:"));
                         has_daemon_model = models
                             .iter()
                             .any(|m| m.name == "daemon" || m.name.starts_with("daemon:"));
@@ -203,9 +203,9 @@ pub async fn diagnostics_full() -> Result<DiagnosticsReport, String> {
         message: if !api_reachable {
             "Cannot check — API offline".to_string()
         } else if has_base_model {
-            "llama3.2:1b available".to_string()
+            "llama3.2:8b available".to_string()
         } else {
-            "llama3.2:1b not found".to_string()
+            "llama3.2:8b not found".to_string()
         },
         metric: None,
         detail: if !models_detail.is_empty() {

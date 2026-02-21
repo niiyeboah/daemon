@@ -10,7 +10,6 @@ const stack = [
   { layer: 'Operating System', component: 'macOS, Windows (Beelink preloaded), or Ubuntu Desktop 24.04 LTS' },
   { layer: 'Inference Runtime', component: 'Ollama' },
   { layer: 'Language Model', component: 'Llama 3.2 8B' },
-  { layer: 'Interface', component: 'Daemon bot (CLI / API)' },
 ]
 
 export function HeroSection() {
@@ -136,7 +135,7 @@ export function HeroSection() {
       <h2 className="mt-8 text-2xl font-semibold">What You Get</h2>
       <ul className="mt-3 list-disc space-y-2 pl-6 text-muted-foreground">
         <li>A Windows or Ubuntu machine running 24/7 on low-power hardware.</li>
-        <li>Llama 3.2 1B served locally by Ollama on port 11434.</li>
+        <li>Llama 3.2 8B served locally by Ollama on port 11434.</li>
         <li>
           A personal assistant named <strong>Daemon</strong> reachable from the
           terminal or via HTTP API from any device on your LAN.

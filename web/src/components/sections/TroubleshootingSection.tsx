@@ -26,7 +26,7 @@ const items: TroubleshootItem[] = [
       <>
         <CodeBlock language="bash" code={`free -h    # check available RAM\ndf -h /    # check disk space`} />
         <p className="text-sm text-muted-foreground">Re-pull if corrupted:</p>
-        <CodeBlock language="bash" code={`ollama rm llama3.2:1b\nollama pull llama3.2:1b`} />
+        <CodeBlock language="bash" code={`ollama rm llama3.2:8b\nollama pull llama3.2:8b`} />
       </>
     ),
   },
@@ -105,7 +105,7 @@ const items: TroubleshootItem[] = [
 export function TroubleshootingSection() {
   return (
     <section id="troubleshooting">
-      <h2 className="text-3xl font-bold tracking-tight">7. Troubleshooting</h2>
+      <h2 className="text-3xl font-bold tracking-tight">6. Troubleshooting</h2>
       <p className="mt-2 text-muted-foreground">Common issues and how to resolve them.</p>
 
       <div className="mt-6 space-y-4">

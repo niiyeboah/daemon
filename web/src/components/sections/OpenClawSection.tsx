@@ -9,7 +9,7 @@ const OPENCLAW_OLLAMA_PROVIDER_URL = 'https://docs.openclaw.ai/providers/ollama'
 export function OpenClawSection() {
   return (
     <section id="openclaw">
-      <h2 className="text-3xl font-bold tracking-tight">8. OpenClaw & Automation</h2>
+      <h2 className="text-3xl font-bold tracking-tight">7. OpenClaw & Automation</h2>
       <p className="mt-2 text-muted-foreground">
         Give Daemon channels, skills, and schedules so it can work for you like
         a personal employee.

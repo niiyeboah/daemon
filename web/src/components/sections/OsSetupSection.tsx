@@ -25,7 +25,7 @@ export function OsSetupSection() {
         <CodeBlock language="bash" code="ollama --version" />
 
         <h3 className="mt-6 text-xl font-semibold">Pull the Base Model</h3>
-        <CodeBlock language="bash" code="ollama pull llama3.2:1b" />
+        <CodeBlock language="bash" code="ollama pull llama3.2:8b" />
         <CodeBlock language="bash" code="ollama list" />
 
         <h3 className="mt-6 text-xl font-semibold">Install Go</h3>
@@ -61,7 +61,7 @@ export function OsSetupSection() {
         <CodeBlock language="powershell" code="ollama --version" />
 
         <h3 className="mt-6 text-xl font-semibold">Pull the Base Model</h3>
-        <CodeBlock language="powershell" code="ollama pull llama3.2:1b" />
+        <CodeBlock language="powershell" code="ollama pull llama3.2:8b" />
         <p className="text-sm text-muted-foreground">
           Downloads about 1 GB. Confirm with:
         </p>
@@ -156,7 +156,7 @@ export function OsSetupSection() {
           For the daemon-setup CLI, download{' '}
           <a href={CLI_BUILD_URLS.linuxAmd64} className="underline" target="_blank" rel="noopener noreferrer">daemon-setup-linux-amd64</a>{' '}
           or see <a href={GITHUB_RELEASES_LATEST_URL} className="underline" target="_blank" rel="noopener noreferrer">GitHub Releases</a>.
-          Or build from source in the Daemon Bot step.
+          Or build from source in the Ollama section.
         </p>
       </OsFilter>
     </section>

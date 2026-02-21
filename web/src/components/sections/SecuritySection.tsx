@@ -5,7 +5,7 @@ import { InfoBox } from '@/components/shared/InfoBox'
 export function SecuritySection() {
   return (
     <section id="security">
-      <h2 className="text-3xl font-bold tracking-tight">6. Security</h2>
+      <h2 className="text-3xl font-bold tracking-tight">5. Security</h2>
       <p className="mt-2 text-muted-foreground">
         Your Daemon box is a server on your network. Basic security hygiene
         prevents accidental exposure.

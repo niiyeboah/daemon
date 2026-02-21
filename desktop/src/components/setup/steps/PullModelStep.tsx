@@ -24,7 +24,7 @@ export function PullModelStep({
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        Downloading the llama3.2:1b base model. This may take a few minutes
+        Downloading the llama3.2:8b base model. This may take a few minutes
         depending on your connection.
       </p>
 

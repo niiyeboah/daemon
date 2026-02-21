@@ -46,7 +46,7 @@ const INITIAL_STEPS: SetupStep[] = [
   {
     id: "pull-model",
     label: "Pull Model",
-    description: "Download llama3.2:1b base model",
+    description: "Download llama3.2:8b base model",
     status: "pending",
   },
   {
@@ -147,7 +147,7 @@ export function useSetup() {
           }
 
           case "pull-model": {
-            addLog("Pulling llama3.2:1b...");
+            addLog("Pulling llama3.2:8b...");
             const unlisten = await onPullProgress((event) => {
               const percent =
                 event.total && event.total > 0
@@ -159,7 +159,7 @@ export function useSetup() {
               }
             });
             try {
-              await ollamaPullModel("llama3.2:1b");
+              await ollamaPullModel("llama3.2:8b");
               addLog("Model pull complete");
               updateStep(stepIndex, "done");
             } finally {
