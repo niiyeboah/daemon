@@ -56,9 +56,9 @@ jobs:
           git checkout -b "$BRANCH"
           git add desktop/src-tauri/tauri.conf.json
           git commit -m "chore(desktop): bump version to $NEW_VERSION"
-          git push -u origin "$BRANCH"
-          git tag "$TAG"
-          git push origin "$TAG"
+          git push -u origin "$BRANCH" --force
+          git tag "$TAG" --force
+          git push origin "$TAG" --force
 
   lint:
     needs: bump-version
