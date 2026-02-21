@@ -221,7 +221,24 @@ jobs:
             echo "Certificate imported: $CERT_ID"
           fi
 
-      - name: Build Tauri app
+      # Apple env is only passed when APPLE_SIGNING_IDENTITY is set (cert imported);
+      # otherwise Tauri uses ad-hoc signing so the build succeeds without notarization secrets.
+      - name: Build Tauri app (ad-hoc signing)
+        if: env.APPLE_SIGNING_IDENTITY == ''
+        env:
+          CI: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        uses: tauri-apps/tauri-action@action-v0.6.1
+        with:
+          projectPath: desktop
+          releaseId: ${{ needs.create-release.outputs.release_id }}
+          args: --target ${{ matrix.target }}
+          includeUpdaterJson: true
+
+      - name: Build Tauri app (signed and notarized)
+        if: env.APPLE_SIGNING_IDENTITY != ''
         env:
           CI: true
           APPLE_SIGNING_IDENTITY: ${{ env.APPLE_SIGNING_IDENTITY }}
