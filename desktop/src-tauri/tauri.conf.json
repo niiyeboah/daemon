@@ -1,6 +1,6 @@
 {
   "productName": "Daemon",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "identifier": "com.daemon.desktop",
   "build": { "frontendDist": "../dist", "devUrl": "http://localhost:1420", "beforeDevCommand": "npm run dev", "beforeBuildCommand": "npm run build" },
   "app": {
