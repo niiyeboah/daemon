@@ -6,6 +6,8 @@
 
 **Daemon** is a local, privacy-first personal assistant bot that runs entirely on your own hardware. No cloud APIs, no subscriptions, no data leaving your network — just a small, capable language model answering your questions on a quiet mini PC sitting on your desk.
 
+**We recommend using the [Daemon Desktop](https://github.com/niiyeboah/daemon/releases) app** to chat with Daemon from a native window. [Download for macOS, Windows & Linux](https://github.com/niiyeboah/daemon/releases) · [Setup guide](https://niiyeboah.github.io/daemon/)
+
 ## Table of contents
 
 - [Daemon](#daemon)
@@ -26,7 +28,7 @@
 | Operating System  | [macOS](docs/04-ollama-llama.md) (M4 Mac Mini, default) or [Windows](docs/02-windows-setup.md) (Beelink S13 preloaded) or [Ubuntu Desktop 24.04 LTS](docs/02b-ubuntu-desktop.md) |
 | Inference Runtime | [Ollama](docs/04-ollama-llama.md)                                                                                                                                                |
 | Language Model    | [Llama 3.2 8B](docs/04-ollama-llama.md)                                                                                                                                          |
-| Interface         | [Daemon bot](docs/05-daemon-bot.md) (CLI / API)                                                                                                                                  |
+| Interface         | [Daemon Desktop](https://github.com/niiyeboah/daemon/releases) (recommended) or [Daemon bot](docs/05-daemon-bot.md) (CLI / API)                                                                                                                 |
 
 ## What You Get
 
@@ -34,9 +36,8 @@ After following the guides below you will have:
 
 - A Windows (or Ubuntu Desktop) machine running 24/7 on low-power hardware.
 - Llama 3.2 8B served locally by Ollama on port `11434`.
-- A personal assistant named **Daemon** reachable from the terminal or via a simple HTTP API from any device on your LAN.
+- A personal assistant named **Daemon** reachable via the [Daemon Desktop](https://github.com/niiyeboah/daemon/releases) app, the terminal, or a simple HTTP API from any device on your LAN.
 
-Optionally, add [OpenClaw](docs/09-openclaw-automation.md) to give Daemon channels, skills, and schedules so it can work for you like a personal employee.
 
 For local inference we recommend the **M4 Mac Mini 16GB**; for a low-power always-on gateway with cloud APIs, the **Beelink S13 Pro** (Windows preloaded) is an option. See [Hardware](docs/01-hardware.md). Alternatively, install [Ubuntu Desktop](docs/02b-ubuntu-desktop.md) on Beelink if you prefer Linux.
 
@@ -66,7 +67,7 @@ Read these in order. Each guide picks up where the previous one left off.
 
 ## Setup with the CLI
 
-Once Ollama is installed and the base model is pulled (see [Setup Guides](#setup-guides) above), you can use the **daemon-setup** CLI to configure the Daemon bot.
+Once Ollama is installed and the base model is pulled (see [Setup Guides](#setup-guides) above), you can use the **daemon-setup** CLI to configure the Daemon bot. Prefer a graphical interface? Use the [Daemon Desktop](https://github.com/niiyeboah/daemon/releases) app and follow the [setup guide](https://niiyeboah.github.io/daemon/) in your browser.
 
 **Interactive mode:** In a terminal, run `./daemon-setup` with no arguments to start an interactive menu where you can pick an action (check, init, modelfile, alias, full setup, or guide) and be prompted for options with sensible defaults. Subcommands and flags still work for scripting (e.g. `./daemon-setup check`, `./daemon-setup setup --yes`). For full workflow help, run `./daemon-setup guide`.
 
