@@ -27,14 +27,14 @@
 | Hardware          | [M4 Mac Mini](docs/01-hardware.md) (local route) or [Beelink S13 Pro](docs/01-hardware.md) (cloud API route)                                                                     |
 | Operating System  | [OS Setup](docs/02-os-setup.md) — macOS (M4 Mac Mini, default), Windows (Beelink), Ubuntu Desktop 24.04 LTS (Beelink) |
 | Inference Runtime | [Ollama](docs/03-ollama-llama.md)                                                                                                                                                |
-| Language Model    | [Llama 3.2 8B](docs/03-ollama-llama.md)                                                                                                                                          |
+| Language Model    | [Llama 3.2 8B](docs/03-ollama-llama.md) (default); optional [deepseek-r1:8b](https://ollama.com/library/deepseek-r1:8b) / [deepseek-r1:7b](https://ollama.com/library/deepseek-r1:7b) for better reasoning |
 
 ## What You Get
 
 After following the guides below you will have:
 
 - A Windows (or Ubuntu Desktop) machine running 24/7 on low-power hardware.
-- Llama 3.2 8B served locally by Ollama on port `11434`.
+- Llama 3.2 8B (or optional deepseek-r1:8b / deepseek-r1:7b) served locally by Ollama on port `11434`.
 - A personal assistant named **Daemon** reachable via the [Daemon Desktop](https://github.com/niiyeboah/daemon/releases) app, the terminal, or a simple HTTP API from any device on your LAN.
 
 
@@ -79,7 +79,7 @@ Once Ollama is installed and the base model is pulled (see [Setup Guides](#setup
    ./daemon-setup check
    ```
 
-   This verifies Ollama is in PATH and that the API is reachable, and that `llama3.2:8b` (and optionally the `daemon` model) are available. If something is missing, the command prints what to do.
+   This verifies Ollama is in PATH and that the API is reachable, and that a base model (e.g. `llama3.2:8b`, `deepseek-r1:8b`, or `deepseek-r1:7b`) and optionally the `daemon` model are available. If something is missing, the command prints what to do.
 
 4. **Create the Daemon model:**
 

@@ -7,6 +7,7 @@ interface PullModelStepProps {
   onRun: () => void;
   onNext: () => void;
   status: string;
+  baseModel?: string;
 }
 
 export function PullModelStep({
@@ -14,6 +15,7 @@ export function PullModelStep({
   onRun,
   onNext,
   status,
+  baseModel = "llama3.2:8b",
 }: PullModelStepProps) {
   useEffect(() => {
     if (status === "pending") {
@@ -24,7 +26,7 @@ export function PullModelStep({
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        Downloading the llama3.2:8b base model. This may take a few minutes
+        Downloading the {baseModel} base model. This may take a few minutes
         depending on your connection.
       </p>
 

@@ -14,7 +14,9 @@ const resourceUsage = [
 
 const commands = [
   { command: 'ollama list', description: 'Show installed models' },
-  { command: 'ollama pull llama3.2:8b', description: 'Download or update the model' },
+  { command: 'ollama pull llama3.2:8b', description: 'Download or update the default model' },
+  { command: 'ollama pull deepseek-r1:8b', description: 'Download DeepSeek R1 Llama 8B (better reasoning)' },
+  { command: 'ollama pull deepseek-r1:7b', description: 'Download DeepSeek R1 Qwen 7B (better reasoning)' },
   { command: 'ollama rm llama3.2:8b', description: 'Remove the model' },
   { command: 'ollama run llama3.2:8b', description: 'Interactive chat' },
   { command: 'ollama show llama3.2:8b', description: 'Show model details' },
@@ -245,6 +247,9 @@ export function OllamaSection() {
         <TabsContent value="modelfile" className="mt-4">
           <h5 className="text-base font-medium">1. Write the Modelfile</h5>
           <CodeBlock language="dockerfile" title="~/Modelfile" code={modelfile} />
+          <p className="mt-2 text-sm text-muted-foreground">
+            For better reasoning you can use <code className="rounded bg-muted px-1.5 py-0.5">FROM deepseek-r1:8b</code> or <code className="rounded bg-muted px-1.5 py-0.5">FROM deepseek-r1:7b</code> instead.
+          </p>
 
           <h5 className="mt-4 text-base font-medium">2. Create the Custom Model</h5>
           <CodeBlock code="ollama create daemon -f ~/Modelfile" />

@@ -391,7 +391,7 @@ func printGuide(w io.Writer) {
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Prerequisites")
 	fmt.Fprintln(w, "  • Ollama installed and in PATH")
-	fmt.Fprintln(w, "  • Base model pulled (e.g. llama3.2:8b)")
+	fmt.Fprintln(w, "  • Base model pulled (e.g. llama3.2:8b, deepseek-r1:8b, or deepseek-r1:7b)")
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Commands")
 	fmt.Fprintln(w, "  check     Verify Ollama is installed and required models are available")
@@ -412,7 +412,8 @@ func printGuide(w io.Writer) {
 	fmt.Fprintln(w, "  Or one-shot:  daemon-setup setup --yes")
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "  For OpenClaw on low-power hardware (e.g. N100), we recommend cloud API keys (Gemini, OpenAI, Claude)")
-	fmt.Fprintln(w, "  instead of local inference. See docs/09-openclaw-automation.md. For local inference use llama3.2:8b.")
+	fmt.Fprintln(w, "  instead of local inference. See docs/07-openclaw-automation.md. For local inference use llama3.2:8b,")
+	fmt.Fprintln(w, "  or deepseek-r1:8b / deepseek-r1:7b for better reasoning (daemon-setup init --base-model <model>).")
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Examples")
 	if runtime.GOOS == "windows" {

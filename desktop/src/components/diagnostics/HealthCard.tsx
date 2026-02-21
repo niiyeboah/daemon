@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  AlertTriangle,
   Circle,
   ChevronDown,
   ChevronUp,
@@ -23,6 +24,7 @@ const ICONS: Record<string, React.ElementType> = {
   "ollama-api": Globe,
   "base-model": Database,
   "daemon-model": Box,
+  "deprecated-1b-model": AlertTriangle,
   "model-loaded": MemoryStick,
   inference: Zap,
   "inference-speed": Gauge,

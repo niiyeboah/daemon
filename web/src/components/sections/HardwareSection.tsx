@@ -5,7 +5,7 @@ const m4Specs = [
   { requirement: 'CPU / GPU', value: 'Apple M4 (10-core CPU, 10-core GPU)', note: 'Metal acceleration for Ollama' },
   { requirement: 'RAM', value: '16 GB unified memory', note: '8B model fits comfortably' },
   { requirement: 'Storage', value: '256 GB SSD', note: 'Enough for OS and models' },
-  { requirement: 'Recommended model', value: 'llama3.2:8b', note: 'ollama pull llama3.2:8b' },
+  { requirement: 'Recommended model', value: 'llama3.2:8b (default); deepseek-r1:8b, deepseek-r1:7b', note: 'ollama pull <model>; better reasoning with DeepSeek R1' },
 ]
 
 const beelinkSpecs = [
@@ -100,7 +100,7 @@ export function HardwareSection() {
         <li>Connect Ethernet or Wi-Fi, display, and keyboard.</li>
         <li>Complete macOS setup.</li>
         <li>
-          Install Ollama and pull <code className="rounded bg-muted px-1.5 py-0.5 text-xs">llama3.2:8b</code>.
+          Install Ollama and pull <code className="rounded bg-muted px-1.5 py-0.5 text-xs">llama3.2:8b</code> (or optionally <code className="rounded bg-muted px-1.5 py-0.5 text-xs">deepseek-r1:8b</code> / <code className="rounded bg-muted px-1.5 py-0.5 text-xs">deepseek-r1:7b</code> for better reasoning).
         </li>
       </ol>
       <p className="mt-4 text-sm text-muted-foreground">

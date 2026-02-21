@@ -54,8 +54,8 @@ export async function setupCheck(): Promise<SetupStatus> {
   return invoke("setup_check");
 }
 
-export async function setupInit(): Promise<void> {
-  return invoke("setup_init");
+export async function setupInit(baseModel?: string): Promise<void> {
+  return invoke("setup_init", { baseModel: baseModel ?? null });
 }
 
 export async function setupAlias(): Promise<void> {

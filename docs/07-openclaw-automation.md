@@ -72,7 +72,7 @@ To have your assistant always on, run the OpenClaw Gateway 24/7 — for example 
 
 OpenClaw requires a **16k context window** so that skills and system prompts fit comfortably.
 
-- **Local route (M4 Mac Mini or capable hardware):** Use Ollama + **llama3.2:8b** (or a daemon variant built from it). The 8B model fits well on 16GB and benefits from M4's Metal acceleration (or GPU on other platforms). Pull the model: `ollama pull llama3.2:8b`, then create the Daemon model with `daemon-setup init` and point OpenClaw at `ollama/daemon` or `ollama/llama3.2:8b`.
+- **Local route (M4 Mac Mini or capable hardware):** Use Ollama + **llama3.2:8b** (default) or **deepseek-r1:8b** / **deepseek-r1:7b** for better reasoning. The 8B/7B models fit well on 16GB and benefit from M4's Metal acceleration. Pull the model: `ollama pull llama3.2:8b` (or `deepseek-r1:8b` / `deepseek-r1:7b`), then create the Daemon model with `daemon-setup init` (use `--base-model deepseek-r1:8b` or `--base-model deepseek-r1:7b` if you chose one of those) and point OpenClaw at `ollama/daemon` or your base model.
 - **Beelink / low-power route:** We recommend using **API keys** for Gemini, OpenAI, or Claude instead of local inference to avoid slow inference and "inference too slow" errors. Get keys from [Google AI Studio](https://aistudio.google.com/), [OpenAI Platform](https://platform.openai.com/), or [Anthropic Console](https://console.anthropic.com/), then configure via the desktop app Settings (API Keys card) or via CLI: `openclaw onboard --auth-choice gemini-api-key` (or `openai-api-key` / `anthropic-api-key`).
 
 ---

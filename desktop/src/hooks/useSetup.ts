@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import type { StepStatus } from "@/types";
+import { BASE_MODEL } from "@/store/constants";
 import {
   detectOs,
   ollamaCheck,
@@ -44,9 +45,15 @@ const INITIAL_STEPS: SetupStep[] = [
     status: "pending",
   },
   {
+    id: "choose-base-model",
+    label: "Choose Base Model",
+    description: "Select base model for Daemon",
+    status: "pending",
+  },
+  {
     id: "pull-model",
     label: "Pull Model",
-    description: "Download llama3.2:8b base model",
+    description: "Download base model",
     status: "pending",
   },
   {
@@ -83,6 +90,7 @@ export function useSetup() {
   const [logs, setLogs] = useState<string[]>([]);
   const [detectedOs, setDetectedOs] = useState<string | null>(null);
   const [ollamaReachable, setOllamaReachable] = useState(false);
+  const [selectedBaseModel, setSelectedBaseModel] = useState<string>(BASE_MODEL);
   const [pullProgress, setPullProgress] = useState<PullProgress>({
     status: "",
     percent: 0,
@@ -146,8 +154,13 @@ export function useSetup() {
             break;
           }
 
+          case "choose-base-model": {
+            // Selection only; Continue is handled by nextStep
+            break;
+          }
+
           case "pull-model": {
-            addLog("Pulling llama3.2:8b...");
+            addLog(`Pulling ${selectedBaseModel}...`);
             const unlisten = await onPullProgress((event) => {
               const percent =
                 event.total && event.total > 0
@@ -159,7 +172,7 @@ export function useSetup() {
               }
             });
             try {
-              await ollamaPullModel("llama3.2:8b");
+              await ollamaPullModel(selectedBaseModel);
               addLog("Model pull complete");
               updateStep(stepIndex, "done");
             } finally {
@@ -174,7 +187,7 @@ export function useSetup() {
               addLog(`[${event.stream}] ${event.line}`);
             });
             try {
-              await setupInit();
+              await setupInit(selectedBaseModel);
               addLog("Daemon model created successfully");
               updateStep(stepIndex, "done");
             } finally {
@@ -228,7 +241,7 @@ export function useSetup() {
         updateStep(stepIndex, "error");
       }
     },
-    [steps, updateStep, addLog, pullProgress.status]
+    [steps, updateStep, addLog, pullProgress.status, selectedBaseModel]
   );
 
   const recheckOllama = useCallback(async () => {
@@ -259,6 +272,10 @@ export function useSetup() {
   );
 
   const nextStep = useCallback(() => {
+    const stepId = steps[currentStep].id;
+    if (stepId === "choose-base-model") {
+      updateStep(currentStep, "done");
+    }
     const next = currentStep + 1;
     if (next < steps.length) {
       setCurrentStep(next);
@@ -267,7 +284,7 @@ export function useSetup() {
         setCurrentStep(next + 1);
       }
     }
-  }, [currentStep, steps, ollamaReachable]);
+  }, [currentStep, steps, ollamaReachable, updateStep]);
 
   return {
     steps,
@@ -277,6 +294,8 @@ export function useSetup() {
     logsEndRef,
     detectedOs,
     ollamaReachable,
+    selectedBaseModel,
+    setSelectedBaseModel,
     pullProgress,
     testResponse,
     runStep,

@@ -54,15 +54,22 @@ pub async fn setup_check(app: AppHandle) -> Result<SetupStatus, String> {
 }
 
 #[tauri::command]
-pub async fn setup_init(app: AppHandle) -> Result<(), String> {
+pub async fn setup_init(app: AppHandle, base_model: Option<String>) -> Result<(), String> {
     let shell = app.shell();
 
-    let args = vec!["init"];
+    let mut args = vec!["init".to_string()];
+    if let Some(ref bm) = base_model {
+        if !bm.is_empty() {
+            args.push("--base-model".to_string());
+            args.push(bm.clone());
+        }
+    }
 
+    let args_ref: Vec<&str> = args.iter().map(String::as_str).collect();
     let (mut rx, _child) = shell
         .sidecar("daemon-setup")
         .map_err(|e| format!("Failed to create sidecar: {}", e))?
-        .args(&args)
+        .args(&args_ref)
         .spawn()
         .map_err(|e| format!("Failed to spawn daemon-setup init: {}", e))?;
 

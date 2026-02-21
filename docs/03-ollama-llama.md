@@ -56,6 +56,8 @@ NAME              ID            SIZE    MODIFIED
 llama3.2:8b       ...           ~4.7 GB  just now
 ```
 
+**Optional — DeepSeek R1 for better reasoning (M4 Mac Mini):** You can use `ollama pull deepseek-r1:8b` or `ollama pull deepseek-r1:7b` instead of (or in addition to) Llama 3.2 8B. The Daemon desktop app and `daemon-setup init --base-model deepseek-r1:8b` (or `deepseek-r1:7b`) support these models.
+
 ---
 
 ## Test the Model Interactively

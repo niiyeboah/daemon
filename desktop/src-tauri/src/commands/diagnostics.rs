@@ -157,6 +157,7 @@ pub async fn diagnostics_full() -> Result<DiagnosticsReport, String> {
     // 3 & 4. Model availability (only if API is reachable)
     let mut has_base_model = false;
     let mut has_daemon_model = false;
+    let mut has_1b_model = false;
     let mut models_detail = String::new();
 
     if api_reachable {
@@ -177,12 +178,22 @@ pub async fn diagnostics_full() -> Result<DiagnosticsReport, String> {
                 }
                 if let Ok(tags) = serde_json::from_str::<Tags>(&text) {
                     if let Some(models) = tags.models {
-                        has_base_model = models
-                            .iter()
-                            .any(|m| m.name == "llama3.2:8b" || m.name.starts_with("llama3.2:8b:"));
+                        has_base_model = models.iter().any(|m| {
+                            m.name == "llama3.2:8b"
+                                || m.name.starts_with("llama3.2:8b:")
+                                || m.name == "deepseek-r1:8b"
+                                || m.name.starts_with("deepseek-r1:8b:")
+                                || m.name == "deepseek-r1:7b"
+                                || m.name.starts_with("deepseek-r1:7b:")
+                                || m.name == "daemon"
+                                || m.name.starts_with("daemon:")
+                        });
                         has_daemon_model = models
                             .iter()
                             .any(|m| m.name == "daemon" || m.name.starts_with("daemon:"));
+                        has_1b_model = models
+                            .iter()
+                            .any(|m| m.name == "llama3.2:1b" || m.name.starts_with("llama3.2:1b:"));
                     }
                 }
             }
@@ -203,9 +214,9 @@ pub async fn diagnostics_full() -> Result<DiagnosticsReport, String> {
         message: if !api_reachable {
             "Cannot check — API offline".to_string()
         } else if has_base_model {
-            "llama3.2:8b available".to_string()
+            "Base model available".to_string()
         } else {
-            "llama3.2:8b not found".to_string()
+            "Base model not found".to_string()
         },
         metric: None,
         detail: if !models_detail.is_empty() {
@@ -222,6 +233,21 @@ pub async fn diagnostics_full() -> Result<DiagnosticsReport, String> {
             None
         },
     });
+
+    if api_reachable && has_1b_model {
+        checks.push(DiagnosticCheck {
+            id: "deprecated-1b-model".to_string(),
+            name: "Deprecated Model".to_string(),
+            status: "warn".to_string(),
+            message: "llama3.2:1b detected. Daemon recommends llama3.2:8b instead.".to_string(),
+            metric: None,
+            detail: Some("Run: ollama pull llama3.2:8b".to_string()),
+            action: Some(DiagnosticAction {
+                label: "Pull llama3.2:8b".to_string(),
+                command: "pull-base-model".to_string(),
+            }),
+        });
+    }
 
     checks.push(DiagnosticCheck {
         id: "daemon-model".to_string(),

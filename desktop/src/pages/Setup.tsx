@@ -4,6 +4,7 @@ import { LogDrawer } from "@/components/setup/LogDrawer";
 import { DetectOsStep } from "@/components/setup/steps/DetectOsStep";
 import { CheckOllamaStep } from "@/components/setup/steps/CheckOllamaStep";
 import { InstallOllamaStep } from "@/components/setup/steps/InstallOllamaStep";
+import { ChooseBaseModelStep } from "@/components/setup/steps/ChooseBaseModelStep";
 import { PullModelStep } from "@/components/setup/steps/PullModelStep";
 import { CreateModelStep } from "@/components/setup/steps/CreateModelStep";
 import { TestInferenceStep } from "@/components/setup/steps/TestInferenceStep";
@@ -19,6 +20,8 @@ export default function Setup() {
     logsEndRef,
     detectedOs,
     ollamaReachable,
+    selectedBaseModel,
+    setSelectedBaseModel,
     pullProgress,
     testResponse,
     runStep,
@@ -76,12 +79,22 @@ export default function Setup() {
               />
             )}
 
+            {current.id === "choose-base-model" && (
+              <ChooseBaseModelStep
+                selectedBaseModel={selectedBaseModel}
+                onSelect={setSelectedBaseModel}
+                onNext={nextStep}
+                status={current.status}
+              />
+            )}
+
             {current.id === "pull-model" && (
               <PullModelStep
                 pullProgress={pullProgress}
                 onRun={() => runStep(currentStep)}
                 onNext={nextStep}
                 status={current.status}
+                baseModel={selectedBaseModel}
               />
             )}
 

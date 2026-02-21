@@ -35,7 +35,7 @@ const ideas = [
   {
     title: 'Multiple Models',
     description:
-      'Ollama can host several models. Use llama3.2:8b for fast queries, codellama:7b for code (with more RAM), or mistral:7b as an alternative.',
+      'Ollama can host several models. Use llama3.2:8b for fast queries, deepseek-r1:8b or deepseek-r1:7b for better reasoning, codellama:7b for code (with more RAM), or mistral:7b as an alternative.',
   },
   {
     title: 'RAG (Retrieval-Augmented Generation)',

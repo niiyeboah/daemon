@@ -63,6 +63,8 @@ Ollama can host several models simultaneously. Consider:
 | Model | Use Case |
 |-------|----------|
 | `llama3.2:8b` | General assistant (Daemon default) |
+| `deepseek-r1:8b` | Better reasoning (DeepSeek R1 Llama 8B) |
+| `deepseek-r1:7b` | Better reasoning (DeepSeek R1 Qwen 7B) |
 | `codellama:7b` | Code generation and review (if you have RAM) |
 | `mistral:7b` | Alternative general-purpose model (needs 8+ GB free RAM) |
 

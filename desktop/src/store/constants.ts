@@ -3,6 +3,12 @@ export const OLLAMA_BASE_URL = "http://localhost:11434";
 export const DEFAULT_MODEL = "daemon";
 export const BASE_MODEL = "llama3.2:8b";
 
+export const BASE_MODEL_OPTIONS = [
+  { id: "llama3.2:8b", label: "Llama 8B", note: "Default, fast" },
+  { id: "deepseek-r1:8b", label: "DeepSeek R1 Llama 8B", note: "Better reasoning" },
+  { id: "deepseek-r1:7b", label: "Qwen 7B", note: "Better reasoning" },
+] as const;
+
 export const DEFAULT_SYSTEM_PROMPT = `You are Daemon, a helpful and concise personal assistant running locally on the user's own hardware. You respect the user's privacy -- no data ever leaves this machine. You answer questions clearly and directly. When you are unsure, you say so. You are friendly but not verbose.`;
 
 export const NAV_ITEMS = [

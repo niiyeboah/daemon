@@ -8,13 +8,13 @@ This guide covers recommended hardware for running Daemon: the **M4 Mac Mini** f
 
 For the **local model route** — where Ollama runs and inference happens on your own machine — we recommend the **M4 Mac Mini 16GB 256GB SSD**.
 
-| Spec | M4 Mac Mini |
-|------|-------------|
-| **CPU** | Apple M4 (10-core CPU, 10-core GPU) |
-| **RAM** | 16 GB unified memory |
-| **Storage** | 256 GB SSD |
-| **Recommended model** | **llama3.2:8b** (8B fits well on 16GB; use `ollama pull llama3.2:8b`) |
-| **Benefits** | Apple Silicon inference, Metal acceleration for Ollama, much faster than low-power x86 |
+| Spec                  | M4 Mac Mini                                                                            |
+| --------------------- | -------------------------------------------------------------------------------------- |
+| **CPU**               | Apple M4 (10-core CPU, 10-core GPU)                                                    |
+| **RAM**               | 16 GB unified memory                                                                   |
+| **Storage**           | 256 GB SSD                                                                             |
+| **Recommended model** | **llama3.2:8b** (default); optionally **deepseek-r1:8b** or **deepseek-r1:7b**         |
+| **Benefits**          | Apple Silicon inference, Metal acceleration for Ollama, much faster than low-power x86 |
 
 The 8B model fits comfortably in 16 GB and benefits from M4's Metal acceleration. See [Ollama + Llama](03-ollama-llama.md) for setup (including the CLI).
 
@@ -53,7 +53,7 @@ Besides the M4 Mac Mini or Beelink S13 Pro (or equivalent), you will need:
 3. **Low power, always-on.** The M4 Mac Mini is efficient and can run 24/7 as a personal assistant.
 4. **Small footprint.** Fits on a desk or shelf without distraction.
 
-Llama 3.2 **8B** (`daemon` or `llama3.2:8b`) is the recommended model for both direct CLI/API chat and OpenClaw on the local route. See [Ollama + Llama](03-ollama-llama.md) and [OpenClaw & automation](07-openclaw-automation.md#model-choice).
+Llama 3.2 **8B** (`daemon` or `llama3.2:8b`) is the default; **deepseek-r1:8b** and **deepseek-r1:7b** are optional alternatives for better reasoning on the local route. See [Ollama + Llama](03-ollama-llama.md) and [OpenClaw & automation](07-openclaw-automation.md#model-choice).
 
 ---
 
@@ -62,7 +62,7 @@ Llama 3.2 **8B** (`daemon` or `llama3.2:8b`) is the recommended model for both d
 ### M4 Mac Mini
 
 1. Unbox and connect Ethernet (recommended) or Wi-Fi, display, and keyboard.
-2. Power on and complete macOS setup. Install Ollama and pull `llama3.2:8b` as in [Ollama + Llama](03-ollama-llama.md).
+2. Power on and complete macOS setup. Install Ollama and pull `llama3.2:8b` (or optionally `deepseek-r1:8b` / `deepseek-r1:7b`) as in [Ollama + Llama](03-ollama-llama.md).
 
 ### Beelink S13 Pro
 
