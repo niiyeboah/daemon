@@ -1,4 +1,4 @@
-# 5 -- Security
+# 4 -- Security
 
 Your Daemon box is a server on your network. Even on a home LAN, basic security hygiene prevents accidental exposure and keeps the system healthy.
 
@@ -183,4 +183,4 @@ sudo fail2ban-client status sshd
 
 ---
 
-Next: [Troubleshooting](06-troubleshooting.md)
+Next: [Troubleshooting](05-troubleshooting.md)

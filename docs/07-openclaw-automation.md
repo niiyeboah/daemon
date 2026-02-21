@@ -1,6 +1,6 @@
-# 8 -- OpenClaw & Automation
+# 7 -- OpenClaw & Automation
 
-Once Daemon is running (Ollama + [Daemon bot](04-daemon-bot.md)), you can add **OpenClaw** to give it channels, skills, and schedules. Think of Daemon as the brain — your local LLM — and OpenClaw as the layer that gives it "hands": messaging apps, automation skills, and scheduled jobs. Together they can act like a **personal employee** that works on your behalf.
+Once Daemon is running (Ollama and the CLI — see [Ollama + Llama](03-ollama-llama.md)), you can add **OpenClaw** to give it channels, skills, and schedules. Think of Daemon as the brain — your local LLM — and OpenClaw as the layer that gives it "hands": messaging apps, automation skills, and scheduled jobs. Together they can act like a **personal employee** that works on your behalf.
 
 ---
 
@@ -162,7 +162,6 @@ Use the model `id` that matches `ollama list` (e.g. `daemon`, `llama3.2:8b`). Fo
 | OpenClaw Getting Started | <https://docs.openclaw.ai/start/getting-started> |
 | OpenClaw Channels | <https://docs.openclaw.ai/channels> |
 | OpenClaw Ollama provider | <https://docs.openclaw.ai/providers/ollama> |
-| Daemon Bot (this repo) | [04-daemon-bot.md](04-daemon-bot.md) |
 | Ollama + Llama (this repo) | [03-ollama-llama.md](03-ollama-llama.md) |
 
 ---

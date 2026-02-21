@@ -28,7 +28,6 @@
 | Operating System  | [OS Setup](docs/02-os-setup.md) — macOS (M4 Mac Mini, default), Windows (Beelink), Ubuntu Desktop 24.04 LTS (Beelink) |
 | Inference Runtime | [Ollama](docs/03-ollama-llama.md)                                                                                                                                                |
 | Language Model    | [Llama 3.2 8B](docs/03-ollama-llama.md)                                                                                                                                          |
-| Interface         | [Daemon Desktop](https://github.com/niiyeboah/daemon/releases) (recommended) or [Daemon bot](docs/04-daemon-bot.md) (CLI / API)                                                                                                                 |
 
 ## What You Get
 
@@ -49,12 +48,11 @@ Read these in order. Each guide picks up where the previous one left off.
 | --- | ------------------------------------------------------- | ------------------------------------------------------------------------ |
 | 1   | [Hardware](docs/01-hardware.md)                         | M4 Mac Mini (local) and Beelink S13 Pro (cloud API option)               |
 | 2   | [OS Setup](docs/02-os-setup.md)                         | macOS (default), Windows, or Ubuntu Desktop — get your OS ready         |
-| 3   | [Ollama + Llama 3.2 8B](docs/03-ollama-llama.md)        | Install Ollama, pull the model, run it as a service                      |
-| 4   | [Daemon Bot](docs/04-daemon-bot.md)                     | Configure the "Daemon" personality via CLI and optional API              |
-| 5   | [Security](docs/05-security.md)                         | Firewall, SSH hardening, and automatic updates                           |
-| 6   | [Troubleshooting](docs/06-troubleshooting.md)           | Common issues and how to fix them                                        |
-| 7   | [Next Steps](docs/07-next-steps.md)                     | Ideas for extending Daemon (voice, integrations, web UI)                 |
-| 8   | [OpenClaw & automation](docs/08-openclaw-automation.md) | Set up OpenClaw, automate tasks, and use Daemon like a personal employee |
+| 3   | [Ollama + Llama 3.2 8B](docs/03-ollama-llama.md)        | Install Ollama, pull the model, run as service, set up Daemon via CLI   |
+| 4   | [Security](docs/04-security.md)                         | Firewall, SSH hardening, and automatic updates                           |
+| 5   | [Troubleshooting](docs/05-troubleshooting.md)            | Common issues and how to fix them                                        |
+| 6   | [Next Steps](docs/06-next-steps.md)                     | Ideas for extending Daemon (voice, integrations, web UI)                 |
+| 7   | [OpenClaw & automation](docs/07-openclaw-automation.md) | Set up OpenClaw, automate tasks, and use Daemon like a personal employee |
 
 ## Prerequisites
 
@@ -65,7 +63,7 @@ Read these in order. Each guide picks up where the previous one left off.
 
 ## Setup with the CLI
 
-Once Ollama is installed and the base model is pulled (see [Setup Guides](#setup-guides) above), you can use the **daemon-setup** CLI to configure the Daemon bot. Prefer a graphical interface? Use the [Daemon Desktop](https://github.com/niiyeboah/daemon/releases) app and follow the [setup guide](https://niiyeboah.github.io/daemon/) in your browser.
+Once Ollama is installed and the base model is pulled (see [Setup Guides](#setup-guides) above), you can use the **daemon-setup** CLI to configure Daemon. Prefer a graphical interface? Use the [Daemon Desktop](https://github.com/niiyeboah/daemon/releases) app and follow the [setup guide](https://niiyeboah.github.io/daemon/) in your browser.
 
 **Interactive mode:** In a terminal, run `./daemon-setup` with no arguments to start an interactive menu where you can pick an action (check, init, modelfile, alias, full setup, or guide) and be prompted for options with sensible defaults. Subcommands and flags still work for scripting (e.g. `./daemon-setup check`, `./daemon-setup setup --yes`). For full workflow help, run `./daemon-setup guide`.
 
@@ -107,7 +105,7 @@ Once Ollama is installed and the base model is pulled (see [Setup Guides](#setup
 
 Use `--yes` to skip confirmations.
 
-For full manual steps and alternatives (e.g. Python API script), see [Daemon Bot](docs/04-daemon-bot.md) and [Ollama + Llama 3.2 8B](docs/03-ollama-llama.md).
+For full manual steps and alternatives (e.g. Python API script), see [Ollama + Llama 3.2 8B](docs/03-ollama-llama.md).
 
 ## Development
 

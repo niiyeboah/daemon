@@ -16,7 +16,7 @@ For the **local model route** — where Ollama runs and inference happens on you
 | **Recommended model** | **llama3.2:8b** (8B fits well on 16GB; use `ollama pull llama3.2:8b`) |
 | **Benefits** | Apple Silicon inference, Metal acceleration for Ollama, much faster than low-power x86 |
 
-The 8B model fits comfortably in 16 GB and benefits from M4's Metal acceleration. See [Ollama + Llama](03-ollama-llama.md) and [Daemon Bot](04-daemon-bot.md) for setup.
+The 8B model fits comfortably in 16 GB and benefits from M4's Metal acceleration. See [Ollama + Llama](03-ollama-llama.md) for setup (including the CLI).
 
 ---
 
@@ -29,7 +29,7 @@ The 8B model fits comfortably in 16 GB and benefits from M4's Metal acceleration
 | **Mini S13** (budget)       | Intel N100 / N150 (4 cores, up to 3.4--3.6 GHz) | 16 GB DDR4     | 500 GB SSD        | Low power (~15 W TDP), fanless or near-silent |
 | **SEi13 Pro** (performance) | Intel Core i5-13500H or i9-13900HK              | 16--32 GB DDR5 | 500 GB--1 TB NVMe | Higher TDP (~45 W), active fan cooling        |
 
-> **For Beelink (low-power N100/N150), we recommend using cloud API keys** (Gemini, OpenAI, or Claude) instead of local inference to avoid slow inference and "inference too slow" errors. Configure API keys via the desktop app Settings or `openclaw onboard --auth-choice gemini-api-key` (or openai-api-key / anthropic-api-key). See [OpenClaw & automation](08-openclaw-automation.md).
+> **For Beelink (low-power N100/N150), we recommend using cloud API keys** (Gemini, OpenAI, or Claude) instead of local inference to avoid slow inference and "inference too slow" errors. Configure API keys via the desktop app Settings or `openclaw onboard --auth-choice gemini-api-key` (or openai-api-key / anthropic-api-key). See [OpenClaw & automation](07-openclaw-automation.md).
 
 If you use the Beelink for the OpenClaw gateway only (with cloud APIs), it remains a good always-on, low-power option. If you have the SEi13 Pro or a similar higher-end model, you can run local Ollama with **llama3.2:8b** as well.
 
@@ -53,7 +53,7 @@ Besides the M4 Mac Mini or Beelink S13 Pro (or equivalent), you will need:
 3. **Low power, always-on.** The M4 Mac Mini is efficient and can run 24/7 as a personal assistant.
 4. **Small footprint.** Fits on a desk or shelf without distraction.
 
-Llama 3.2 **8B** (`daemon` or `llama3.2:8b`) is the recommended model for both direct CLI/API chat and OpenClaw on the local route. See [Daemon Bot](04-daemon-bot.md) and [OpenClaw & automation](08-openclaw-automation.md#model-choice).
+Llama 3.2 **8B** (`daemon` or `llama3.2:8b`) is the recommended model for both direct CLI/API chat and OpenClaw on the local route. See [Ollama + Llama](03-ollama-llama.md) and [OpenClaw & automation](07-openclaw-automation.md#model-choice).
 
 ---
 

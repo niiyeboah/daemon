@@ -117,7 +117,7 @@ You get an interactive chat. Exit with `/bye` or `Ctrl+D`.
 
 ### Alternative: WSL2
 
-If you prefer the Linux-based setup (systemd, etc.) but want to keep Windows as the host OS, you can install [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) and follow [Post-Install (Ubuntu)](#post-install-system-setup-ubuntu), [Ollama + Llama](03-ollama-llama.md), and [Daemon Bot](04-daemon-bot.md) inside the WSL Ubuntu distro.
+If you prefer the Linux-based setup (systemd, etc.) but want to keep Windows as the host OS, you can install [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) and follow [Post-Install (Ubuntu)](#post-install-system-setup-ubuntu) and [Ollama + Llama](03-ollama-llama.md) (including CLI setup) inside the WSL Ubuntu distro.
 
 ### Alternative: Ubuntu Desktop
 
@@ -293,7 +293,7 @@ sudo apt install -y curl wget git build-essential
 |---------|-----|
 | `curl` | Required by the Ollama installer script |
 | `wget` | Handy for downloading files |
-| `git` | Needed if you clone the daemon-bot repo or other projects |
+| `git` | Needed if you clone this repo or other projects |
 | `build-essential` | Occasionally needed to compile native dependencies |
 
 ### Set the Timezone
@@ -338,11 +338,11 @@ Make sure this line exists:
 If you prefer to run Daemon under its own user account rather than your personal login:
 
 ```bash
-sudo adduser daemon-bot
-sudo usermod -aG sudo daemon-bot
+sudo adduser daemon
+sudo usermod -aG sudo daemon
 ```
 
-You can then SSH in as `daemon-bot` for all Ollama and Daemon operations. This is optional -- running under your main user account is perfectly fine for a personal setup.
+You can then SSH in as `daemon` for all Ollama and Daemon operations. This is optional -- running under your main user account is perfectly fine for a personal setup.
 
 ### (Optional) Enable Automatic Security Updates
 

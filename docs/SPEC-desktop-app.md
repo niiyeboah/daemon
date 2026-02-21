@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-A cross-platform desktop application that replaces the manual setup process with a guided, point-and-click experience. The app automates Daemon bot setup, provides live diagnostics, connects WhatsApp via OpenClaw, and includes a built-in chat view for interacting with the local LLM.
+A cross-platform desktop application that replaces the manual setup process with a guided, point-and-click experience. The app automates Daemon setup, provides live diagnostics, connects WhatsApp via OpenClaw, and includes a built-in chat view for interacting with the local LLM.
 
 ### Goals
 

@@ -1,4 +1,4 @@
-# 6 -- Troubleshooting
+# 5 -- Troubleshooting
 
 Common issues and how to resolve them.
 
@@ -104,7 +104,7 @@ ollama list
 sudo ufw status
 ```
 
-   Port 11434 must be allowed from your LAN subnet. See [Security](05-security.md).
+   Port 11434 must be allowed from your LAN subnet. See [Security](04-security.md).
 
 3. **Check the server is listening on all interfaces:**
 
@@ -128,7 +128,7 @@ sudo ss -tlnp | grep 11434
 sudo systemctl status ssh
 ```
 
-2. If you changed the SSH port (see [Security](05-security.md)), connect on the new port:
+2. If you changed the SSH port (see [Security](04-security.md)), connect on the new port:
 
 ```bash
 ssh -p 2222 your-username@192.168.1.100
@@ -148,7 +148,7 @@ sudo ufw status | grep -E '22|2222'
 
 **Steps:**
 
-1. The `daemon` model is created from a Modelfile. If you have not done this yet, follow [Daemon Bot Setup -- Option A](04-daemon-bot.md#option-a----modelfile-simplest).
+1. The `daemon` model is created from a Modelfile. If you have not done this yet, follow [Set up Daemon with the CLI — Option A](03-ollama-llama.md#option-a----modelfile-simplest).
 
 2. If you already created it, verify:
 
@@ -205,4 +205,4 @@ This overwrites the binary in place and preserves your models and configuration.
 
 ---
 
-Next: [Next Steps](07-next-steps.md)
+Next: [Next Steps](06-next-steps.md)
