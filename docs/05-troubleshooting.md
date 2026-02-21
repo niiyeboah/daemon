@@ -164,6 +164,28 @@ ollama create daemon -f ~/Modelfile
 
 ---
 
+## macOS: "Daemon" is damaged and can't be opened
+
+**Symptoms:** After downloading the Daemon DMG from GitHub Releases, macOS shows a dialog: *"Daemon" is damaged and can't be opened. You should eject the disk image.*
+
+**Cause:** The installer is not yet signed with an Apple Developer ID. macOS Gatekeeper adds a quarantine attribute to downloaded files and may block or misreport unsigned apps as "damaged".
+
+**Workaround:** Remove the quarantine attribute, then open the DMG again:
+
+```bash
+xattr -cr ~/Downloads/Daemon_*.dmg
+```
+
+Replace `Daemon_*.dmg` with the exact filename (e.g. `Daemon_0.1.2_aarch64.dmg`). After installing, if the app itself will not open:
+
+```bash
+xattr -cr /Applications/Daemon.app
+```
+
+Then open Daemon from Applications or the Dock. Future releases may be code-signed and notarized so this step is unnecessary; see [Distribution](08-distribution.md).
+
+---
+
 ## High Memory Usage / System Swapping
 
 **Symptoms:** The system feels sluggish, `free -h` shows swap is heavily used.

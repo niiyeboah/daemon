@@ -64,7 +64,23 @@ The app uses the Tauri updater plugin with GitHub Releases. To enable signed upd
    - Builds macOS (aarch64), Linux (x86_64), and Windows (x86_64)
    - Creates GitHub Release with installers and `latest.json` for auto-updates
 
-## Code Signing (Future)
+## macOS: "Damaged" DMG / Gatekeeper
 
-- **macOS:** Apple Developer ID (priority for M4 Mac Mini users)
-- **Windows:** Code signing certificate
+Builds use ad-hoc signing by default. If users see *"Daemon is damaged and can't be opened"* after downloading the DMG, they can remove the quarantine attribute: `xattr -cr ~/Downloads/Daemon_*.dmg` (and after install, `xattr -cr /Applications/Daemon.app`). See [Troubleshooting — macOS](05-troubleshooting.md#macos-daemon-is-damaged-and-cant-be-opened).
+
+## Code Signing (Optional)
+
+To sign and notarize the macOS build in CI, add these repository secrets and re-run the Desktop Release workflow:
+
+| Secret                       | Description                                       |
+| ---------------------------- | ------------------------------------------------- |
+| `APPLE_CERTIFICATE`          | Base64-encoded `.p12` (Developer ID Application)  |
+| `APPLE_CERTIFICATE_PASSWORD` | Password for the `.p12`                           |
+| `KEYCHAIN_PASSWORD`          | Password for the temporary build keychain         |
+| `APPLE_ID`                   | Apple ID email                                    |
+| `APPLE_PASSWORD`             | App-Specific Password (not your Apple ID password)|
+| `APPLE_TEAM_ID`              | Team ID from developer.apple.com                  |
+
+Requires a paid Apple Developer account. If these secrets are not set, the workflow uses ad-hoc signing and the DMG still builds; users can apply the quarantine workaround above.
+
+- **Windows:** Code signing certificate (future)
