@@ -40,17 +40,21 @@ jobs:
       - name: Bump version and create tag
         id: bump
         run: |
+          set -e
+          BUMP="${{ github.event.inputs.bump || inputs.bump || 'patch' }}"
           CURRENT=$(jq -r '.version' desktop/src-tauri/tauri.conf.json)
-          NEW_VERSION=$(npx --yes semver "$CURRENT" -i ${{ inputs.bump }})
+          NEW_VERSION=$(npx --yes semver "$CURRENT" -i "$BUMP")
           TAG="desktop-v${NEW_VERSION}"
+          BRANCH="release/${TAG}"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
           jq -i --arg v "$NEW_VERSION" '.version = $v' desktop/src-tauri/tauri.conf.json
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
           git add desktop/src-tauri/tauri.conf.json
           git commit -m "chore(desktop): bump version to $NEW_VERSION"
-          git push
+          git push -u origin "$BRANCH"
           git tag "$TAG"
           git push origin "$TAG"
 
