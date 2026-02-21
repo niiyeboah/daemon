@@ -1,0 +1,37 @@
+# DAE-5: Desktop app PR validation
+# Lint and type-check on PRs touching desktop or daemon-setup.
+# Builds run via desktop-release workflow (workflow_dispatch).
+
+name: Desktop CI
+
+on:
+  pull_request:
+    paths:
+      - 'desktop/**'
+      - 'cmd/daemon-setup/**'
+      - '.github/workflows/desktop-ci.yml'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: desktop/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: desktop
+
+      - name: Lint frontend
+        run: npm run lint
+        working-directory: desktop
+
+      - name: Type check
+        run: npx tsc --noEmit
+        working-directory: desktop

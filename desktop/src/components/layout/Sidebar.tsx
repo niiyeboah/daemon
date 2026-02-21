@@ -34,6 +34,11 @@ export function Sidebar() {
       )}
     >
       <div className="flex items-center gap-2 px-3 py-4 border-b border-sidebar-border">
+        <img
+          src="/daemon-logo.png"
+          alt="Daemon"
+          className={cn("shrink-0", collapsed ? "size-6" : "size-8")}
+        />
         {!collapsed && (
           <span className="font-semibold text-sm tracking-tight">Daemon</span>
         )}

@@ -49,15 +49,30 @@ sidecar-windows:
 	@mkdir -p desktop/src-tauri/bin
 	GOOS=windows GOARCH=amd64 go build -o desktop/src-tauri/bin/daemon-setup-x86_64-pc-windows-msvc.exe ./cmd/daemon-setup
 
-# Run desktop app in dev mode (macOS)
+# Run desktop app in dev mode (hot-reload)
 .PHONY: desktop-dev
 desktop-dev: sidecar-macos
 	cd desktop && npm run tauri dev
 
-# Build desktop app for production (macOS)
+# Build desktop app for production (current platform)
 .PHONY: desktop-build
 desktop-build: sidecar-macos
 	cd desktop && npm run tauri build
+
+# Cross-compile for macOS (primary target, M4 Mac Mini)
+.PHONY: desktop-build-macos
+desktop-build-macos: sidecar-macos
+	cd desktop && npm run tauri build
+
+# Cross-compile for Linux (amd64)
+.PHONY: desktop-build-linux
+desktop-build-linux: sidecar-linux
+	cd desktop && npm run tauri build -- --target x86_64-unknown-linux-gnu
+
+# Cross-compile for Windows (amd64)
+.PHONY: desktop-build-win
+desktop-build-win: sidecar-windows
+	cd desktop && npm run tauri build -- --target x86_64-pc-windows-msvc
 
 # Clean built binaries
 .PHONY: clean

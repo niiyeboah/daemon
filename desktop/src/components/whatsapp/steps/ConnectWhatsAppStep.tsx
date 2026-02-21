@@ -10,11 +10,8 @@ interface ConnectWhatsAppStepProps {
 }
 
 // Unicode block chars used in terminal QR codes
-const FULL = "\u2588";   // █ full block
 const LOWER = "\u2584";  // ▄ lower half (2:1 mode)
 const UPPER = "\u2580";  // ▀ upper half (2:1 mode)
-const DARK = "\u2593";   // ▓ dark shade
-const MED = "\u2592";    // ▒ medium shade
 const LIGHT = "\u2591";  // ░ light shade
 
 /** Returns [topBlack, bottomBlack] for a char. In 1:1 mode both are same. */
