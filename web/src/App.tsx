@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { Header } from '@/components/layout/Header'
 import { Sidebar } from '@/components/layout/Sidebar'
@@ -17,15 +17,25 @@ import { OpenClawSection } from '@/components/sections/OpenClawSection'
 import { useScrollSpy } from '@/hooks/useScrollSpy'
 import { themeAtom, osAtom } from '@/store/atoms'
 import { SECTIONS } from '@/store/constants'
+import { detectOs } from '@/lib/detectOs'
+
+const OS_STORAGE_KEY = 'daemon-os'
 
 function App() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const theme = useAtomValue(themeAtom)
   const selectedOs = useAtomValue(osAtom)
+  const setOs = useSetAtom(osAtom)
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
   }, [theme])
+
+  useEffect(() => {
+    if (localStorage.getItem(OS_STORAGE_KEY) == null) {
+      setOs(detectOs())
+    }
+  }, [setOs])
 
   const visibleSections = useMemo(() => {
     return SECTIONS.filter((s) => {

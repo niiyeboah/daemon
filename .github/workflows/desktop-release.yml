@@ -51,10 +51,11 @@ jobs:
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "branch=$BRANCH" >> $GITHUB_OUTPUT
           jq --arg v "$NEW_VERSION" '.version = $v' desktop/src-tauri/tauri.conf.json > desktop/src-tauri/tauri.conf.json.tmp && mv desktop/src-tauri/tauri.conf.json.tmp desktop/src-tauri/tauri.conf.json
+          jq --arg v "$NEW_VERSION" '.version = $v' desktop/package.json > desktop/package.json.tmp && mv desktop/package.json.tmp desktop/package.json
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
-          git add desktop/src-tauri/tauri.conf.json
+          git add desktop/src-tauri/tauri.conf.json desktop/package.json
           git commit -m "chore(desktop): bump version to $NEW_VERSION"
           git push -u origin "$BRANCH" --force
           git tag "$TAG" --force

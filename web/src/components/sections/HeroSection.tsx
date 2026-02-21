@@ -1,7 +1,9 @@
+import { useAtomValue } from 'jotai'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Download, Apple, Monitor, Terminal } from 'lucide-react'
 import { DESKTOP_DOWNLOAD_URLS } from '@/store/constants'
+import { osAtom } from '@/store/atoms'
 
 const stack = [
   { layer: 'Hardware', component: 'M4 Mac Mini (local) or Beelink S13 Pro (cloud API option)' },
@@ -12,6 +14,8 @@ const stack = [
 ]
 
 export function HeroSection() {
+  const selectedOs = useAtomValue(osAtom)
+
   return (
     <section id="hero">
       <h1 className="text-4xl font-bold tracking-tight">
@@ -33,50 +37,69 @@ export function HeroSection() {
         Install the desktop app on your machine to chat with Daemon from a native window.
       </p>
       <div className="mt-4 flex flex-wrap gap-3">
-        <Button asChild size="default" className="gap-2">
-          <a
-            href={DESKTOP_DOWNLOAD_URLS.macosAarch64}
-            target="_blank"
-            rel="noopener noreferrer"
-            download
-          >
-            <Apple className="h-4 w-4" />
-            macOS (Apple Silicon)
-          </a>
-        </Button>
-        <Button asChild size="default" className="gap-2">
-          <a
-            href={DESKTOP_DOWNLOAD_URLS.windowsX64}
-            target="_blank"
-            rel="noopener noreferrer"
-            download
-          >
-            <Monitor className="h-4 w-4" />
-            Windows
-          </a>
-        </Button>
-        <div className="flex flex-wrap items-center gap-2">
-          <Terminal className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">Linux:</span>
-          <Button asChild variant="outline" size="sm" className="gap-1.5">
-            <a href={DESKTOP_DOWNLOAD_URLS.linuxDeb} target="_blank" rel="noopener noreferrer" download>
-              <Download className="h-3.5 w-3.5" />
-              .deb
+        {selectedOs === 'macos' && (
+          <Button asChild size="default" className="gap-2">
+            <a
+              href={DESKTOP_DOWNLOAD_URLS.macosAarch64}
+              target="_blank"
+              rel="noopener noreferrer"
+              download
+            >
+              <Apple className="h-4 w-4" />
+              macOS (Apple Silicon)
             </a>
           </Button>
-          <Button asChild variant="outline" size="sm" className="gap-1.5">
-            <a href={DESKTOP_DOWNLOAD_URLS.linuxAppImage} target="_blank" rel="noopener noreferrer" download>
-              <Download className="h-3.5 w-3.5" />
-              AppImage
+        )}
+        {selectedOs === 'windows' && (
+          <Button asChild size="default" className="gap-2">
+            <a
+              href={DESKTOP_DOWNLOAD_URLS.windowsX64}
+              target="_blank"
+              rel="noopener noreferrer"
+              download
+            >
+              <Monitor className="h-4 w-4" />
+              Windows
             </a>
           </Button>
-          <Button asChild variant="outline" size="sm" className="gap-1.5">
-            <a href={DESKTOP_DOWNLOAD_URLS.linuxRpm} target="_blank" rel="noopener noreferrer" download>
-              <Download className="h-3.5 w-3.5" />
-              .rpm
-            </a>
-          </Button>
-        </div>
+        )}
+        {selectedOs === 'ubuntu' && (
+          <>
+            <Button asChild size="default" className="gap-2">
+              <a
+                href={DESKTOP_DOWNLOAD_URLS.linuxDeb}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+              >
+                <Terminal className="h-4 w-4" />
+                Debian / Ubuntu (.deb)
+              </a>
+            </Button>
+            <Button asChild size="default" className="gap-2">
+              <a
+                href={DESKTOP_DOWNLOAD_URLS.linuxAppImage}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+              >
+                <Download className="h-4 w-4" />
+                AppImage
+              </a>
+            </Button>
+            <Button asChild size="default" className="gap-2">
+              <a
+                href={DESKTOP_DOWNLOAD_URLS.linuxRpm}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+              >
+                <Download className="h-4 w-4" />
+                RPM
+              </a>
+            </Button>
+          </>
+        )}
       </div>
 
       <h2 className="mt-8 text-2xl font-semibold">The Stack</h2>
