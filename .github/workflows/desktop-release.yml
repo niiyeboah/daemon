@@ -48,7 +48,7 @@ jobs:
           BRANCH="release/${TAG}"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          jq -i --arg v "$NEW_VERSION" '.version = $v' desktop/src-tauri/tauri.conf.json
+          jq --arg v "$NEW_VERSION" '.version = $v' desktop/src-tauri/tauri.conf.json > desktop/src-tauri/tauri.conf.json.tmp && mv desktop/src-tauri/tauri.conf.json.tmp desktop/src-tauri/tauri.conf.json
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
