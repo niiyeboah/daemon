@@ -1,30 +1,32 @@
 # Daemon
 
 <p align="center">
-  <img src="assets/daemon-logo.png" alt="Daemon logo" width="200" />
+  <img src="web/public/daemon-logo.png" alt="Daemon logo" width="200" />
 </p>
 
 **Daemon** is a local, privacy-first personal assistant bot that runs entirely on your own hardware. No cloud APIs, no subscriptions, no data leaving your network — just a small, capable language model answering your questions on a quiet mini PC sitting on your desk.
 
 ## Table of contents
 
-- [Stack](#stack)
-- [What You Get](#what-you-get)
-- [Setup Guides](#setup-guides)
-- [Prerequisites](#prerequisites)
-- [Setup with the CLI](#setup-with-the-cli)
-- [Development](#development)
-- [License](#license)
+- [Daemon](#daemon)
+  - [Table of contents](#table-of-contents)
+  - [Stack](#stack)
+  - [What You Get](#what-you-get)
+  - [Setup Guides](#setup-guides)
+  - [Prerequisites](#prerequisites)
+  - [Setup with the CLI](#setup-with-the-cli)
+  - [Development](#development)
+  - [License](#license)
 
 ## Stack
 
-| Layer             | Component                                                                                                                |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Hardware          | [M4 Mac Mini](docs/01-hardware.md) (local route) or [Beelink S13 Pro](docs/01-hardware.md) (cloud API route)          |
+| Layer             | Component                                                                                                                                                                        |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Hardware          | [M4 Mac Mini](docs/01-hardware.md) (local route) or [Beelink S13 Pro](docs/01-hardware.md) (cloud API route)                                                                     |
 | Operating System  | [macOS](docs/04-ollama-llama.md) (M4 Mac Mini, default) or [Windows](docs/02-windows-setup.md) (Beelink S13 preloaded) or [Ubuntu Desktop 24.04 LTS](docs/02b-ubuntu-desktop.md) |
-| Inference Runtime | [Ollama](docs/04-ollama-llama.md)                                                                                        |
-| Language Model    | [Llama 3.2 8B](docs/04-ollama-llama.md)                                                                                  |
-| Interface         | [Daemon bot](docs/05-daemon-bot.md) (CLI / API)                                                                          |
+| Inference Runtime | [Ollama](docs/04-ollama-llama.md)                                                                                                                                                |
+| Language Model    | [Llama 3.2 8B](docs/04-ollama-llama.md)                                                                                                                                          |
+| Interface         | [Daemon bot](docs/05-daemon-bot.md) (CLI / API)                                                                                                                                  |
 
 ## What You Get
 
@@ -42,17 +44,17 @@ For local inference we recommend the **M4 Mac Mini 16GB**; for a low-power alway
 
 Read these in order. Each guide picks up where the previous one left off.
 
-| #   | Guide                                            | Description                                                 |
-| --- | ------------------------------------------------ | ----------------------------------------------------------- |
-| 1   | [Hardware](docs/01-hardware.md)                  | M4 Mac Mini (local) and Beelink S13 Pro (cloud API option)  |
-| 2   | [Windows](docs/02-windows-setup.md)              | Run Daemon on Windows (Beelink S13 preloaded)                |
-| 2b  | [Ubuntu Desktop](docs/02b-ubuntu-desktop.md)     | Install Ubuntu Desktop 24.04 LTS as an alternative to Windows |
-| 3   | [Post-Install](docs/03-post-install.md)          | System updates, dependencies, timezone, and user setup (Ubuntu) |
-| 4   | [Ollama + Llama 3.2 8B](docs/04-ollama-llama.md) | Install Ollama, pull the model, run it as a service         |
-| 5   | [Daemon Bot](docs/05-daemon-bot.md)              | Configure the "Daemon" personality via CLI and optional API |
-| 6   | [Security](docs/06-security.md)                  | Firewall, SSH hardening, and automatic updates              |
-| 7   | [Troubleshooting](docs/07-troubleshooting.md)    | Common issues and how to fix them                           |
-| 8   | [Next Steps](docs/08-next-steps.md)              | Ideas for extending Daemon (voice, integrations, web UI)    |
+| #   | Guide                                                   | Description                                                              |
+| --- | ------------------------------------------------------- | ------------------------------------------------------------------------ |
+| 1   | [Hardware](docs/01-hardware.md)                         | M4 Mac Mini (local) and Beelink S13 Pro (cloud API option)               |
+| 2   | [Windows](docs/02-windows-setup.md)                     | Run Daemon on Windows (Beelink S13 preloaded)                            |
+| 2b  | [Ubuntu Desktop](docs/02b-ubuntu-desktop.md)            | Install Ubuntu Desktop 24.04 LTS as an alternative to Windows            |
+| 3   | [Post-Install](docs/03-post-install.md)                 | System updates, dependencies, timezone, and user setup (Ubuntu)          |
+| 4   | [Ollama + Llama 3.2 8B](docs/04-ollama-llama.md)        | Install Ollama, pull the model, run it as a service                      |
+| 5   | [Daemon Bot](docs/05-daemon-bot.md)                     | Configure the "Daemon" personality via CLI and optional API              |
+| 6   | [Security](docs/06-security.md)                         | Firewall, SSH hardening, and automatic updates                           |
+| 7   | [Troubleshooting](docs/07-troubleshooting.md)           | Common issues and how to fix them                                        |
+| 8   | [Next Steps](docs/08-next-steps.md)                     | Ideas for extending Daemon (voice, integrations, web UI)                 |
 | 9   | [OpenClaw & automation](docs/09-openclaw-automation.md) | Set up OpenClaw, automate tasks, and use Daemon like a personal employee |
 
 ## Prerequisites
