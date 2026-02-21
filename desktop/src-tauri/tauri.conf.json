@@ -1,26 +1,60 @@
 {
   "productName": "Daemon",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "identifier": "com.daemon.desktop",
-  "build": { "frontendDist": "../dist", "devUrl": "http://localhost:1420", "beforeDevCommand": "npm run dev", "beforeBuildCommand": "npm run build" },
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
   "app": {
-    "windows": [{ "title": "Daemon", "width": 1100, "height": 750, "minWidth": 800, "minHeight": 600, "center": true }],
-    "security": { "csp": null }
+    "windows": [
+      {
+        "title": "Daemon",
+        "width": 1100,
+        "height": 750,
+        "minWidth": 800,
+        "minHeight": 600,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
   },
   "bundle": {
     "active": true,
     "targets": "all",
-    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
-    "externalBin": ["bin/daemon-setup"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "externalBin": [
+      "bin/daemon-setup"
+    ],
     "createUpdaterArtifacts": true,
-    "macOS": { "dmg": {} },
-    "linux": { "appimage": {}, "deb": {} },
-    "windows": { "wix": {}, "nsis": {} }
+    "macOS": {
+      "dmg": {}
+    },
+    "linux": {
+      "appimage": {},
+      "deb": {}
+    },
+    "windows": {
+      "wix": {},
+      "nsis": {}
+    }
   },
   "plugins": {
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDJFNTgxRkU5RERENEU3OEUKUldTTzU5VGQ2UjlZTG5wSy9KOFhTQ1V2TmRSNkpJMXVyc2w5TzlBMTZXbUllYmNpQnZqclltaVAK",
-      "endpoints": ["https://github.com/niiyeboah/daemon/releases/latest/download/latest.json"]
+      "endpoints": [
+        "https://github.com/niiyeboah/daemon/releases/latest/download/latest.json"
+      ]
     }
   }
 }
