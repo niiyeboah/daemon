@@ -94,12 +94,19 @@ export function HardwareSection() {
 
       <h3 className="mt-6 text-xl font-semibold">Physical Setup</h3>
       <p className="mt-2 text-sm text-muted-foreground">
-        <strong>M4 Mac Mini:</strong> Connect Ethernet or Wi-Fi, display, and keyboard; complete macOS setup, then install Ollama and pull <code className="rounded bg-muted px-1.5 py-0.5 text-xs">llama3.2:8b</code>.
+        <strong>M4 Mac Mini:</strong>
       </p>
-      <p className="mt-2 text-sm text-muted-foreground">
+      <ol className="mt-3 list-decimal space-y-2 pl-6 text-sm text-muted-foreground">
+        <li>Connect Ethernet or Wi-Fi, display, and keyboard.</li>
+        <li>Complete macOS setup.</li>
+        <li>
+          Install Ollama and pull <code className="rounded bg-muted px-1.5 py-0.5 text-xs">llama3.2:8b</code>.
+        </li>
+      </ol>
+      <p className="mt-4 text-sm text-muted-foreground">
         <strong>Beelink S13 Pro:</strong>
       </p>
-      <ol className="mt-3 list-decimal space-y-2 pl-6 text-muted-foreground">
+      <ol className="mt-3 list-decimal space-y-2 pl-6 text-sm text-muted-foreground">
         <li>Unbox the Beelink S13 Pro.</li>
         <li>Connect Ethernet cable (recommended) or plan for Wi-Fi.</li>
         <li>Connect a monitor via HDMI and a wired keyboard.</li>
