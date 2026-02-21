@@ -27,6 +27,7 @@ jobs:
     outputs:
       tag: ${{ steps.bump.outputs.tag }}
       version: ${{ steps.bump.outputs.version }}
+      branch: ${{ steps.bump.outputs.branch }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -48,6 +49,7 @@ jobs:
           BRANCH="release/${TAG}"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
           jq --arg v "$NEW_VERSION" '.version = $v' desktop/src-tauri/tauri.conf.json > desktop/src-tauri/tauri.conf.json.tmp && mv desktop/src-tauri/tauri.conf.json.tmp desktop/src-tauri/tauri.conf.json
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -101,11 +103,12 @@ jobs:
         with:
           script: |
             const tagName = '${{ needs.bump-version.outputs.tag }}';
+            const targetCommitish = '${{ needs.bump-version.outputs.branch }}';
             const { data } = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: tagName,
-              target_commitish: tagName,
+              target_commitish: targetCommitish,
               name: `Daemon Desktop ${tagName}`,
               body: 'See the assets to download this version and install.',
               draft: true,
