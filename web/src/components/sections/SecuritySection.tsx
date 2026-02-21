@@ -1,6 +1,5 @@
 import { CodeBlock } from '@/components/shared/CodeBlock'
 import { OsFilter } from '@/components/shared/OsFilter'
-import { StepCheckbox } from '@/components/shared/StepCheckbox'
 import { InfoBox } from '@/components/shared/InfoBox'
 
 export function SecuritySection() {
@@ -54,8 +53,6 @@ export function SecuritySection() {
         <CodeBlock language="bash" code="sudo ufw enable" />
         <CodeBlock language="bash" code="sudo ufw status verbose" />
 
-        <StepCheckbox stepId="firewall-configured" label="Firewall configured" />
-
         <h3 className="mt-6 text-xl font-semibold">SSH Hardening</h3>
 
         <h4 className="mt-4 text-lg font-medium">1. Key-Based Authentication</h4>
@@ -80,16 +77,12 @@ export function SecuritySection() {
         />
         <CodeBlock language="bash" code="sudo systemctl restart ssh" />
 
-        <StepCheckbox stepId="ssh-hardened" label="SSH access hardened" />
-
         <h3 className="mt-6 text-xl font-semibold">Automatic Security Updates</h3>
         <CodeBlock
           language="bash"
           code={`sudo apt install -y unattended-upgrades\nsudo dpkg-reconfigure -plow unattended-upgrades`}
         />
         <p className="text-sm text-muted-foreground">Select Yes when prompted.</p>
-
-        <StepCheckbox stepId="auto-updates-enabled" label="Automatic updates enabled" />
 
         <h3 className="mt-6 text-xl font-semibold">Fail2Ban (Optional)</h3>
         <CodeBlock

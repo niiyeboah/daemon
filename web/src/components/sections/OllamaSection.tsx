@@ -1,7 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { CodeBlock } from '@/components/shared/CodeBlock'
 import { OsFilter } from '@/components/shared/OsFilter'
-import { StepCheckbox } from '@/components/shared/StepCheckbox'
 import { InfoBox } from '@/components/shared/InfoBox'
 
 const resourceUsage = [
@@ -51,8 +50,6 @@ export function OllamaSection() {
       <p className="mt-2 text-sm text-muted-foreground">Verify the installation:</p>
       <CodeBlock code="ollama --version" />
 
-      <StepCheckbox stepId="ollama-installed" label="Ollama installed and running" />
-
       <h3 className="mt-6 text-xl font-semibold">Pull the Model</h3>
       <CodeBlock code="ollama pull llama3.2:1b" />
       <p className="text-sm text-muted-foreground">
@@ -60,16 +57,12 @@ export function OllamaSection() {
       </p>
       <CodeBlock code="ollama list" />
 
-      <StepCheckbox stepId="model-pulled" label="Llama 3.2 1B model downloaded" />
-
       <h3 className="mt-6 text-xl font-semibold">Test Interactively</h3>
       <CodeBlock code="ollama run llama3.2:1b" />
       <p className="text-sm text-muted-foreground">
         Try a question at the prompt. On the N100/N150 expect ~10-30 tokens/sec.
         Exit with <code className="rounded bg-muted px-1.5 py-0.5">/bye</code> or Ctrl+D.
       </p>
-
-      <StepCheckbox stepId="model-tested" label="Model tested interactively" />
 
       <OsFilter os="ubuntu">
         <h3 className="mt-6 text-xl font-semibold">Systemd Service</h3>

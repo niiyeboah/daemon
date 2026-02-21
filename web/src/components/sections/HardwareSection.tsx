@@ -1,5 +1,4 @@
 import { Card, CardContent } from '@/components/ui/card'
-import { StepCheckbox } from '@/components/shared/StepCheckbox'
 import { InfoBox } from '@/components/shared/InfoBox'
 
 const m4Specs = [
@@ -111,8 +110,6 @@ export function HardwareSection() {
         </li>
         <li>Save and exit BIOS.</li>
       </ol>
-
-      <StepCheckbox stepId="hardware-ready" label="Hardware set up and powered on" />
     </section>
   )
 }

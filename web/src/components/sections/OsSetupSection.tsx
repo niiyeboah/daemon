@@ -1,6 +1,5 @@
 import { CodeBlock } from '@/components/shared/CodeBlock'
 import { OsFilter } from '@/components/shared/OsFilter'
-import { StepCheckbox } from '@/components/shared/StepCheckbox'
 import { InfoBox } from '@/components/shared/InfoBox'
 import { GITHUB_RELEASES_LATEST_URL, CLI_BUILD_URLS } from '@/store/constants'
 
@@ -160,9 +159,6 @@ export function OsSetupSection() {
           Or build from source in the Daemon Bot step.
         </p>
       </OsFilter>
-
-      <StepCheckbox stepId="os-installed" label="Operating system installed" />
-      <StepCheckbox stepId="go-installed" label="Go installed" />
     </section>
   )
 }

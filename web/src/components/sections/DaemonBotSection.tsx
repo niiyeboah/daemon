@@ -1,7 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CodeBlock } from '@/components/shared/CodeBlock'
 import { OsFilter } from '@/components/shared/OsFilter'
-import { StepCheckbox } from '@/components/shared/StepCheckbox'
 import { InfoBox } from '@/components/shared/InfoBox'
 import { GITHUB_RELEASES_LATEST_URL, CLI_BUILD_URLS } from '@/store/constants'
 
@@ -103,10 +102,6 @@ export function DaemonBotSection() {
       <InfoBox variant="tip">
         Or run everything at once: <code className="rounded bg-muted px-1.5 py-0.5">./daemon-setup setup</code> (add <code className="rounded bg-muted px-1.5 py-0.5">--yes</code> to skip confirmations).
       </InfoBox>
-
-      <StepCheckbox stepId="daemon-setup-built" label="daemon-setup CLI built" />
-      <StepCheckbox stepId="daemon-model-created" label="Daemon model created" />
-      <StepCheckbox stepId="shell-alias-added" label="Shell alias configured" />
 
       <h3 className="mt-8 text-xl font-semibold">Manual Setup</h3>
       <p className="mt-2 text-muted-foreground">

@@ -1,5 +1,4 @@
 import { CodeBlock } from '@/components/shared/CodeBlock'
-import { StepCheckbox } from '@/components/shared/StepCheckbox'
 import { InfoBox } from '@/components/shared/InfoBox'
 import { OsFilter } from '@/components/shared/OsFilter'
 
@@ -59,9 +58,6 @@ timedatectl`}
         Also add <code className="rounded bg-muted px-1.5 py-0.5">127.0.1.1 daemon</code> to{' '}
         <code className="rounded bg-muted px-1.5 py-0.5">/etc/hosts</code>.
       </p>
-
-      <StepCheckbox stepId="system-updated" label="System packages updated" />
-      <StepCheckbox stepId="hostname-set" label="Hostname and timezone configured" />
 
       <h3 className="mt-6 text-xl font-semibold">Verify System Resources</h3>
       <CodeBlock

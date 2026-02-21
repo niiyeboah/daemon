@@ -1,7 +1,22 @@
-import type { SectionMeta, Step } from '@/types'
+import type { SectionMeta } from '@/types'
 
 export const GITHUB_RELEASES_URL = 'https://github.com/niiyeboah/daemon/releases'
 export const GITHUB_RELEASES_LATEST_URL = 'https://github.com/niiyeboah/daemon/releases/latest'
+
+/** Desktop app version (from tauri.conf.json at build time via Vite define) */
+const DESKTOP_VERSION = import.meta.env.VITE_DESKTOP_VERSION ?? '0.1.1'
+
+/** Base URL for desktop release assets (tag: desktop-v{VERSION}) */
+export const DESKTOP_RELEASE_BASE = `https://github.com/niiyeboah/daemon/releases/download/desktop-v${DESKTOP_VERSION}`
+
+/** Direct download URLs for the Daemon Desktop app */
+export const DESKTOP_DOWNLOAD_URLS = {
+  macosAarch64: `${DESKTOP_RELEASE_BASE}/Daemon_${DESKTOP_VERSION}_aarch64.dmg`,
+  windowsX64: `${DESKTOP_RELEASE_BASE}/Daemon_${DESKTOP_VERSION}_x64-setup.exe`,
+  linuxDeb: `${DESKTOP_RELEASE_BASE}/Daemon_${DESKTOP_VERSION}_amd64.deb`,
+  linuxAppImage: `${DESKTOP_RELEASE_BASE}/Daemon_${DESKTOP_VERSION}_amd64.AppImage`,
+  linuxRpm: `${DESKTOP_RELEASE_BASE}/Daemon-${DESKTOP_VERSION}-1.x86_64.rpm`,
+} as const
 
 /** Direct download URLs for the latest CLI builds (GitHub redirects latest → tag) */
 const RELEASES_LATEST_DOWNLOAD = 'https://github.com/niiyeboah/daemon/releases/latest/download'
@@ -22,32 +37,4 @@ export const SECTIONS: SectionMeta[] = [
   { id: 'troubleshooting', title: 'Troubleshooting' },
   { id: 'openclaw', title: 'OpenClaw & Automation' },
   { id: 'next-steps', title: 'Next Steps' },
-]
-
-export const STEPS: Step[] = [
-  // Hardware
-  { id: 'hardware-ready', section: 'hardware', label: 'Hardware set up and powered on', os: 'all' },
-
-  // OS Setup
-  { id: 'os-installed', section: 'os-setup', label: 'Operating system installed', os: 'all' },
-  { id: 'go-installed', section: 'os-setup', label: 'Go installed', os: 'all' },
-
-  // Post-Install (Ubuntu only)
-  { id: 'system-updated', section: 'post-install', label: 'System packages updated', os: 'ubuntu' },
-  { id: 'hostname-set', section: 'post-install', label: 'Hostname and timezone configured', os: 'ubuntu' },
-
-  // Ollama
-  { id: 'ollama-installed', section: 'ollama', label: 'Ollama installed and running', os: 'all' },
-  { id: 'model-pulled', section: 'ollama', label: 'Llama 3.2 1B model downloaded', os: 'all' },
-  { id: 'model-tested', section: 'ollama', label: 'Model tested interactively', os: 'all' },
-
-  // Daemon Bot
-  { id: 'daemon-setup-built', section: 'daemon-bot', label: 'daemon-setup CLI built', os: 'all' },
-  { id: 'daemon-model-created', section: 'daemon-bot', label: 'Daemon model created', os: 'all' },
-  { id: 'shell-alias-added', section: 'daemon-bot', label: 'Shell alias configured', os: 'all' },
-
-  // Security
-  { id: 'firewall-configured', section: 'security', label: 'Firewall configured', os: 'ubuntu' },
-  { id: 'ssh-hardened', section: 'security', label: 'SSH access hardened', os: 'ubuntu' },
-  { id: 'auto-updates-enabled', section: 'security', label: 'Automatic updates enabled', os: 'ubuntu' },
 ]
