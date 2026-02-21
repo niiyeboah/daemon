@@ -18,6 +18,11 @@ export function HeroSection() {
 
   return (
     <section id="hero">
+      <img
+        src={`${import.meta.env.BASE_URL}daemon-logo.png`}
+        alt="Daemon"
+        className="mb-6 h-48 w-48 rounded-full object-contain"
+      />
       <h1 className="text-4xl font-bold tracking-tight">
         Daemon Setup Guide
       </h1>

@@ -11,7 +11,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
   const [theme, setTheme] = useAtom(themeAtom)
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4">
         <Button
           variant="ghost"
@@ -26,7 +26,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
           <img
             src={`${import.meta.env.BASE_URL}daemon-logo.png`}
             alt="Daemon"
-            className="h-8 w-8 rounded-full object-contain"
+            className="h-8 w-8 rounded-full object-contain scale-[1.3]"
           />
           <span className="text-lg font-bold">Daemon</span>
           <span className="hidden text-sm text-muted-foreground sm:inline">
