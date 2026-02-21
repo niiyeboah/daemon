@@ -98,9 +98,7 @@ jobs:
         working-directory: desktop
 
       - name: Disable updater artifacts for PRs (no signing on non-main)
-        run: |
-          cd src-tauri
-          jq '.bundle.createUpdaterArtifacts = false' tauri.conf.json > tauri.conf.tmp && mv tauri.conf.tmp tauri.conf.json
+        run: jq -i '.bundle.createUpdaterArtifacts = false' src-tauri/tauri.conf.json
         working-directory: desktop
 
       - name: Build Tauri app (no release artifacts)
