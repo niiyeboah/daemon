@@ -7,6 +7,8 @@ on:
       - 'web/**'
       - '.github/workflows/deploy.yml'
   workflow_dispatch:
+  repository_dispatch:
+    types: [deploy-on-desktop-release]
 
 permissions:
   contents: read
@@ -22,6 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.ref || github.ref }}
       - uses: actions/setup-node@v4
         with:
           node-version: 20
