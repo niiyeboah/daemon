@@ -1,4 +1,4 @@
-# 4 -- Ollama + Llama 3.2 8B
+# 3 -- Ollama + Llama 3.2 8B
 
 This guide installs Ollama, downloads the Llama 3.2 8B model, and configures Ollama to run as a persistent service.
 
@@ -145,7 +145,7 @@ sudo systemctl daemon-reload
 sudo systemctl restart ollama
 ```
 
-> **Security note:** Only do this on a trusted home network. See [Security](06-security.md) for firewall rules.
+> **Security note:** Only do this on a trusted home network. See [Security](05-security.md) for firewall rules.
 
 ### Set a custom models directory
 
@@ -192,4 +192,4 @@ On a 16 GB machine, the OS and Ollama with the 8B model loaded will typically us
 
 ---
 
-Next: [Daemon Bot Setup](05-daemon-bot.md)
+Next: [Daemon Bot Setup](04-daemon-bot.md)

@@ -25,10 +25,10 @@
 | Layer             | Component                                                                                                                                                                        |
 | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Hardware          | [M4 Mac Mini](docs/01-hardware.md) (local route) or [Beelink S13 Pro](docs/01-hardware.md) (cloud API route)                                                                     |
-| Operating System  | [macOS](docs/04-ollama-llama.md) (M4 Mac Mini, default) or [Windows](docs/02-windows-setup.md) (Beelink S13 preloaded) or [Ubuntu Desktop 24.04 LTS](docs/02b-ubuntu-desktop.md) |
-| Inference Runtime | [Ollama](docs/04-ollama-llama.md)                                                                                                                                                |
-| Language Model    | [Llama 3.2 8B](docs/04-ollama-llama.md)                                                                                                                                          |
-| Interface         | [Daemon Desktop](https://github.com/niiyeboah/daemon/releases) (recommended) or [Daemon bot](docs/05-daemon-bot.md) (CLI / API)                                                                                                                 |
+| Operating System  | [OS Setup](docs/02-os-setup.md) — macOS (M4 Mac Mini, default), Windows (Beelink), Ubuntu Desktop 24.04 LTS (Beelink) |
+| Inference Runtime | [Ollama](docs/03-ollama-llama.md)                                                                                                                                                |
+| Language Model    | [Llama 3.2 8B](docs/03-ollama-llama.md)                                                                                                                                          |
+| Interface         | [Daemon Desktop](https://github.com/niiyeboah/daemon/releases) (recommended) or [Daemon bot](docs/04-daemon-bot.md) (CLI / API)                                                                                                                 |
 
 ## What You Get
 
@@ -39,7 +39,7 @@ After following the guides below you will have:
 - A personal assistant named **Daemon** reachable via the [Daemon Desktop](https://github.com/niiyeboah/daemon/releases) app, the terminal, or a simple HTTP API from any device on your LAN.
 
 
-For local inference we recommend the **M4 Mac Mini 16GB**; for a low-power always-on gateway with cloud APIs, the **Beelink S13 Pro** (Windows preloaded) is an option. See [Hardware](docs/01-hardware.md). Alternatively, install [Ubuntu Desktop](docs/02b-ubuntu-desktop.md) on Beelink if you prefer Linux.
+For local inference we recommend the **M4 Mac Mini 16GB**; for a low-power always-on gateway with cloud APIs, the **Beelink S13 Pro** (Windows preloaded) is an option. See [Hardware](docs/01-hardware.md). Alternatively, install [Ubuntu Desktop](docs/02-os-setup.md#ubuntu-desktop-beelink-s13-pro) on Beelink if you prefer Linux.
 
 ## Setup Guides
 
@@ -48,15 +48,13 @@ Read these in order. Each guide picks up where the previous one left off.
 | #   | Guide                                                   | Description                                                              |
 | --- | ------------------------------------------------------- | ------------------------------------------------------------------------ |
 | 1   | [Hardware](docs/01-hardware.md)                         | M4 Mac Mini (local) and Beelink S13 Pro (cloud API option)               |
-| 2   | [Windows](docs/02-windows-setup.md)                     | Run Daemon on Windows (Beelink S13 preloaded)                            |
-| 2b  | [Ubuntu Desktop](docs/02b-ubuntu-desktop.md)            | Install Ubuntu Desktop 24.04 LTS as an alternative to Windows            |
-| 3   | [Post-Install](docs/03-post-install.md)                 | System updates, dependencies, timezone, and user setup (Ubuntu)          |
-| 4   | [Ollama + Llama 3.2 8B](docs/04-ollama-llama.md)        | Install Ollama, pull the model, run it as a service                      |
-| 5   | [Daemon Bot](docs/05-daemon-bot.md)                     | Configure the "Daemon" personality via CLI and optional API              |
-| 6   | [Security](docs/06-security.md)                         | Firewall, SSH hardening, and automatic updates                           |
-| 7   | [Troubleshooting](docs/07-troubleshooting.md)           | Common issues and how to fix them                                        |
-| 8   | [Next Steps](docs/08-next-steps.md)                     | Ideas for extending Daemon (voice, integrations, web UI)                 |
-| 9   | [OpenClaw & automation](docs/09-openclaw-automation.md) | Set up OpenClaw, automate tasks, and use Daemon like a personal employee |
+| 2   | [OS Setup](docs/02-os-setup.md)                         | macOS (default), Windows, or Ubuntu Desktop — get your OS ready         |
+| 3   | [Ollama + Llama 3.2 8B](docs/03-ollama-llama.md)        | Install Ollama, pull the model, run it as a service                      |
+| 4   | [Daemon Bot](docs/04-daemon-bot.md)                     | Configure the "Daemon" personality via CLI and optional API              |
+| 5   | [Security](docs/05-security.md)                         | Firewall, SSH hardening, and automatic updates                           |
+| 6   | [Troubleshooting](docs/06-troubleshooting.md)           | Common issues and how to fix them                                        |
+| 7   | [Next Steps](docs/07-next-steps.md)                     | Ideas for extending Daemon (voice, integrations, web UI)                 |
+| 8   | [OpenClaw & automation](docs/08-openclaw-automation.md) | Set up OpenClaw, automate tasks, and use Daemon like a personal employee |
 
 ## Prerequisites
 
@@ -109,7 +107,7 @@ Once Ollama is installed and the base model is pulled (see [Setup Guides](#setup
 
 Use `--yes` to skip confirmations.
 
-For full manual steps and alternatives (e.g. Python API script), see [Daemon Bot](docs/05-daemon-bot.md) and [Ollama + Llama 3.2 8B](docs/04-ollama-llama.md).
+For full manual steps and alternatives (e.g. Python API script), see [Daemon Bot](docs/04-daemon-bot.md) and [Ollama + Llama 3.2 8B](docs/03-ollama-llama.md).
 
 ## Development
 

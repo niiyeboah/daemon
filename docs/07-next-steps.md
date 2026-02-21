@@ -1,4 +1,4 @@
-# 8 -- Next Steps
+# 7 -- Next Steps
 
 Daemon is up and running. Here are ideas to extend and improve your personal assistant.
 
@@ -6,7 +6,7 @@ Daemon is up and running. Here are ideas to extend and improve your personal ass
 
 ## OpenClaw & automation
 
-Turn Daemon into a **personal employee** that works on your behalf: add [OpenClaw](09-openclaw-automation.md) to give it messaging channels (Telegram, Discord, Slack), automation skills from ClawHub, and scheduled jobs. Daemon stays the brain (your local LLM); OpenClaw is the layer that lets it act — reply on your channels, run workflows, and execute tasks 24/7. See [OpenClaw & automation](09-openclaw-automation.md) for setup and how to start automating.
+Turn Daemon into a **personal employee** that works on your behalf: add [OpenClaw](08-openclaw-automation.md) to give it messaging channels (Telegram, Discord, Slack), automation skills from ClawHub, and scheduled jobs. Daemon stays the brain (your local LLM); OpenClaw is the layer that lets it act — reply on your channels, run workflows, and execute tasks 24/7. See [OpenClaw & automation](08-openclaw-automation.md) for setup and how to start automating.
 
 ---
 
@@ -43,7 +43,7 @@ sudo docker run -d --network=host -e OLLAMA_BASE_URL=http://localhost:11434 \
 
   Then open `http://192.168.1.100:8080` from any device on your LAN.
 
-- **Custom Flask/FastAPI app** -- Build a minimal chat page tailored to your needs. The Python script from [Option B](05-daemon-bot.md#option-b----python-api-script) is a good starting point; add a `/chat` HTTP endpoint and a simple HTML frontend.
+- **Custom Flask/FastAPI app** -- Build a minimal chat page tailored to your needs. The Python script from [Option B](04-daemon-bot.md#option-b----python-api-script) is a good starting point; add a `/chat` HTTP endpoint and a simple HTML frontend.
 
 ---
 

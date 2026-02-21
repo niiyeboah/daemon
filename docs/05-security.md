@@ -1,4 +1,4 @@
-# 6 -- Security
+# 5 -- Security
 
 Your Daemon box is a server on your network. Even on a home LAN, basic security hygiene prevents accidental exposure and keeps the system healthy.
 
@@ -23,7 +23,7 @@ sudo ufw allow ssh          # port 22/tcp
 
 ### Allow Ollama (LAN only)
 
-Only necessary if you configured Ollama to bind to `0.0.0.0` (see [Ollama guide](04-ollama-llama.md)) and want to reach it from other devices on your network:
+Only necessary if you configured Ollama to bind to `0.0.0.0` (see [Ollama guide](03-ollama-llama.md)) and want to reach it from other devices on your network:
 
 ```bash
 # Replace 192.168.1.0/24 with your actual LAN subnet
@@ -134,7 +134,7 @@ ssh -p 2222 your-username@192.168.1.100
 
 ## Automatic Security Updates
 
-If you did not set this up during [post-install](03-post-install.md):
+If you did not set this up during [post-install](02-os-setup.md#post-install-system-setup-ubuntu):
 
 ```bash
 sudo apt install -y unattended-upgrades
@@ -183,4 +183,4 @@ sudo fail2ban-client status sshd
 
 ---
 
-Next: [Troubleshooting](07-troubleshooting.md)
+Next: [Troubleshooting](06-troubleshooting.md)

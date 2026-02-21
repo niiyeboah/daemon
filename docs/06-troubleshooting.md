@@ -1,4 +1,4 @@
-# 7 -- Troubleshooting
+# 6 -- Troubleshooting
 
 Common issues and how to resolve them.
 
@@ -48,7 +48,7 @@ curl -fsSL https://ollama.com/install.sh | sh
 free -h
 ```
 
-   The 8B model needs roughly 4--6 GB of free RAM. If the system is low on memory, close other processes or add swap space (see [Post-Install](03-post-install.md)).
+   The 8B model needs roughly 4--6 GB of free RAM. If the system is low on memory, close other processes or add swap space (see [OS Setup — Post-Install](02-os-setup.md#post-install-system-setup-ubuntu)).
 
 2. Check disk space:
 
@@ -96,7 +96,7 @@ ollama list
 
 **Steps:**
 
-1. **Check the bind address.** By default Ollama only listens on `localhost`. You need to set `OLLAMA_HOST=0.0.0.0` in the systemd service override. See [Ollama guide](04-ollama-llama.md#bind-to-all-interfaces-for-lan-access).
+1. **Check the bind address.** By default Ollama only listens on `localhost`. You need to set `OLLAMA_HOST=0.0.0.0` in the systemd service override. See [Ollama guide](03-ollama-llama.md#bind-to-all-interfaces-for-lan-access).
 
 2. **Check the firewall:**
 
@@ -104,7 +104,7 @@ ollama list
 sudo ufw status
 ```
 
-   Port 11434 must be allowed from your LAN subnet. See [Security](06-security.md).
+   Port 11434 must be allowed from your LAN subnet. See [Security](05-security.md).
 
 3. **Check the server is listening on all interfaces:**
 
@@ -128,7 +128,7 @@ sudo ss -tlnp | grep 11434
 sudo systemctl status ssh
 ```
 
-2. If you changed the SSH port (see [Security](06-security.md)), connect on the new port:
+2. If you changed the SSH port (see [Security](05-security.md)), connect on the new port:
 
 ```bash
 ssh -p 2222 your-username@192.168.1.100
@@ -148,7 +148,7 @@ sudo ufw status | grep -E '22|2222'
 
 **Steps:**
 
-1. The `daemon` model is created from a Modelfile. If you have not done this yet, follow [Daemon Bot Setup -- Option A](05-daemon-bot.md#option-a----modelfile-simplest).
+1. The `daemon` model is created from a Modelfile. If you have not done this yet, follow [Daemon Bot Setup -- Option A](04-daemon-bot.md#option-a----modelfile-simplest).
 
 2. If you already created it, verify:
 
@@ -188,7 +188,7 @@ Recreate the model:
 ollama create daemon -f ~/Modelfile
 ```
 
-3. Add more swap if needed (see [Post-Install](03-post-install.md)).
+3. Add more swap if needed (see [OS Setup — Post-Install](02-os-setup.md#post-install-system-setup-ubuntu)).
 
 ---
 
@@ -205,4 +205,4 @@ This overwrites the binary in place and preserves your models and configuration.
 
 ---
 
-Next: [Next Steps](08-next-steps.md)
+Next: [Next Steps](07-next-steps.md)

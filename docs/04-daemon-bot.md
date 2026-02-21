@@ -1,4 +1,4 @@
-# 5 -- Daemon Bot Setup
+# 4 -- Daemon Bot Setup
 
 With Ollama running and Llama 3.2 8B downloaded, it is time to give your assistant its identity. **Daemon** is the personality and interface layer that sits on top of Ollama.
 
@@ -91,7 +91,7 @@ daemon
 
 ### On Windows
 
-If you are on Windows (see [Windows Setup](02-windows-setup.md)), `daemon-setup alias` adds a **PowerShell function** to your profile (`Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1`). Restart PowerShell or run `. $PROFILE` to load it, then run `daemon`. You can also run `ollama run daemon` in any terminal (PowerShell or CMD).
+If you are on Windows (see [OS Setup — Windows](02-os-setup.md#windows-beelink-s13-pro)), `daemon-setup alias` adds a **PowerShell function** to your profile (`Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1`). Restart PowerShell or run `. $PROFILE` to load it, then run `daemon`. You can also run `ollama run daemon` in any terminal (PowerShell or CMD).
 
 ---
 
@@ -283,4 +283,4 @@ Edit the `SYSTEM_PROMPT` variable in `daemon.py` and restart the script (or the 
 
 ---
 
-Next: [Security](06-security.md)
+Next: [Security](05-security.md)
