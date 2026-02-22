@@ -268,16 +268,59 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            const releaseId = parseInt('${{ needs.create-release.outputs.release_id }}');
             await github.rest.repos.updateRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              release_id: parseInt('${{ needs.create-release.outputs.release_id }}'),
+              release_id: releaseId,
               draft: false,
               prerelease: false
             });
 
-  trigger-web-deploy:
+      - name: Delete orphaned draft releases
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: releases } = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+            const desktopDrafts = releases.filter(r =>
+              r.draft && r.tag_name.startsWith('desktop-v')
+            );
+            for (const r of desktopDrafts) {
+              await github.rest.repos.deleteRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: r.id
+              });
+              console.log(`Deleted orphaned draft: ${r.tag_name}`);
+            }
+
+  merge-to-main:
     needs: [publish-release, bump-version]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Merge release branch into main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="${{ needs.bump-version.outputs.branch }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout main
+          git pull origin main
+          git merge "$BRANCH" -m "chore(desktop): merge $BRANCH into main"
+          git push origin main
+
+  trigger-web-deploy:
+    needs: [merge-to-main, bump-version]
     runs-on: ubuntu-latest
     steps:
       - name: Trigger web deploy
