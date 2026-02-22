@@ -43,7 +43,7 @@ sudo docker run -d --network=host -e OLLAMA_BASE_URL=http://localhost:11434 \
 
   Then open `http://192.168.1.100:8080` from any device on your LAN.
 
-- **Custom Flask/FastAPI app** -- Build a minimal chat page tailored to your needs. The Python script from [Option B](03-ollama-llama.md#option-b----python-api-script) is a good starting point; add a `/chat` HTTP endpoint and a simple HTML frontend.
+- **Custom Flask/FastAPI app** -- Build a minimal chat page tailored to your needs. The Python script from [Option B](03-ollama-setup.md#option-b----python-api-script) is a good starting point; add a `/chat` HTTP endpoint and a simple HTML frontend.
 
 ---
 
@@ -60,13 +60,7 @@ Turn Daemon into a proactive assistant that does things on a schedule.
 
 Ollama can host several models simultaneously. Consider:
 
-| Model | Use Case |
-|-------|----------|
-| `qwen2.5-coder:7b` | Default for Mac (code & general) |
-| `codellama:7b` | Code generation and review (if you have RAM) |
-| `mistral:7b` | Alternative general-purpose model (needs 8+ GB free RAM) |
-
-Switch models in the Modelfile or Python script by changing the model name.
+Ollama can host several models simultaneously. Switch models in the Modelfile or Python script by changing the model name. See the [Ollama library](https://ollama.com/library) for available options.
 
 ---
 

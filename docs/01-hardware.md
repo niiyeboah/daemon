@@ -16,7 +16,7 @@ For the **local model route** — where Ollama runs and inference happens on you
 | **Recommended model** | **qwen2.5-coder:7b**                                                                   |
 | **Benefits**          | Apple Silicon inference, Metal acceleration for Ollama, much faster than low-power x86 |
 
-The 7B model fits comfortably in 16 GB and benefits from M4's Metal acceleration. See [Ollama + Qwen2.5-Coder-7B](03-ollama-llama.md) for setup (including the CLI).
+The 7B model fits comfortably in 16 GB and benefits from M4's Metal acceleration. See [Ollama + Qwen2.5-Coder-7B](03-ollama-setup.md) for setup (including the CLI).
 
 ---
 
@@ -42,7 +42,7 @@ Besides the M4 Mac Mini or Beelink S13 Pro (or equivalent), you will need:
 - **Wired keyboard** — Required for initial setup and BIOS (Beelink). A wired USB keyboard avoids wireless dongle or Bluetooth issues during install and boot.
 - **USB drive** — At least 4 GB, only needed if you want to replace Windows with Ubuntu on Beelink. See [OS Setup — Ubuntu Desktop](02-os-setup.md#ubuntu-desktop-beelink-s13-pro) for flashing options (Ventoy is recommended).
 
-> For **M4 Mac Mini**, use macOS — see [OS Setup](02-os-setup.md) then [Ollama + Qwen2.5-Coder-7B](03-ollama-llama.md). The Beelink S13 Pro comes preloaded with **Windows** — see [OS Setup — Windows](02-os-setup.md#windows-beelink-s13-pro). If you prefer Linux on Beelink, see [OS Setup — Ubuntu Desktop](02-os-setup.md#ubuntu-desktop-beelink-s13-pro).
+> For **M4 Mac Mini**, use macOS — see [OS Setup](02-os-setup.md) then [Ollama + Qwen2.5-Coder-7B](03-ollama-setup.md). The Beelink S13 Pro comes preloaded with **Windows** — see [OS Setup — Windows](02-os-setup.md#windows-beelink-s13-pro). If you prefer Linux on Beelink, see [OS Setup — Ubuntu Desktop](02-os-setup.md#ubuntu-desktop-beelink-s13-pro).
 
 ---
 
@@ -53,7 +53,7 @@ Besides the M4 Mac Mini or Beelink S13 Pro (or equivalent), you will need:
 3. **Low power, always-on.** The M4 Mac Mini is efficient and can run 24/7 as a personal assistant.
 4. **Small footprint.** Fits on a desk or shelf without distraction.
 
-**qwen2.5-coder:7b** is the recommended model for the local route. See [Ollama + Qwen2.5-Coder-7B](03-ollama-llama.md) and [OpenClaw & automation](07-openclaw-automation.md#model-choice).
+**qwen2.5-coder:7b** is the recommended model for the local route. See [Ollama + Qwen2.5-Coder-7B](03-ollama-setup.md) and [OpenClaw & automation](07-openclaw-automation.md#model-choice).
 
 ---
 
@@ -62,7 +62,7 @@ Besides the M4 Mac Mini or Beelink S13 Pro (or equivalent), you will need:
 ### M4 Mac Mini
 
 1. Unbox and connect Ethernet (recommended) or Wi-Fi, display, and keyboard.
-2. Power on and complete macOS setup. Install Ollama and pull `qwen2.5-coder:7b` as in [Ollama + Qwen2.5-Coder-7B](03-ollama-llama.md).
+2. Power on and complete macOS setup. Install Ollama and pull `qwen2.5-coder:7b` as in [Ollama + Qwen2.5-Coder-7B](03-ollama-setup.md).
 
 ### Beelink S13 Pro
 
@@ -76,4 +76,4 @@ Besides the M4 Mac Mini or Beelink S13 Pro (or equivalent), you will need:
 
 ---
 
-Next: [OS Setup](02-os-setup.md) (then [Ollama + Qwen2.5-Coder-7B](03-ollama-llama.md) for macOS) or [OS Setup — Windows / Ubuntu](02-os-setup.md) (Beelink)
+Next: [OS Setup](02-os-setup.md) (then [Ollama + Qwen2.5-Coder-7B](03-ollama-setup.md) for macOS) or [OS Setup — Windows / Ubuntu](02-os-setup.md) (Beelink)

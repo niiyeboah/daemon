@@ -23,7 +23,7 @@ sudo ufw allow ssh          # port 22/tcp
 
 ### Allow Ollama (LAN only)
 
-Only necessary if you configured Ollama to bind to `0.0.0.0` (see [Ollama guide](03-ollama-llama.md)) and want to reach it from other devices on your network:
+Only necessary if you configured Ollama to bind to `0.0.0.0` (see [Ollama guide](03-ollama-setup.md)) and want to reach it from other devices on your network:
 
 ```bash
 # Replace 192.168.1.0/24 with your actual LAN subnet

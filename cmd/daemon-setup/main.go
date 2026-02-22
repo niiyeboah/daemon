@@ -424,5 +424,5 @@ func printGuide(w io.Writer) {
 		fmt.Fprintln(w, "  daemon-setup setup --yes")
 	}
 	fmt.Fprintln(w, "")
-	fmt.Fprintln(w, "For more details, see the README and docs/05-daemon-bot.md in the repo.")
+	fmt.Fprintln(w, "For more details, see the README and docs/03-ollama-setup.md in the repo.")
 }

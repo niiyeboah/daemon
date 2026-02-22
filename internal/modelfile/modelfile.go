@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-// Default system prompt from docs/05-daemon-bot.md
+// Default system prompt from docs/03-ollama-setup.md
 const defaultSystemPrompt = `You are Daemon, a helpful and concise personal assistant running locally on the user's own hardware. You respect the user's privacy -- no data ever leaves this machine. You answer questions clearly and directly. When you are unsure, you say so. You are friendly but not verbose.`
 
 // Params holds Modelfile parameters (can be overridden by flags).
@@ -18,7 +18,7 @@ type Params struct {
 	NumCtx       int     // PARAMETER num_ctx
 }
 
-// DefaultParams returns the defaults from docs/05-daemon-bot.md.
+// DefaultParams returns the defaults from docs/03-ollama-setup.md.
 func DefaultParams(baseModel string) Params {
 	if baseModel == "" {
 		baseModel = "qwen2.5-coder:7b"
@@ -28,7 +28,7 @@ func DefaultParams(baseModel string) Params {
 		SystemPrompt: defaultSystemPrompt,
 		Temperature:  0.7,
 		TopP:         0.9,
-		NumCtx:       16384,
+		NumCtx:       32768,
 	}
 }
 

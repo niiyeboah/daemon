@@ -157,7 +157,6 @@ pub async fn diagnostics_full() -> Result<DiagnosticsReport, String> {
     // 3 & 4. Model availability (only if API is reachable)
     let mut has_base_model = false;
     let mut has_daemon_model = false;
-    let mut has_1b_model = false;
     let mut models_detail = String::new();
 
     if api_reachable {
@@ -187,9 +186,6 @@ pub async fn diagnostics_full() -> Result<DiagnosticsReport, String> {
                         has_daemon_model = models
                             .iter()
                             .any(|m| m.name == "daemon" || m.name.starts_with("daemon:"));
-                        has_1b_model = models
-                            .iter()
-                            .any(|m| m.name == "llama3.2:1b" || m.name.starts_with("llama3.2:1b:"));
                     }
                 }
             }
@@ -229,21 +225,6 @@ pub async fn diagnostics_full() -> Result<DiagnosticsReport, String> {
             None
         },
     });
-
-    if api_reachable && has_1b_model {
-        checks.push(DiagnosticCheck {
-            id: "deprecated-1b-model".to_string(),
-            name: "Deprecated Model".to_string(),
-            status: "warn".to_string(),
-            message: "llama3.2:1b detected. Daemon recommends qwen2.5-coder:7b instead.".to_string(),
-            metric: None,
-            detail: Some("Run: ollama pull qwen2.5-coder:7b".to_string()),
-            action: Some(DiagnosticAction {
-                label: "Pull qwen2.5-coder:7b".to_string(),
-                command: "pull-base-model".to_string(),
-            }),
-        });
-    }
 
     checks.push(DiagnosticCheck {
         id: "daemon-model".to_string(),

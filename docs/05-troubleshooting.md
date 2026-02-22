@@ -96,7 +96,7 @@ ollama list
 
 **Steps:**
 
-1. **Check the bind address.** By default Ollama only listens on `localhost`. You need to set `OLLAMA_HOST=0.0.0.0` in the systemd service override. See [Ollama guide](03-ollama-llama.md#bind-to-all-interfaces-for-lan-access).
+1. **Check the bind address.** By default Ollama only listens on `localhost`. You need to set `OLLAMA_HOST=0.0.0.0` in the systemd service override. See [Ollama guide](03-ollama-setup.md#bind-to-all-interfaces-for-lan-access).
 
 2. **Check the firewall:**
 
@@ -148,7 +148,7 @@ sudo ufw status | grep -E '22|2222'
 
 **Steps:**
 
-1. The `daemon` model is created from a Modelfile. If you have not done this yet, follow [Set up Daemon with the CLI — Option A](03-ollama-llama.md#option-a----modelfile-simplest).
+1. The `daemon` model is created from a Modelfile. If you have not done this yet, follow [Set up Daemon with the CLI — Option A](03-ollama-setup.md#option-a----modelfile-simplest).
 
 2. If you already created it, verify:
 

@@ -2,15 +2,15 @@
 
 Choose your path based on your hardware:
 
-- **macOS (default)** — M4 Mac Mini (recommended). No post-install setup; proceed to [Ollama + Qwen2.5-Coder-7B](03-ollama-llama.md).
+- **macOS (default)** — M4 Mac Mini (recommended). No post-install setup; proceed to [Ollama + Qwen2.5-Coder-7B](03-ollama-setup.md).
 - **Windows** — Beelink S13 Pro (preloaded). Full setup from Windows to running the bot.
-- **Ubuntu Desktop** — Beelink S13 Pro with Linux. Install Ubuntu, then post-install, then [Ollama + Qwen2.5-Coder-7B](03-ollama-llama.md).
+- **Ubuntu Desktop** — Beelink S13 Pro with Linux. Install Ubuntu, then post-install, then [Ollama + Qwen2.5-Coder-7B](03-ollama-setup.md).
 
 ---
 
 ## macOS (Default — M4 Mac Mini)
 
-macOS requires no post-install setup. If you're using the M4 Mac Mini, proceed to [Ollama + Qwen2.5-Coder-7B](03-ollama-llama.md) — your system is ready.
+macOS requires no post-install setup. If you're using the M4 Mac Mini, proceed to [Ollama + Qwen2.5-Coder-7B](03-ollama-setup.md) — your system is ready.
 
 ---
 
@@ -117,7 +117,7 @@ You get an interactive chat. Exit with `/bye` or `Ctrl+D`.
 
 ### Alternative: WSL2
 
-If you prefer the Linux-based setup (systemd, etc.) but want to keep Windows as the host OS, you can install [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) and follow [Post-Install (Ubuntu)](#post-install-system-setup-ubuntu) and [Ollama + Qwen2.5-Coder-7B](03-ollama-llama.md) (including CLI setup) inside the WSL Ubuntu distro.
+If you prefer the Linux-based setup (systemd, etc.) but want to keep Windows as the host OS, you can install [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) and follow [Post-Install (Ubuntu)](#post-install-system-setup-ubuntu) and [Ollama + Qwen2.5-Coder-7B](03-ollama-setup.md) (including CLI setup) inside the WSL Ubuntu distro.
 
 ### Alternative: Ubuntu Desktop
 
@@ -381,4 +381,4 @@ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 
 ---
 
-Next: [Ollama + Qwen2.5-Coder-7B](03-ollama-llama.md) (macOS and Ubuntu paths; Windows path is self-contained above)
+Next: [Ollama + Qwen2.5-Coder-7B](03-ollama-setup.md) (macOS and Ubuntu paths; Windows path is self-contained above)

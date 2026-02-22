@@ -36,7 +36,7 @@ export function ConfigureModelStep({
           <div className="rounded-lg border border-success/30 bg-success/5 p-4 text-sm space-y-1">
             <div>Model configured successfully.</div>
             <div className="text-xs text-muted-foreground font-mono">
-              provider: ollama | model: ollama/daemon | context: 16384 | max tokens: 8192
+              provider: ollama | model: ollama/daemon | context: 32768 | max tokens: 8192
             </div>
           </div>
           <Button onClick={onNext} className="w-full">

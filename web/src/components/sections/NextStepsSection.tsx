@@ -35,7 +35,7 @@ const ideas = [
   {
     title: 'Multiple Models',
     description:
-      'Ollama can host several models. Use qwen2.5-coder:7b (default for Mac). Other options: codellama:7b for code (with more RAM), or mistral:7b as an alternative.',
+      'Ollama can host several models. Browse the Ollama library to find alternatives for your hardware and use case.',
   },
   {
     title: 'RAG (Retrieval-Augmented Generation)',

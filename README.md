@@ -26,8 +26,8 @@
 | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Hardware          | [M4 Mac Mini](docs/01-hardware.md) (local route) or [Beelink S13 Pro](docs/01-hardware.md) (cloud API route)                                                                     |
 | Operating System  | [OS Setup](docs/02-os-setup.md) — macOS (M4 Mac Mini, default), Windows (Beelink), Ubuntu Desktop 24.04 LTS (Beelink) |
-| Inference Runtime | [Ollama](docs/03-ollama-llama.md)                                                                                                                                                |
-| Language Model    | [Qwen2.5-Coder-7B](docs/03-ollama-llama.md) ([qwen2.5-coder:7b](https://ollama.com/library/qwen2.5-coder:7b)) |
+| Inference Runtime | [Ollama](docs/03-ollama-setup.md)                                                                                                                                                |
+| Language Model    | [Qwen2.5-Coder-7B](docs/03-ollama-setup.md) ([qwen2.5-coder:7b](https://ollama.com/library/qwen2.5-coder:7b)) |
 
 ## What You Get
 
@@ -48,7 +48,7 @@ Read these in order. Each guide picks up where the previous one left off.
 | --- | ------------------------------------------------------- | ------------------------------------------------------------------------ |
 | 1   | [Hardware](docs/01-hardware.md)                         | M4 Mac Mini (local) and Beelink S13 Pro (cloud API option)               |
 | 2   | [OS Setup](docs/02-os-setup.md)                         | macOS (default), Windows, or Ubuntu Desktop — get your OS ready         |
-| 3   | [Ollama + Qwen2.5-Coder-7B](docs/03-ollama-llama.md)   | Install Ollama, pull the model, run as service, set up Daemon via CLI   |
+| 3   | [Ollama + Qwen2.5-Coder-7B](docs/03-ollama-setup.md)   | Install Ollama, pull the model, run as service, set up Daemon via CLI   |
 | 4   | [Security](docs/04-security.md)                         | Firewall, SSH hardening, and automatic updates                           |
 | 5   | [Troubleshooting](docs/05-troubleshooting.md)            | Common issues and how to fix them                                        |
 | 6   | [Next Steps](docs/06-next-steps.md)                     | Ideas for extending Daemon (voice, integrations, web UI)                 |
@@ -105,7 +105,7 @@ Once Ollama is installed and the base model is pulled (see [Setup Guides](#setup
 
 Use `--yes` to skip confirmations.
 
-For full manual steps and alternatives (e.g. Python API script), see [Ollama + Qwen2.5-Coder-7B](docs/03-ollama-llama.md).
+For full manual steps and alternatives (e.g. Python API script), see [Ollama + Qwen2.5-Coder-7B](docs/03-ollama-setup.md).
 
 ## Development
 

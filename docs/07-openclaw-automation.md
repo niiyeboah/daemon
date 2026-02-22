@@ -1,13 +1,13 @@
 # 7 -- OpenClaw & Automation
 
-Once Daemon is running (Ollama and the CLI — see [Ollama + Qwen2.5-Coder-7B](03-ollama-llama.md)), you can add **OpenClaw** to give it channels, skills, and schedules. Think of Daemon as the brain — your local LLM — and OpenClaw as the layer that gives it "hands": messaging apps, automation skills, and scheduled jobs. Together they can act like a **personal employee** that works on your behalf.
+Once Daemon is running (Ollama and the CLI — see [Ollama + Qwen2.5-Coder-7B](03-ollama-setup.md)), you can add **OpenClaw** to give it channels, skills, and schedules. Think of Daemon as the brain — your local LLM — and OpenClaw as the layer that gives it "hands": messaging apps, automation skills, and scheduled jobs. Together they can act like a **personal employee** that works on your behalf.
 
 ---
 
 ## Prerequisites
 
 - **Node.js 22 or newer** — OpenClaw runs on Node. Check with `node --version`.
-- **Daemon (Ollama) already running** — Optional if you prefer to use OpenClaw with a cloud AI provider; for a fully local setup, keep [Ollama](03-ollama-llama.md) and your Daemon model running so OpenClaw can use it (if your OpenClaw version supports a local Ollama backend; see OpenClaw docs).
+- **Daemon (Ollama) already running** — Optional if you prefer to use OpenClaw with a cloud AI provider; for a fully local setup, keep [Ollama](03-ollama-setup.md) and your Daemon model running so OpenClaw can use it (if your OpenClaw version supports a local Ollama backend; see OpenClaw docs).
 - **A messaging account** — e.g. Telegram, Discord, or Slack, for connecting a channel so you can talk to your assistant from your phone or desktop.
 
 ---
@@ -70,7 +70,7 @@ To have your assistant always on, run the OpenClaw Gateway 24/7 — for example 
 
 ## Model choice
 
-OpenClaw requires a **16k context window** so that skills and system prompts fit comfortably.
+OpenClaw requires a **32k context window** so that skills and system prompts fit comfortably.
 
 - **Local route (M4 Mac Mini or capable hardware):** Use Ollama + **qwen2.5-coder:7b**. The 7B model fits well on 16GB and benefits from M4's Metal acceleration. Pull the model: `ollama pull qwen2.5-coder:7b`, then create the Daemon model with `daemon-setup init` and point OpenClaw at `ollama/daemon` or your base model.
 - **Beelink / low-power route:** We recommend using **API keys** for Gemini, OpenAI, or Claude instead of local inference to avoid slow inference and "inference too slow" errors. Get keys from [Google AI Studio](https://aistudio.google.com/), [OpenAI Platform](https://platform.openai.com/), or [Anthropic Console](https://console.anthropic.com/), then configure via the desktop app Settings (API Keys card) or via CLI: `openclaw onboard --auth-choice gemini-api-key` (or `openai-api-key` / `anthropic-api-key`).
@@ -129,7 +129,7 @@ If your model does not appear in auto-discovery (e.g. the Daemon model does not 
           {
             "id": "daemon",
             "name": "Daemon",
-            "contextWindow": 16384,
+            "contextWindow": 32768,
             "maxTokens": 8192
           }
         ]
@@ -162,7 +162,7 @@ Use the model `id` that matches `ollama list` (e.g. `daemon`, `qwen2.5-coder:7b`
 | OpenClaw Getting Started | <https://docs.openclaw.ai/start/getting-started> |
 | OpenClaw Channels | <https://docs.openclaw.ai/channels> |
 | OpenClaw Ollama provider | <https://docs.openclaw.ai/providers/ollama> |
-| Ollama + Qwen2.5-Coder-7B (this repo) | [03-ollama-llama.md](03-ollama-llama.md) |
+| Ollama + Qwen2.5-Coder-7B (this repo) | [03-ollama-setup.md](03-ollama-setup.md) |
 
 ---
 

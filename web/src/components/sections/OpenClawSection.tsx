@@ -1,6 +1,6 @@
 import { CodeBlock } from '@/components/shared/CodeBlock'
 
-const OPENCLAW_DOC_URL = 'https://github.com/niiyeboah/daemon/blob/main/docs/09-openclaw-automation.md'
+const OPENCLAW_DOC_URL = 'https://github.com/niiyeboah/daemon/blob/main/docs/07-openclaw-automation.md'
 const OPENCLAW_SETUP_URL = 'https://docs.openclaw.ai/setup'
 const OPENCLAW_GETTING_STARTED_URL = 'https://docs.openclaw.ai/start/getting-started'
 const OPENCLAW_CHANNELS_URL = 'https://docs.openclaw.ai/channels'

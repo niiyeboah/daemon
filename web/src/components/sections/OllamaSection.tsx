@@ -6,9 +6,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { GITHUB_RELEASES_LATEST_URL, CLI_BUILD_URLS } from '@/store/constants'
 
 const resourceUsage = [
-  { resource: 'RAM', usage: '1-2 GB while model is loaded' },
-  { resource: 'Disk', usage: '~1 GB for the Q4_K_M quantised model' },
-  { resource: 'CPU', usage: 'All cores utilised during inference' },
+  { resource: 'RAM', usage: '4-6 GB while model is loaded' },
+  { resource: 'Disk', usage: '~5 GB for the Q4_K_M quantised model' },
+  { resource: 'Download', usage: '~4.7 GB for the model weights' },
   { resource: 'Idle', usage: 'Model unloaded after 5 min of inactivity' },
 ]
 
@@ -25,7 +25,7 @@ const modelfile = `FROM qwen2.5-coder:7b
 
 PARAMETER temperature 0.7
 PARAMETER top_p 0.9
-PARAMETER num_ctx 16384
+PARAMETER num_ctx 32768
 
 SYSTEM """
 You are Daemon, a helpful and concise personal assistant running locally on the user's own hardware. You respect the user's privacy -- no data ever leaves this machine. You answer questions clearly and directly. When you are unsure, you say so. You are friendly but not verbose.
