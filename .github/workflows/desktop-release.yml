@@ -49,10 +49,21 @@ jobs:
           NEW_VERSION=$(npx --yes semver "$CURRENT" -i "$BUMP")
           TAG="desktop-v${NEW_VERSION}"
           BRANCH="release/${TAG}"
-          if gh release view "$TAG" &>/dev/null; then
-            echo "::error::A release for $TAG already exists. Merge the release branch into main (or delete the existing release) before running this workflow again."
+          # Check for existing releases (draft or published) for this tag.
+          # gh release view only finds published releases; use the API to also
+          # catch drafts left behind by previous failed runs.
+          RELEASE_JSON=$(gh api "repos/${{ github.repository }}/releases?per_page=100" \
+            --jq "[.[] | select(.tag_name == \"$TAG\")]" 2>/dev/null || echo "[]")
+          PUBLISHED=$(echo "$RELEASE_JSON" | jq '[.[] | select(.draft == false)] | length')
+          if [ "$PUBLISHED" -gt 0 ]; then
+            echo "::error::A published release for $TAG already exists. Merge the release branch into main (or delete the existing release) before running this workflow again."
             exit 1
           fi
+          # Clean up orphaned draft releases from previous failed runs
+          for DRAFT_ID in $(echo "$RELEASE_JSON" | jq -r '.[] | select(.draft == true) | .id'); do
+            echo "Deleting orphaned draft release (id=$DRAFT_ID) for $TAG..."
+            gh api -X DELETE "repos/${{ github.repository }}/releases/$DRAFT_ID"
+          done
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "branch=$BRANCH" >> $GITHUB_OUTPUT
