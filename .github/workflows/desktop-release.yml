@@ -40,6 +40,8 @@ jobs:
 
       - name: Bump version and create tag
         id: bump
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
           BUMP="${{ github.event.inputs.bump || inputs.bump || 'patch' }}"
@@ -47,6 +49,10 @@ jobs:
           NEW_VERSION=$(npx --yes semver "$CURRENT" -i "$BUMP")
           TAG="desktop-v${NEW_VERSION}"
           BRANCH="release/${TAG}"
+          if gh release view "$TAG" &>/dev/null; then
+            echo "::error::A release for $TAG already exists. Merge the release branch into main (or delete the existing release) before running this workflow again."
+            exit 1
+          fi
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "branch=$BRANCH" >> $GITHUB_OUTPUT
