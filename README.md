@@ -27,7 +27,7 @@
 | Hardware          | [M4 Mac Mini](docs/01-hardware.md) (local route) or [Beelink S13 Pro](docs/01-hardware.md) (cloud API route)                                                                     |
 | Operating System  | [OS Setup](docs/02-os-setup.md) — macOS (M4 Mac Mini, default), Windows (Beelink), Ubuntu Desktop 24.04 LTS (Beelink) |
 | Inference Runtime | [Ollama](docs/03-ollama-setup.md)                                                                                                                                                |
-| Language Model    | [Qwen2.5-Coder-7B](docs/03-ollama-setup.md) ([qwen2.5-coder:7b](https://ollama.com/library/qwen2.5-coder:7b)) |
+| Language Model    | [Qwen2.5-Coder-7B](https://ollama.com/library/qwen2.5-coder:7b) |
 
 ## What You Get
 
