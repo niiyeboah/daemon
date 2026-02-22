@@ -38,7 +38,7 @@ curl -fsSL https://ollama.com/install.sh | sh
 
 ## Model Fails to Load
 
-**Symptoms:** `ollama run llama3.2:8b` exits immediately or prints an out-of-memory error.
+**Symptoms:** `ollama run qwen2.5-coder:7b` exits immediately or prints an out-of-memory error.
 
 **Steps:**
 
@@ -48,7 +48,7 @@ curl -fsSL https://ollama.com/install.sh | sh
 free -h
 ```
 
-   The 8B model needs roughly 4--6 GB of free RAM. If the system is low on memory, close other processes or add swap space (see [OS Setup — Post-Install](02-os-setup.md#post-install-system-setup-ubuntu)).
+   The 7B model needs roughly 4--6 GB of free RAM. If the system is low on memory, close other processes or add swap space (see [OS Setup — Post-Install](02-os-setup.md#post-install-system-setup-ubuntu)).
 
 2. Check disk space:
 
@@ -61,8 +61,8 @@ df -h /
 3. Re-pull the model (in case of a corrupted download):
 
 ```bash
-ollama rm llama3.2:8b
-ollama pull llama3.2:8b
+ollama rm qwen2.5-coder:7b
+ollama pull qwen2.5-coder:7b
 ```
 
 4. Verify:

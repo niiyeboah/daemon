@@ -18,8 +18,8 @@ export function ChooseBaseModelStep({
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        Choose the base model to download and use for Daemon. DeepSeek R1 8B and
-        7B are recommended for M4 Mac Mini 16GB for better reasoning.
+        Choose the base model to download and use for Daemon. Qwen2.5-Coder-7B
+        is recommended for M4 Mac Mini 16GB.
       </p>
 
       <div className="space-y-2">

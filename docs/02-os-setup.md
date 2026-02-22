@@ -2,15 +2,15 @@
 
 Choose your path based on your hardware:
 
-- **macOS (default)** — M4 Mac Mini (recommended). No post-install setup; proceed to [Ollama + Llama](03-ollama-llama.md).
+- **macOS (default)** — M4 Mac Mini (recommended). No post-install setup; proceed to [Ollama + Qwen2.5-Coder-7B](03-ollama-llama.md).
 - **Windows** — Beelink S13 Pro (preloaded). Full setup from Windows to running the bot.
-- **Ubuntu Desktop** — Beelink S13 Pro with Linux. Install Ubuntu, then post-install, then [Ollama + Llama](03-ollama-llama.md).
+- **Ubuntu Desktop** — Beelink S13 Pro with Linux. Install Ubuntu, then post-install, then [Ollama + Qwen2.5-Coder-7B](03-ollama-llama.md).
 
 ---
 
 ## macOS (Default — M4 Mac Mini)
 
-macOS requires no post-install setup. If you're using the M4 Mac Mini, proceed to [Ollama + Llama 3.2 8B](03-ollama-llama.md) — your system is ready.
+macOS requires no post-install setup. If you're using the M4 Mac Mini, proceed to [Ollama + Qwen2.5-Coder-7B](03-ollama-llama.md) — your system is ready.
 
 ---
 
@@ -37,7 +37,7 @@ ollama --version
 ### 2. Pull the base model
 
 ```powershell
-ollama pull llama3.2:8b
+ollama pull qwen2.5-coder:7b
 ```
 
 This downloads several GB. When it finishes, confirm:
@@ -46,7 +46,7 @@ This downloads several GB. When it finishes, confirm:
 ollama list
 ```
 
-You should see `llama3.2:8b` in the list.
+You should see `qwen2.5-coder:7b` in the list.
 
 ### 3. Install Go
 
@@ -117,7 +117,7 @@ You get an interactive chat. Exit with `/bye` or `Ctrl+D`.
 
 ### Alternative: WSL2
 
-If you prefer the Linux-based setup (systemd, etc.) but want to keep Windows as the host OS, you can install [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) and follow [Post-Install (Ubuntu)](#post-install-system-setup-ubuntu) and [Ollama + Llama](03-ollama-llama.md) (including CLI setup) inside the WSL Ubuntu distro.
+If you prefer the Linux-based setup (systemd, etc.) but want to keep Windows as the host OS, you can install [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) and follow [Post-Install (Ubuntu)](#post-install-system-setup-ubuntu) and [Ollama + Qwen2.5-Coder-7B](03-ollama-llama.md) (including CLI setup) inside the WSL Ubuntu distro.
 
 ### Alternative: Ubuntu Desktop
 
@@ -381,4 +381,4 @@ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 
 ---
 
-Next: [Ollama + Llama 3.2 8B](03-ollama-llama.md) (macOS and Ubuntu paths; Windows path is self-contained above)
+Next: [Ollama + Qwen2.5-Coder-7B](03-ollama-llama.md) (macOS and Ubuntu paths; Windows path is self-contained above)

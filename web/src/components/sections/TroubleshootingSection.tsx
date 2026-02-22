@@ -26,7 +26,7 @@ const items: TroubleshootItem[] = [
       <>
         <CodeBlock language="bash" code={`free -h    # check available RAM\ndf -h /    # check disk space`} />
         <p className="text-sm text-muted-foreground">Re-pull if corrupted:</p>
-        <CodeBlock language="bash" code={`ollama rm llama3.2:8b\nollama pull llama3.2:8b`} />
+        <CodeBlock language="bash" code={`ollama rm qwen2.5-coder:7b\nollama pull qwen2.5-coder:7b`} />
       </>
     ),
   },

@@ -14,16 +14,14 @@ const resourceUsage = [
 
 const commands = [
   { command: 'ollama list', description: 'Show installed models' },
-  { command: 'ollama pull llama3.2:8b', description: 'Download or update the default model' },
-  { command: 'ollama pull deepseek-r1:8b', description: 'Download DeepSeek R1 Llama 8B (better reasoning)' },
-  { command: 'ollama pull deepseek-r1:7b', description: 'Download DeepSeek R1 Qwen 7B (better reasoning)' },
-  { command: 'ollama rm llama3.2:8b', description: 'Remove the model' },
-  { command: 'ollama run llama3.2:8b', description: 'Interactive chat' },
-  { command: 'ollama show llama3.2:8b', description: 'Show model details' },
+  { command: 'ollama pull qwen2.5-coder:7b', description: 'Download or update the default model' },
+  { command: 'ollama rm qwen2.5-coder:7b', description: 'Remove the model' },
+  { command: 'ollama run qwen2.5-coder:7b', description: 'Interactive chat' },
+  { command: 'ollama show qwen2.5-coder:7b', description: 'Show model details' },
   { command: 'ollama ps', description: 'Show loaded models and memory usage' },
 ]
 
-const modelfile = `FROM llama3.2:8b
+const modelfile = `FROM qwen2.5-coder:7b
 
 PARAMETER temperature 0.7
 PARAMETER top_p 0.9
@@ -34,14 +32,14 @@ You are Daemon, a helpful and concise personal assistant running locally on the 
 """`
 
 const pythonScript = `#!/usr/bin/env python3
-"""Daemon -- local personal assistant powered by Llama 3.2 8B via Ollama."""
+"""Daemon -- local personal assistant powered by Qwen2.5-Coder-7B via Ollama."""
 
 import json
 import sys
 import requests
 
 OLLAMA_URL = "http://localhost:11434/api/chat"
-MODEL = "llama3.2:8b"
+MODEL = "qwen2.5-coder:7b"
 
 SYSTEM_PROMPT = (
     "You are Daemon, a helpful and concise personal assistant running locally "
@@ -86,7 +84,7 @@ if __name__ == "__main__":
 export function OllamaSection() {
   return (
     <section id="ollama">
-      <h2 className="text-3xl font-bold tracking-tight">4. Ollama + Llama 3.2 8B</h2>
+      <h2 className="text-3xl font-bold tracking-tight">4. Ollama + Qwen2.5-Coder-7B</h2>
       <p className="mt-2 text-muted-foreground">
         Ollama is a lightweight runtime for downloading, running, and managing
         LLMs locally. It exposes an HTTP API that Daemon uses.
@@ -115,14 +113,14 @@ export function OllamaSection() {
       <CodeBlock code="ollama --version" />
 
       <h3 className="mt-6 text-xl font-semibold">Pull the Model</h3>
-      <CodeBlock code="ollama pull llama3.2:8b" />
+      <CodeBlock code="ollama pull qwen2.5-coder:7b" />
       <p className="text-sm text-muted-foreground">
         Downloads the default Q4_K_M quantised version (~1 GB). Verify:
       </p>
       <CodeBlock code="ollama list" />
 
       <h3 className="mt-6 text-xl font-semibold">Test Interactively</h3>
-      <CodeBlock code="ollama run llama3.2:8b" />
+      <CodeBlock code="ollama run qwen2.5-coder:7b" />
       <p className="text-sm text-muted-foreground">
         Try a question at the prompt. On the N100/N150 expect ~10-30 tokens/sec.
         Exit with <code className="rounded bg-muted px-1.5 py-0.5">/bye</code> or Ctrl+D.
@@ -247,9 +245,6 @@ export function OllamaSection() {
         <TabsContent value="modelfile" className="mt-4">
           <h5 className="text-base font-medium">1. Write the Modelfile</h5>
           <CodeBlock language="dockerfile" title="~/Modelfile" code={modelfile} />
-          <p className="mt-2 text-sm text-muted-foreground">
-            For better reasoning you can use <code className="rounded bg-muted px-1.5 py-0.5">FROM deepseek-r1:8b</code> or <code className="rounded bg-muted px-1.5 py-0.5">FROM deepseek-r1:7b</code> instead.
-          </p>
 
           <h5 className="mt-4 text-base font-medium">2. Create the Custom Model</h5>
           <CodeBlock code="ollama create daemon -f ~/Modelfile" />

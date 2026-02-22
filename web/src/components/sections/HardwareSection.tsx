@@ -3,9 +3,9 @@ import { InfoBox } from '@/components/shared/InfoBox'
 
 const m4Specs = [
   { requirement: 'CPU / GPU', value: 'Apple M4 (10-core CPU, 10-core GPU)', note: 'Metal acceleration for Ollama' },
-  { requirement: 'RAM', value: '16 GB unified memory', note: '8B model fits comfortably' },
+  { requirement: 'RAM', value: '16 GB unified memory', note: '7B model fits comfortably' },
   { requirement: 'Storage', value: '256 GB SSD', note: 'Enough for OS and models' },
-  { requirement: 'Recommended model', value: 'llama3.2:8b (default); deepseek-r1:8b, deepseek-r1:7b', note: 'ollama pull <model>; better reasoning with DeepSeek R1' },
+  { requirement: 'Recommended model', value: 'qwen2.5-coder:7b', note: 'ollama pull qwen2.5-coder:7b' },
 ]
 
 const beelinkSpecs = [
@@ -81,7 +81,7 @@ export function HardwareSection() {
 
       <h3 className="mt-6 text-xl font-semibold">Why the M4 Mac Mini fits (local route)</h3>
       <ul className="mt-3 list-disc space-y-2 pl-6 text-muted-foreground">
-        <li><strong>Right-sized for 8B.</strong> Llama 3.2 8B uses ~4–6 GB RAM; 16 GB leaves room for the OS.</li>
+        <li><strong>Right-sized for 7B.</strong> Qwen2.5-Coder-7B uses ~4–6 GB RAM; 16 GB leaves room for the OS.</li>
         <li><strong>Metal acceleration.</strong> Ollama uses Apple Metal for much faster inference.</li>
         <li><strong>Low power, always-on.</strong> Efficient for a 24/7 personal assistant.</li>
         <li><strong>Small footprint.</strong> Fits on a desk or shelf.</li>
@@ -100,7 +100,7 @@ export function HardwareSection() {
         <li>Connect Ethernet or Wi-Fi, display, and keyboard.</li>
         <li>Complete macOS setup.</li>
         <li>
-          Install Ollama and pull <code className="rounded bg-muted px-1.5 py-0.5 text-xs">llama3.2:8b</code> (or optionally <code className="rounded bg-muted px-1.5 py-0.5 text-xs">deepseek-r1:8b</code> / <code className="rounded bg-muted px-1.5 py-0.5 text-xs">deepseek-r1:7b</code> for better reasoning).
+          Install Ollama and pull <code className="rounded bg-muted px-1.5 py-0.5 text-xs">qwen2.5-coder:7b</code>.
         </li>
       </ol>
       <p className="mt-4 text-sm text-muted-foreground">

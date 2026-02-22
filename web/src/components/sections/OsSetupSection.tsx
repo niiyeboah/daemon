@@ -25,7 +25,7 @@ export function OsSetupSection() {
         <CodeBlock language="bash" code="ollama --version" />
 
         <h3 className="mt-6 text-xl font-semibold">Pull the Base Model</h3>
-        <CodeBlock language="bash" code="ollama pull llama3.2:8b" />
+        <CodeBlock language="bash" code="ollama pull qwen2.5-coder:7b" />
         <CodeBlock language="bash" code="ollama list" />
 
         <h3 className="mt-6 text-xl font-semibold">Install Go</h3>
@@ -61,7 +61,7 @@ export function OsSetupSection() {
         <CodeBlock language="powershell" code="ollama --version" />
 
         <h3 className="mt-6 text-xl font-semibold">Pull the Base Model</h3>
-        <CodeBlock language="powershell" code="ollama pull llama3.2:8b" />
+        <CodeBlock language="powershell" code="ollama pull qwen2.5-coder:7b" />
         <p className="text-sm text-muted-foreground">
           Downloads about 1 GB. Confirm with:
         </p>

@@ -57,7 +57,7 @@ openclaw onboard --install-daemon`}
         So that OpenClaw uses your existing Daemon (Ollama), set{' '}
         <code className="rounded bg-muted px-1.5 py-0.5">OLLAMA_API_KEY</code> (any value works).
         Set the default model to <code className="rounded bg-muted px-1.5 py-0.5">ollama/daemon</code> or{' '}
-        <code className="rounded bg-muted px-1.5 py-0.5">ollama/llama3.2:8b</code> in{' '}
+        <code className="rounded bg-muted px-1.5 py-0.5">ollama/qwen2.5-coder:7b</code> in{' '}
         <code className="rounded bg-muted px-1.5 py-0.5">~/.openclaw/openclaw.json</code>, then restart the gateway.
         On low-power hardware (e.g. N100), we recommend <strong>cloud API keys</strong> (Gemini, OpenAI, Claude) instead of local inference — see the full guide.
       </p>

@@ -179,12 +179,8 @@ pub async fn diagnostics_full() -> Result<DiagnosticsReport, String> {
                 if let Ok(tags) = serde_json::from_str::<Tags>(&text) {
                     if let Some(models) = tags.models {
                         has_base_model = models.iter().any(|m| {
-                            m.name == "llama3.2:8b"
-                                || m.name.starts_with("llama3.2:8b:")
-                                || m.name == "deepseek-r1:8b"
-                                || m.name.starts_with("deepseek-r1:8b:")
-                                || m.name == "deepseek-r1:7b"
-                                || m.name.starts_with("deepseek-r1:7b:")
+                            m.name == "qwen2.5-coder:7b"
+                                || m.name.starts_with("qwen2.5-coder:7b:")
                                 || m.name == "daemon"
                                 || m.name.starts_with("daemon:")
                         });
@@ -239,11 +235,11 @@ pub async fn diagnostics_full() -> Result<DiagnosticsReport, String> {
             id: "deprecated-1b-model".to_string(),
             name: "Deprecated Model".to_string(),
             status: "warn".to_string(),
-            message: "llama3.2:1b detected. Daemon recommends llama3.2:8b instead.".to_string(),
+            message: "llama3.2:1b detected. Daemon recommends qwen2.5-coder:7b instead.".to_string(),
             metric: None,
-            detail: Some("Run: ollama pull llama3.2:8b".to_string()),
+            detail: Some("Run: ollama pull qwen2.5-coder:7b".to_string()),
             action: Some(DiagnosticAction {
-                label: "Pull llama3.2:8b".to_string(),
+                label: "Pull qwen2.5-coder:7b".to_string(),
                 command: "pull-base-model".to_string(),
             }),
         });

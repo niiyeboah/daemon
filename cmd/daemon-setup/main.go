@@ -180,7 +180,7 @@ func promptPathModelBase() (*pathModelBase, error) {
 		},
 		{
 			Name: "baseModel",
-			Prompt: &survey.Input{Message: "Base model (FROM):", Default: "llama3.2:8b"},
+			Prompt: &survey.Input{Message: "Base model (FROM):", Default: "qwen2.5-coder:7b"},
 			Transform: survey.TransformString(func(s string) string {
 				return strings.TrimSpace(s)
 			}),
@@ -309,7 +309,7 @@ func newInitCmd() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&modelfilePath, "modelfile", "", "Path to write the Modelfile (default: $HOME/Modelfile)")
 	cmd.Flags().StringVar(&modelName, "model-name", "daemon", "Name of the custom model to create")
-	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:8b", "Base model in the Modelfile (FROM)")
+	cmd.Flags().StringVar(&baseModel, "base-model", "qwen2.5-coder:7b", "Base model in the Modelfile (FROM)")
 	return cmd
 }
 
@@ -328,7 +328,7 @@ func newModelfileCmd() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&modelfilePath, "modelfile", "", "Path to write the Modelfile (default: $HOME/Modelfile)")
 	cmd.Flags().StringVar(&modelName, "model-name", "daemon", "Name of the custom model (for reference)")
-	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:8b", "Base model in the Modelfile (FROM)")
+	cmd.Flags().StringVar(&baseModel, "base-model", "qwen2.5-coder:7b", "Base model in the Modelfile (FROM)")
 	return cmd
 }
 
@@ -362,7 +362,7 @@ func newSetupCmd() *cobra.Command {
 	cmd.Flags().BoolVar(&yes, "yes", false, "Skip confirmations")
 	cmd.Flags().StringVar(&modelfilePath, "modelfile", "", "Path to write the Modelfile (default: $HOME/Modelfile)")
 	cmd.Flags().StringVar(&modelName, "model-name", "daemon", "Name of the custom model to create")
-	cmd.Flags().StringVar(&baseModel, "base-model", "llama3.2:8b", "Base model in the Modelfile (FROM)")
+	cmd.Flags().StringVar(&baseModel, "base-model", "qwen2.5-coder:7b", "Base model in the Modelfile (FROM)")
 	return cmd
 }
 
@@ -391,7 +391,7 @@ func printGuide(w io.Writer) {
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Prerequisites")
 	fmt.Fprintln(w, "  • Ollama installed and in PATH")
-	fmt.Fprintln(w, "  • Base model pulled (e.g. llama3.2:8b, deepseek-r1:8b, or deepseek-r1:7b)")
+	fmt.Fprintln(w, "  • Base model pulled (e.g. qwen2.5-coder:7b)")
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Commands")
 	fmt.Fprintln(w, "  check     Verify Ollama is installed and required models are available")
@@ -412,8 +412,8 @@ func printGuide(w io.Writer) {
 	fmt.Fprintln(w, "  Or one-shot:  daemon-setup setup --yes")
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "  For OpenClaw on low-power hardware (e.g. N100), we recommend cloud API keys (Gemini, OpenAI, Claude)")
-	fmt.Fprintln(w, "  instead of local inference. See docs/07-openclaw-automation.md. For local inference use llama3.2:8b,")
-	fmt.Fprintln(w, "  or deepseek-r1:8b / deepseek-r1:7b for better reasoning (daemon-setup init --base-model <model>).")
+	fmt.Fprintln(w, "  instead of local inference. See docs/07-openclaw-automation.md. For local inference use qwen2.5-coder:7b")
+	fmt.Fprintln(w, "  (daemon-setup init --base-model qwen2.5-coder:7b).")
 	fmt.Fprintln(w, "")
 	fmt.Fprintln(w, "Examples")
 	if runtime.GOOS == "windows" {

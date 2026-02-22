@@ -62,9 +62,7 @@ Ollama can host several models simultaneously. Consider:
 
 | Model | Use Case |
 |-------|----------|
-| `llama3.2:8b` | General assistant (Daemon default) |
-| `deepseek-r1:8b` | Better reasoning (DeepSeek R1 Llama 8B) |
-| `deepseek-r1:7b` | Better reasoning (DeepSeek R1 Qwen 7B) |
+| `qwen2.5-coder:7b` | Default for Mac (code & general) |
 | `codellama:7b` | Code generation and review (if you have RAM) |
 | `mistral:7b` | Alternative general-purpose model (needs 8+ GB free RAM) |
 
@@ -87,7 +85,7 @@ If you later add an eGPU enclosure or move to a machine with a discrete NVIDIA G
 
 1. Install NVIDIA drivers and the CUDA toolkit.
 2. Reinstall Ollama (it auto-detects CUDA).
-3. Inference speed will jump dramatically -- 50--100+ tokens/second on a mid-range GPU with the 8B model.
+3. Inference speed will jump dramatically -- 50--100+ tokens/second on a mid-range GPU with the 7B model.
 
 ---
 
@@ -97,7 +95,7 @@ If you later add an eGPU enclosure or move to a machine with a discrete NVIDIA G
 |----------|-----|
 | Ollama documentation | <https://ollama.com/> |
 | Ollama GitHub | <https://github.com/ollama/ollama> |
-| Llama 3.2 model card | <https://ollama.com/library/llama3.2> |
+| Qwen2.5-Coder model card | <https://ollama.com/library/qwen2.5-coder> |
 | Ubuntu Server docs | <https://ubuntu.com/server/docs> |
 | Beelink official site | <https://www.bee-link.com/> |
 | Open WebUI | <https://github.com/open-webui/open-webui> |

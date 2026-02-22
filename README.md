@@ -27,14 +27,14 @@
 | Hardware          | [M4 Mac Mini](docs/01-hardware.md) (local route) or [Beelink S13 Pro](docs/01-hardware.md) (cloud API route)                                                                     |
 | Operating System  | [OS Setup](docs/02-os-setup.md) — macOS (M4 Mac Mini, default), Windows (Beelink), Ubuntu Desktop 24.04 LTS (Beelink) |
 | Inference Runtime | [Ollama](docs/03-ollama-llama.md)                                                                                                                                                |
-| Language Model    | [Llama 3.2 8B](docs/03-ollama-llama.md) (default); optional [deepseek-r1:8b](https://ollama.com/library/deepseek-r1:8b) / [deepseek-r1:7b](https://ollama.com/library/deepseek-r1:7b) for better reasoning |
+| Language Model    | [Qwen2.5-Coder-7B](docs/03-ollama-llama.md) ([qwen2.5-coder:7b](https://ollama.com/library/qwen2.5-coder:7b)) |
 
 ## What You Get
 
 After following the guides below you will have:
 
 - A Windows (or Ubuntu Desktop) machine running 24/7 on low-power hardware.
-- Llama 3.2 8B (or optional deepseek-r1:8b / deepseek-r1:7b) served locally by Ollama on port `11434`.
+- Qwen2.5-Coder-7B served locally by Ollama on port `11434`.
 - A personal assistant named **Daemon** reachable via the [Daemon Desktop](https://github.com/niiyeboah/daemon/releases) app, the terminal, or a simple HTTP API from any device on your LAN.
 
 
@@ -48,7 +48,7 @@ Read these in order. Each guide picks up where the previous one left off.
 | --- | ------------------------------------------------------- | ------------------------------------------------------------------------ |
 | 1   | [Hardware](docs/01-hardware.md)                         | M4 Mac Mini (local) and Beelink S13 Pro (cloud API option)               |
 | 2   | [OS Setup](docs/02-os-setup.md)                         | macOS (default), Windows, or Ubuntu Desktop — get your OS ready         |
-| 3   | [Ollama + Llama 3.2 8B](docs/03-ollama-llama.md)        | Install Ollama, pull the model, run as service, set up Daemon via CLI   |
+| 3   | [Ollama + Qwen2.5-Coder-7B](docs/03-ollama-llama.md)   | Install Ollama, pull the model, run as service, set up Daemon via CLI   |
 | 4   | [Security](docs/04-security.md)                         | Firewall, SSH hardening, and automatic updates                           |
 | 5   | [Troubleshooting](docs/05-troubleshooting.md)            | Common issues and how to fix them                                        |
 | 6   | [Next Steps](docs/06-next-steps.md)                     | Ideas for extending Daemon (voice, integrations, web UI)                 |
@@ -79,7 +79,7 @@ Once Ollama is installed and the base model is pulled (see [Setup Guides](#setup
    ./daemon-setup check
    ```
 
-   This verifies Ollama is in PATH and that the API is reachable, and that a base model (e.g. `llama3.2:8b`, `deepseek-r1:8b`, or `deepseek-r1:7b`) and optionally the `daemon` model are available. If something is missing, the command prints what to do.
+   This verifies Ollama is in PATH and that the API is reachable, and that a base model (e.g. `qwen2.5-coder:7b`) and optionally the `daemon` model are available. If something is missing, the command prints what to do.
 
 4. **Create the Daemon model:**
 
@@ -105,7 +105,7 @@ Once Ollama is installed and the base model is pulled (see [Setup Guides](#setup
 
 Use `--yes` to skip confirmations.
 
-For full manual steps and alternatives (e.g. Python API script), see [Ollama + Llama 3.2 8B](docs/03-ollama-llama.md).
+For full manual steps and alternatives (e.g. Python API script), see [Ollama + Qwen2.5-Coder-7B](docs/03-ollama-llama.md).
 
 ## Development
 
@@ -120,4 +120,4 @@ For full manual steps and alternatives (e.g. Python API script), see [Ollama + L
 
 ## License
 
-This documentation is provided as-is for personal use. See individual tool and model licenses (Ollama, Llama 3.2) for their respective terms.
+This documentation is provided as-is for personal use. See individual tool and model licenses (Ollama, Qwen2.5-Coder) for their respective terms.

@@ -1,6 +1,6 @@
-# 3 -- Ollama + Llama 3.2 8B
+# 3 -- Ollama + Qwen2.5-Coder-7B
 
-This guide installs Ollama, downloads the Llama 3.2 8B model, and configures Ollama to run as a persistent service.
+This guide installs Ollama, downloads the Qwen2.5-Coder-7B model, and configures Ollama to run as a persistent service.
 
 ---
 
@@ -35,13 +35,13 @@ ollama --version
 
 ---
 
-## Pull the Llama 3.2 8B Model
+## Pull the Qwen2.5-Coder-7B Model
 
 ```bash
-ollama pull llama3.2:8b
+ollama pull qwen2.5-coder:7b
 ```
 
-This downloads the default quantised version of Llama 3.2 8B. The download is several GB.
+This downloads the default quantised version of Qwen2.5-Coder-7B. The download is several GB.
 
 Verify the model is available:
 
@@ -53,17 +53,15 @@ You should see an entry like:
 
 ```
 NAME              ID            SIZE    MODIFIED
-llama3.2:8b       ...           ~4.7 GB  just now
+qwen2.5-coder:7b  ...           ~4.7 GB  just now
 ```
-
-**Optional — DeepSeek R1 for better reasoning (M4 Mac Mini):** You can use `ollama pull deepseek-r1:8b` or `ollama pull deepseek-r1:7b` instead of (or in addition to) Llama 3.2 8B. The Daemon desktop app and `daemon-setup init --base-model deepseek-r1:8b` (or `deepseek-r1:7b`) support these models.
 
 ---
 
 ## Test the Model Interactively
 
 ```bash
-ollama run llama3.2:8b
+ollama run qwen2.5-coder:7b
 ```
 
 You will get an interactive prompt. Try a question:
@@ -103,13 +101,13 @@ The service starts Ollama in server mode, listening on **`http://localhost:11434
 curl http://localhost:11434/api/tags
 ```
 
-This should return a JSON object listing your installed models (including `llama3.2:8b`).
+This should return a JSON object listing your installed models (including `qwen2.5-coder:7b`).
 
 ### Test a Chat Completion via the API
 
 ```bash
 curl -s http://localhost:11434/api/chat -d '{
-  "model": "llama3.2:8b",
+  "model": "qwen2.5-coder:7b",
   "messages": [
     {"role": "user", "content": "Hello, who are you?"}
   ],
@@ -170,12 +168,12 @@ Reload and restart as above.
 
 | Resource | Approximate Usage |
 |----------|-------------------|
-| **RAM** | 4--6 GB while the 8B model is loaded |
-| **Disk** | ~5 GB for the quantised 8B model |
+| **RAM** | 4--6 GB while the 7B model is loaded |
+| **Disk** | ~5 GB for the quantised 7B model |
 | **CPU** | All cores utilised during inference (or GPU on Apple Metal / NVIDIA) |
 | **Idle** | Model is unloaded from RAM after 5 minutes of inactivity (configurable) |
 
-On a 16 GB machine, the OS and Ollama with the 8B model loaded will typically use 6--8 GB total, leaving headroom.
+On a 16 GB machine, the OS and Ollama with the 7B model loaded will typically use 6--8 GB total, leaving headroom.
 
 ---
 
@@ -184,10 +182,10 @@ On a 16 GB machine, the OS and Ollama with the 8B model loaded will typically us
 | Command | Description |
 |---------|-------------|
 | `ollama list` | Show installed models |
-| `ollama pull llama3.2:8b` | Download or update the model |
-| `ollama rm llama3.2:8b` | Remove the model |
-| `ollama run llama3.2:8b` | Interactive chat |
-| `ollama show llama3.2:8b` | Show model details (parameters, quantisation, etc.) |
+| `ollama pull qwen2.5-coder:7b` | Download or update the model |
+| `ollama rm qwen2.5-coder:7b` | Remove the model |
+| `ollama run qwen2.5-coder:7b` | Interactive chat |
+| `ollama show qwen2.5-coder:7b` | Show model details (parameters, quantisation, etc.) |
 | `ollama ps` | Show currently loaded models and their memory usage |
 | `sudo systemctl restart ollama` | Restart the Ollama service (Linux) |
 | `journalctl -u ollama -f` | Tail the Ollama service logs (Linux) |
@@ -196,7 +194,7 @@ On a 16 GB machine, the OS and Ollama with the 8B model loaded will typically us
 
 ## Set up Daemon with the CLI
 
-With Ollama running and Llama 3.2 8B downloaded, it is time to give your assistant its identity. **Daemon** is the personality and interface layer that sits on top of Ollama.
+With Ollama running and Qwen2.5-Coder-7B downloaded, it is time to give your assistant its identity. **Daemon** is the personality and interface layer that sits on top of Ollama.
 
 This section covers two approaches — pick the one that fits your needs:
 
@@ -209,7 +207,7 @@ This section covers two approaches — pick the one that fits your needs:
 
 Pre-built **daemon-setup** binaries for Windows, Linux, and macOS are available on [GitHub Releases](https://github.com/niiyeboah/daemon/releases). Download the file for your OS, or build from source (see the repo README).
 
-When you run **daemon-setup** with no arguments in a terminal, it starts an interactive menu. You can choose to check prerequisites, write the Modelfile, create the daemon model, add the shell alias, run a full setup, or view the guide. You will be prompted for paths and model names with sensible defaults (e.g. `~/Modelfile`, model name `daemon`, base model `llama3.2:8b`). To use the CLI non-interactively (e.g. in scripts), run a subcommand directly: `daemon-setup check`, `daemon-setup init`, `daemon-setup setup --yes`, etc.
+When you run **daemon-setup** with no arguments in a terminal, it starts an interactive menu. You can choose to check prerequisites, write the Modelfile, create the daemon model, add the shell alias, run a full setup, or view the guide. You will be prompted for paths and model names with sensible defaults (e.g. `~/Modelfile`, model name `daemon`, base model `qwen2.5-coder:7b`). To use the CLI non-interactively (e.g. in scripts), run a subcommand directly: `daemon-setup check`, `daemon-setup init`, `daemon-setup setup --yes`, etc.
 
 ### Option A -- Modelfile (Simplest)
 
@@ -226,7 +224,7 @@ nano ~/Modelfile
 Paste the following:
 
 ```dockerfile
-FROM llama3.2:8b
+FROM qwen2.5-coder:7b
 
 PARAMETER temperature 0.7
 PARAMETER top_p 0.9
@@ -249,7 +247,7 @@ Verify:
 ollama list
 ```
 
-You should now see a `daemon` model alongside the base `llama3.2:8b`.
+You should now see a `daemon` model alongside the base `qwen2.5-coder:7b`.
 
 #### 3. Run Daemon
 
@@ -312,7 +310,7 @@ nano ~/daemon-bot/daemon.py
 
 ```python
 #!/usr/bin/env python3
-"""Daemon -- local personal assistant powered by Llama 3.2 8B via Ollama."""
+"""Daemon -- local personal assistant powered by Qwen2.5-Coder-7B via Ollama."""
 
 import json
 import sys
@@ -320,7 +318,7 @@ import sys
 import requests
 
 OLLAMA_URL = "http://localhost:11434/api/chat"
-MODEL = "llama3.2:8b"
+MODEL = "qwen2.5-coder:7b"
 
 SYSTEM_PROMPT = (
     "You are Daemon, a helpful and concise personal assistant running locally "
