@@ -227,4 +227,107 @@ This overwrites the binary in place and preserves your models and configuration.
 
 ---
 
+## OpenClaw: "Not found in PATH" in Desktop App
+
+**Symptoms:** The Daemon desktop app shows "OpenClaw not found in PATH" and tries to install it, even though `openclaw` works fine in the terminal.
+
+**Cause:** macOS GUI apps inherit a minimal PATH (`/usr/bin:/bin:/usr/sbin:/sbin`) that excludes directories added by your shell profile (nvm, Homebrew, cargo, etc.). If OpenClaw was installed via npm/nvm, it lives at a path like `~/.nvm/versions/node/vXX/bin/openclaw` which the desktop app can't see.
+
+**Fix:** This is handled automatically in Daemon desktop v0.1.5+, which resolves the full login shell PATH before looking for binaries. If you're on an older version, update the desktop app.
+
+---
+
+## OpenClaw: Agent Responds with "NO_REPLY"
+
+**Symptoms:** Messages sent via the OpenClaw dashboard or WhatsApp get no response. The session file shows the assistant responding with just `NO_REPLY`.
+
+**Cause:** OpenClaw's system prompt includes a "Silent Replies" section that tells the model to respond with `NO_REPLY` when it has nothing to say. Small or code-focused models (e.g. `qwen2.5-coder:7b`) can't reliably distinguish this from normal conversation and default to `NO_REPLY` for everything.
+
+**Fix:**
+
+1. Switch to an instruction-following model like `llama3.1:8b`:
+
+   ```bash
+   ollama pull llama3.1:8b
+   ```
+
+2. Rebuild the Daemon model:
+
+   ```bash
+   cat > /tmp/Modelfile << 'EOF'
+   FROM llama3.1:8b
+   SYSTEM "You are Daemon, a helpful and concise personal assistant running locally. You respect privacy -- no data leaves this machine. You answer clearly and directly. You are friendly but not verbose."
+   PARAMETER num_ctx 32768
+   PARAMETER temperature 0.7
+   PARAMETER top_p 0.9
+   EOF
+   ollama create daemon -f /tmp/Modelfile
+   ```
+
+3. Restart the gateway:
+
+   ```bash
+   openclaw gateway restart
+   ```
+
+4. Trim workspace files to reduce system prompt size (see [Model choice](07-openclaw-automation.md#model-choice)).
+
+---
+
+## OpenClaw: WhatsApp Not Receiving Messages
+
+**Symptoms:** WhatsApp channel shows as "enabled" but messages aren't being received or responded to.
+
+**Steps:**
+
+1. Check the channel status:
+
+   ```bash
+   openclaw channels status
+   ```
+
+   Look for `linked, running, connected`. If it says `not linked`, you need to re-pair.
+
+2. Re-pair WhatsApp if needed:
+
+   ```bash
+   openclaw channels login --channel whatsapp
+   ```
+
+   Scan the QR code with WhatsApp (Settings > Linked Devices).
+
+3. Check the allowlist. The `dmPolicy` in `~/.openclaw/openclaw.json` is set to `allowlist` by default. Only numbers in `channels.whatsapp.allowFrom` can message the agent:
+
+   ```json
+   {
+     "channels": {
+       "whatsapp": {
+         "allowFrom": ["+1234567890"],
+         "dmPolicy": "allowlist"
+       }
+     }
+   }
+   ```
+
+4. After a gateway restart, WhatsApp may take 1-2 minutes to reconnect. The health-monitor will auto-restart it. Check the gateway log for `Listening for personal WhatsApp inbound messages`.
+
+---
+
+## OpenClaw: Web Search Fails ("missing_brave_api_key")
+
+**Symptoms:** The agent tries to search the web but gets `missing_brave_api_key` error.
+
+**Fix:** OpenClaw's `web_search` tool requires a Brave Search API key. The free tier provides 2,000 queries/month:
+
+1. Get a key at <https://brave.com/search/api/>
+2. Configure it:
+
+   ```bash
+   openclaw configure --section web
+   ```
+
+   Or set `BRAVE_API_KEY` in the gateway environment.
+
+---
+
 Next: [Next Steps](06-next-steps.md)

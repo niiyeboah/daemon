@@ -70,10 +70,32 @@ To have your assistant always on, run the OpenClaw Gateway 24/7 — for example 
 
 ## Model choice
 
-OpenClaw requires a **32k context window** so that skills and system prompts fit comfortably.
+OpenClaw injects a large system prompt (~10k tokens) containing workspace files, tool definitions, skills, and agent framework instructions. The model must be capable enough to follow complex multi-step instructions within this context.
 
-- **Local route (M4 Mac Mini or capable hardware):** Use Ollama + **qwen2.5-coder:7b**. The 7B model fits well on 16GB and benefits from M4's Metal acceleration. Pull the model: `ollama pull qwen2.5-coder:7b`, then create the Daemon model with `daemon-setup init` and point OpenClaw at `ollama/daemon` or your base model.
+- **Local route (M4 Mac Mini 16GB or similar):** Use Ollama + **llama3.1:8b**. This model handles OpenClaw's agent instructions reliably and fits comfortably in 16GB RAM (~4.9GB on disk). Pull and create the Daemon model:
+
+  ```bash
+  ollama pull llama3.1:8b
+  # Create the Daemon Modelfile (see below)
+  ollama create daemon -f /path/to/Modelfile
+  ```
+
+  **Why not qwen2.5-coder:7b?** While it's a capable coding model, it struggles with OpenClaw's conversational agent instructions (silent reply tokens, startup sequences, tool orchestration) and tends to output `NO_REPLY` instead of responding. `llama3.1:8b` is better at instruction following for agent workloads.
+
 - **Beelink / low-power route:** We recommend using **API keys** for Gemini, OpenAI, or Claude instead of local inference to avoid slow inference and "inference too slow" errors. Get keys from [Google AI Studio](https://aistudio.google.com/), [OpenAI Platform](https://platform.openai.com/), or [Anthropic Console](https://console.anthropic.com/), then configure via the desktop app Settings (API Keys card) or via CLI: `openclaw onboard --auth-choice gemini-api-key` (or `openai-api-key` / `anthropic-api-key`).
+
+### Reducing system prompt overhead
+
+OpenClaw loads all workspace files (`~/.openclaw/workspace/`) into every system prompt. On small local models, this can consume a significant portion of the context window and confuse the model.
+
+To keep the system prompt lean:
+
+- **Trim workspace files** — keep `AGENTS.md`, `SOUL.md`, `USER.md`, `IDENTITY.md` short and focused. Remove verbose instructions, examples, and edge cases that a small model won't follow anyway.
+- **Delete `BOOTSTRAP.md`** after first-run onboarding — it's only needed once but gets injected into every session if left in the workspace.
+- **Keep `HEARTBEAT.md` minimal** — if you're not using heartbeats, leave it empty (with only comments).
+- **Avoid large `TOOLS.md`** — only include notes you actively reference.
+
+A trimmed workspace (~500 tokens) vs the default (~3,300 tokens) can save ~2,800 tokens per message, giving the model more room to reason.
 
 ---
 
