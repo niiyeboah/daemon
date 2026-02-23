@@ -15,7 +15,7 @@ export function PullModelStep({
   onRun,
   onNext,
   status,
-  baseModel = "qwen2.5-coder:7b",
+  baseModel = "daemon",
 }: PullModelStepProps) {
   useEffect(() => {
     if (status === "pending") {

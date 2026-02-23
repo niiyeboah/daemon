@@ -37,7 +37,7 @@ ollama --version
 ### 2. Pull the base model
 
 ```powershell
-ollama pull qwen2.5-coder:7b
+ollama pull llama3.1:8b
 ```
 
 This downloads several GB. When it finishes, confirm:
@@ -46,7 +46,7 @@ This downloads several GB. When it finishes, confirm:
 ollama list
 ```
 
-You should see `qwen2.5-coder:7b` in the list.
+You should see `llama3.1:8b` in the list.
 
 ### 3. Install Go
 

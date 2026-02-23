@@ -58,4 +58,4 @@ Read these in order. Each guide picks up where the previous one left off.
 
 ## License
 
-This documentation is provided as-is for personal use. See individual tool and model licenses (Ollama, Qwen2.5-Coder) for their respective terms.
+This documentation is provided as-is for personal use. See individual tool and model licenses for their respective terms.

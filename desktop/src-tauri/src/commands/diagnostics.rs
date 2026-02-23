@@ -239,9 +239,7 @@ pub async fn diagnostics_full() -> Result<DiagnosticsReport, String> {
                 if let Ok(tags) = serde_json::from_str::<Tags>(&text) {
                     if let Some(models) = tags.models {
                         has_base_model = models.iter().any(|m| {
-                            m.name == "qwen2.5-coder:7b"
-                                || m.name.starts_with("qwen2.5-coder:7b:")
-                                || m.name == "daemon"
+                            m.name == "daemon"
                                 || m.name.starts_with("daemon:")
                         });
                         has_daemon_model = models

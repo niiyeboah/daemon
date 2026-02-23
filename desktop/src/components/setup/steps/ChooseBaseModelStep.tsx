@@ -12,8 +12,7 @@ export function ChooseBaseModelStep({
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        Choose the base model to download and use for Daemon. Qwen2.5-Coder-7B
-        is recommended for M4 Mac Mini 16GB.
+        Choose the base model to download and use for Daemon.
       </p>
 
       <div className="space-y-2">

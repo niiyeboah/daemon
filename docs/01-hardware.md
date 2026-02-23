@@ -13,7 +13,7 @@ For the **local model route** — where Ollama runs and inference happens on you
 | **CPU**               | Apple M4 (10-core CPU, 10-core GPU)                                                    |
 | **RAM**               | 16 GB unified memory                                                                   |
 | **Storage**           | 256 GB SSD                                                                             |
-| **Recommended model** | **qwen2.5-coder:7b**                                                                   |
+| **Recommended model** | See [Model choice](07-openclaw-automation.md#model-choice)                                                           |
 | **Benefits**          | Apple Silicon inference, Metal acceleration for Ollama, much faster than low-power x86 |
 
 The 7B model fits comfortably in 16 GB and benefits from M4's Metal acceleration. See [OpenRouter API Accounts](03-openrouter-setup.md) for API setup.
@@ -31,7 +31,7 @@ The 7B model fits comfortably in 16 GB and benefits from M4's Metal acceleration
 
 > **For Beelink (low-power N100/N150), we recommend using cloud API keys** (Gemini, OpenAI, or Claude) instead of local inference to avoid slow inference and "inference too slow" errors. Configure API keys via the desktop app Settings or `openclaw onboard --auth-choice gemini-api-key` (or openai-api-key / anthropic-api-key). See [OpenClaw & automation](07-openclaw-automation.md).
 
-If you use the Beelink for the OpenClaw gateway only (with cloud APIs), it remains a good always-on, low-power option. If you have the SEi13 Pro or a similar higher-end model, you can run local Ollama with **qwen2.5-coder:7b** as well.
+If you use the Beelink for the OpenClaw gateway only (with cloud APIs), it remains a good always-on, low-power option. If you have the SEi13 Pro or a similar higher-end model, you can run local Ollama with a compatible model (see [Model choice](07-openclaw-automation.md#model-choice)) as well.
 
 ---
 
@@ -48,12 +48,12 @@ Besides the M4 Mac Mini or Beelink S13 Pro (or equivalent), you will need:
 
 ## Why the M4 Mac Mini Fits (Local Route)
 
-1. **Right-sized for 7B.** Qwen2.5-Coder-7B quantised uses roughly 4--6 GB of RAM. A 16 GB machine comfortably hosts the model, the OS, and lightweight services.
+1. **Right-sized for 7B–8B.** A 7B–8B model quantised uses roughly 4–6 GB of RAM. A 16 GB machine comfortably hosts the model, the OS, and lightweight services.
 2. **Metal acceleration.** Ollama uses Apple Metal on macOS for much faster inference than CPU-only on N100/N150.
 3. **Low power, always-on.** The M4 Mac Mini is efficient and can run 24/7 as a personal assistant.
 4. **Small footprint.** Fits on a desk or shelf without distraction.
 
-**qwen2.5-coder:7b** is the recommended model for the local route. See [OpenRouter API Accounts](03-openrouter-setup.md) and [OpenClaw & automation](07-openclaw-automation.md#model-choice).
+See [OpenRouter API Accounts](03-openrouter-setup.md) and [OpenClaw & automation](07-openclaw-automation.md#model-choice) for the recommended model for the local route.
 
 ---
 

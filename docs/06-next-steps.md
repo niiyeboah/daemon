@@ -89,7 +89,6 @@ If you later add an eGPU enclosure or move to a machine with a discrete NVIDIA G
 |----------|-----|
 | Ollama documentation | <https://ollama.com/> |
 | Ollama GitHub | <https://github.com/ollama/ollama> |
-| Qwen2.5-Coder model card | <https://ollama.com/library/qwen2.5-coder> |
 | Ubuntu Server docs | <https://ubuntu.com/server/docs> |
 | Beelink official site | <https://www.bee-link.com/> |
 | Open WebUI | <https://github.com/open-webui/open-webui> |

@@ -80,7 +80,7 @@ OpenClaw injects a large system prompt (~10k tokens) containing workspace files,
   ollama create daemon -f /path/to/Modelfile
   ```
 
-  **Why not qwen2.5-coder:7b?** While it's a capable coding model, it struggles with OpenClaw's conversational agent instructions (silent reply tokens, startup sequences, tool orchestration) and tends to output `NO_REPLY` instead of responding. `llama3.1:8b` is better at instruction following for agent workloads.
+  **Why not smaller models?** Small or code-focused models struggle with OpenClaw's conversational agent instructions (silent reply tokens, startup sequences, tool orchestration) and tend to output `NO_REPLY` instead of responding. `llama3.1:8b` is better at instruction following for agent workloads.
 
 - **Beelink / low-power route:** We recommend using **API keys** for Gemini, OpenAI, or Claude instead of local inference to avoid slow inference and "inference too slow" errors. Get keys from [Google AI Studio](https://aistudio.google.com/), [OpenAI Platform](https://platform.openai.com/), or [Anthropic Console](https://console.anthropic.com/), then configure via the desktop app Settings (API Keys card) or via CLI: `openclaw onboard --auth-choice gemini-api-key` (or `openai-api-key` / `anthropic-api-key`).
 
@@ -103,7 +103,7 @@ A trimmed workspace (~500 tokens) vs the default (~3,300 tokens) can save ~2,800
 
 So that OpenClaw uses your existing Daemon (Ollama) instead of a cloud provider, configure the Ollama provider and set the default model. Restart the gateway after any config change: `openclaw gateway restart`.
 
-**Prerequisite:** Ollama must be running and your chosen model available. Check with `ollama list` (you should see `daemon` or `qwen2.5-coder:7b`).
+**Prerequisite:** Ollama must be running and your chosen model available. Check with `ollama list` (you should see `daemon`).
 
 ### Option A — Auto-discovery
 
@@ -133,7 +133,7 @@ The simplest way is to let OpenClaw discover models from your local Ollama insta
    }
    ```
 
-   Use `ollama/daemon` or `ollama/qwen2.5-coder:7b` for the base model. Restart the gateway and verify with `openclaw models list` and `openclaw models status`.
+   Use `ollama/daemon` for the base model. Restart the gateway and verify with `openclaw models list` and `openclaw models status`.
 
 ### Option B — Explicit config
 
@@ -166,7 +166,7 @@ If your model does not appear in auto-discovery (e.g. the Daemon model does not 
 }
 ```
 
-Use the model `id` that matches `ollama list` (e.g. `daemon`, `qwen2.5-coder:7b`). For other hosts or the legacy OpenAI-compatible endpoint, see the [OpenClaw Ollama provider docs](https://docs.openclaw.ai/providers/ollama).
+Use the model `id` that matches `ollama list` (e.g. `daemon`). For other hosts or the legacy OpenAI-compatible endpoint, see the [OpenClaw Ollama provider docs](https://docs.openclaw.ai/providers/ollama).
 
 ### Verification
 

@@ -38,7 +38,7 @@ curl -fsSL https://ollama.com/install.sh | sh
 
 ## Model Fails to Load
 
-**Symptoms:** `ollama run qwen2.5-coder:7b` exits immediately or prints an out-of-memory error.
+**Symptoms:** `ollama run <model>` exits immediately or prints an out-of-memory error.
 
 **Steps:**
 
@@ -61,8 +61,8 @@ df -h /
 3. Re-pull the model (in case of a corrupted download):
 
 ```bash
-ollama rm qwen2.5-coder:7b
-ollama pull qwen2.5-coder:7b
+ollama rm <model>
+ollama pull <model>
 ```
 
 4. Verify:
@@ -241,7 +241,7 @@ This overwrites the binary in place and preserves your models and configuration.
 
 **Symptoms:** Messages sent via the OpenClaw dashboard or WhatsApp get no response. The session file shows the assistant responding with just `NO_REPLY`.
 
-**Cause:** OpenClaw's system prompt includes a "Silent Replies" section that tells the model to respond with `NO_REPLY` when it has nothing to say. Small or code-focused models (e.g. `qwen2.5-coder:7b`) can't reliably distinguish this from normal conversation and default to `NO_REPLY` for everything.
+**Cause:** OpenClaw's system prompt includes a "Silent Replies" section that tells the model to respond with `NO_REPLY` when it has nothing to say. Small or code-focused models can't reliably distinguish this from normal conversation and default to `NO_REPLY` for everything.
 
 **Fix:**
 
