@@ -17,18 +17,6 @@ export interface ChatTokenEvent {
   done: boolean;
 }
 
-export interface PullProgressEvent {
-  status: string;
-  completed: number | null;
-  total: number | null;
-}
-
-export interface SetupStatus {
-  ollama_found: boolean;
-  ollama_path: string | null;
-  output: string;
-}
-
 export interface SetupLogEvent {
   line: string;
   stream: "stdout" | "stderr";
@@ -114,7 +102,8 @@ export interface ApiKeysStatus {
 
 export type Theme = "light" | "dark" | "system";
 
-export type TaskComplexity = "simple" | "complex";
+// "simple" = quick/cheap, "standard" = balanced, "complex" = most capable
+export type TaskComplexity = "simple" | "standard" | "complex";
 
 export interface AppSettings {
   theme: Theme;

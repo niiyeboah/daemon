@@ -115,11 +115,12 @@ export default function Settings() {
           <CardContent>
             <select
               value={taskComplexity}
-              onChange={(e) => setTaskComplexity(e.target.value as "simple" | "complex")}
+              onChange={(e) => setTaskComplexity(e.target.value as "simple" | "standard" | "complex")}
               className="w-full rounded-md border bg-background px-3 py-2 text-sm"
             >
-              <option value="simple">Simple Task (Gemini 2.5 Flash)</option>
-              <option value="complex">Complex Task (Claude 3.5 Sonnet)</option>
+              <option value="simple">Quick (Gemini 2.0 Flash)</option>
+              <option value="standard">Standard (Gemini 2.5 Flash)</option>
+              <option value="complex">Complex (Claude 3.5 Sonnet)</option>
             </select>
             <p className="text-xs text-muted-foreground mt-2">
               Affects which model is used for your requests.
@@ -195,8 +196,8 @@ export default function Settings() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-xs text-muted-foreground">
-              Used by OpenClaw for cloud models. For Beelink or low-power devices,
-              use these instead of local Ollama.
+              API keys for cloud providers used directly by OpenClaw agents
+              (separate from the OpenRouter key above).
             </p>
             {apiKeyError && (
               <p className="text-xs text-destructive">{apiKeyError}</p>

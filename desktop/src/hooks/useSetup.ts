@@ -2,19 +2,20 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import type { StepStatus } from "@/types";
 import {
   detectOs,
+  openrouterTestKey,
+  openclawCheck,
+  openclawInstall,
+  openclawConfigureModel,
+  onOpenClawLog,
 } from "@/lib/tauri";
+import { useSettings } from "@/hooks/useSettings";
+import { OPENCLAW_DEFAULT_MODEL } from "@/store/constants";
 
 export interface SetupStep {
   id: string;
   label: string;
   description: string;
   status: StepStatus;
-  optional?: boolean;
-}
-
-export interface PullProgress {
-  status: string;
-  percent: number;
 }
 
 const INITIAL_STEPS: SetupStep[] = [
@@ -25,48 +26,22 @@ const INITIAL_STEPS: SetupStep[] = [
     status: "pending",
   },
   {
-    id: "check-ollama",
-    label: "Check Ollama",
-    description: "Verify Ollama is installed and running",
+    id: "configure-api-key",
+    label: "OpenRouter API Key",
+    description: "Enter and verify your OpenRouter API key",
     status: "pending",
   },
   {
-    id: "install-ollama",
-    label: "Install Ollama",
-    description: "Install Ollama if not found",
+    id: "install-openclaw",
+    label: "Install OpenClaw",
+    description: "Check or install the OpenClaw CLI",
     status: "pending",
   },
   {
-    id: "choose-base-model",
-    label: "Choose Base Model",
-    description: "Select base model for Daemon",
+    id: "configure-openclaw",
+    label: "Configure OpenClaw",
+    description: "Connect OpenClaw to OpenRouter",
     status: "pending",
-  },
-  {
-    id: "pull-model",
-    label: "Pull Model",
-    description: "Download base model",
-    status: "pending",
-  },
-  {
-    id: "create-model",
-    label: "Create Daemon",
-    description: "Create the Daemon model from Modelfile",
-    status: "pending",
-  },
-  {
-    id: "test-inference",
-    label: "Test Inference",
-    description: "Send a test prompt and verify response",
-    status: "pending",
-    optional: true,
-  },
-  {
-    id: "add-alias",
-    label: "Shell Alias",
-    description: "Add the daemon shell alias",
-    status: "pending",
-    optional: true,
   },
   {
     id: "done",
@@ -81,12 +56,21 @@ export function useSetup() {
   const [currentStep, setCurrentStep] = useState(0);
   const [logs, setLogs] = useState<string[]>([]);
   const [detectedOs, setDetectedOs] = useState<string | null>(null);
-  const [ollamaReachable, setOllamaReachable] = useState(false);
-  const selectedBaseModel = "daemon"; // stub
-
-  const pullProgress = { status: "", percent: 0 }; // stub
-  const testResponse = null; // stub
+  const [openclawInstalled, setOpenclawInstalled] = useState(false);
+  // Ref for immediate read inside runStep; state for re-renders / prop passing
+  const openclawCheckedRef = useRef(false);
+  const [openclawChecked, setOpenclawChecked] = useState(false);
   const logsEndRef = useRef<HTMLDivElement>(null);
+
+  const { openrouterApiKey, setOpenrouterApiKey } = useSettings();
+  const [apiKeyInput, setApiKeyInput] = useState("");
+
+  // Pre-fill key input when saved settings load
+  useEffect(() => {
+    if (openrouterApiKey && !apiKeyInput) {
+      setApiKeyInput(openrouterApiKey);
+    }
+  }, [openrouterApiKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const addLog = useCallback((line: string) => {
     setLogs((prev) => [...prev, line]);
@@ -96,14 +80,11 @@ export function useSetup() {
     logsEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [logs]);
 
-  const updateStep = useCallback(
-    (index: number, status: StepStatus) => {
-      setSteps((prev) =>
-        prev.map((s, i) => (i === index ? { ...s, status } : s))
-      );
-    },
-    []
-  );
+  const updateStep = useCallback((index: number, status: StepStatus) => {
+    setSteps((prev) =>
+      prev.map((s, i) => (i === index ? { ...s, status } : s))
+    );
+  }, []);
 
   const runStep = useCallback(
     async (stepIndex: number) => {
@@ -120,49 +101,83 @@ export function useSetup() {
             break;
           }
 
-          case "check-ollama": {
-            addLog("Skipping Ollama check (OpenRouter transition)");
-            setOllamaReachable(true);
-            updateStep(stepIndex, "done");
-            updateStep(stepIndex + 1, "done");
-            break;
-          }
-
-          case "install-ollama": {
-            // Unused
-            break;
-          }
-
-          case "choose-base-model": {
-            break;
-          }
-
-          case "pull-model": {
-            addLog("Skipping Model Pull (OpenRouter transition)");
+          case "configure-api-key": {
+            const key = apiKeyInput.trim();
+            if (!key) {
+              addLog("Error: API key cannot be empty");
+              updateStep(stepIndex, "error");
+              break;
+            }
+            addLog("Testing OpenRouter API key...");
+            await openrouterTestKey(key);
+            await setOpenrouterApiKey(key);
+            addLog("API key verified and saved");
             updateStep(stepIndex, "done");
             break;
           }
 
-          case "create-model": {
-            addLog("Skipping Model Creation (OpenRouter transition)");
-            updateStep(stepIndex, "done");
+          case "install-openclaw": {
+            if (!openclawCheckedRef.current) {
+              // First call: check if openclaw is installed
+              openclawCheckedRef.current = true;
+              setOpenclawChecked(true);
+              addLog("Checking for OpenClaw in PATH...");
+              const status = await openclawCheck();
+              if (status.installed) {
+                addLog(`OpenClaw found at ${status.path}`);
+                setOpenclawInstalled(true);
+                updateStep(stepIndex, "done");
+              } else {
+                addLog("OpenClaw not found — click Install to continue");
+                setOpenclawInstalled(false);
+                updateStep(stepIndex, "pending"); // wait for user to click Install
+              }
+            } else {
+              // Second call: user clicked Install
+              addLog("Installing OpenClaw...");
+              const unlisten = await onOpenClawLog((event) => {
+                addLog(`[${event.stream}] ${event.line}`);
+              });
+              try {
+                await openclawInstall();
+                addLog("Verifying installation...");
+                const status = await openclawCheck();
+                if (status.installed) {
+                  addLog("OpenClaw installed successfully");
+                  setOpenclawInstalled(true);
+                  updateStep(stepIndex, "done");
+                } else {
+                  throw new Error(
+                    "Installation finished but openclaw was not found in PATH. Try restarting the app or install manually."
+                  );
+                }
+              } finally {
+                unlisten();
+              }
+            }
             break;
           }
 
-          case "test-inference": {
-            addLog("Skipping test inference...");
-            updateStep(stepIndex, "done");
-            break;
-          }
-
-          case "add-alias": {
-            addLog("Skipping alias creation...");
+          case "configure-openclaw": {
+            const key = openrouterApiKey || apiKeyInput.trim();
+            if (!key) {
+              addLog("Error: No API key found. Please complete the previous step first.");
+              updateStep(stepIndex, "error");
+              break;
+            }
+            addLog(`Configuring OpenClaw with model: ${OPENCLAW_DEFAULT_MODEL}...`);
+            await openclawConfigureModel(OPENCLAW_DEFAULT_MODEL, key);
+            addLog("Config written to ~/.openclaw/openclaw.json");
+            addLog(
+              "Auth profiles written to ~/.openclaw/agents/main/agent/auth-profiles.json"
+            );
+            addLog(`Model: openrouter/${OPENCLAW_DEFAULT_MODEL}`);
             updateStep(stepIndex, "done");
             break;
           }
 
           case "done": {
-            addLog("Setup complete! You're all set.");
+            addLog("Setup complete!");
             updateStep(stepIndex, "done");
             break;
           }
@@ -173,36 +188,46 @@ export function useSetup() {
         updateStep(stepIndex, "error");
       }
     },
-    [steps, updateStep, addLog, pullProgress.status, selectedBaseModel]
+    [
+      steps,
+      updateStep,
+      addLog,
+      apiKeyInput,
+      openrouterApiKey,
+      setOpenrouterApiKey,
+      openclawInstalled,
+    ]
   );
 
-  const recheckOllama = useCallback(async () => {
-    const installStepIndex = steps.findIndex((s) => s.id === "install-ollama");
-    updateStep(installStepIndex, "done");
-  }, [steps, updateStep]);
-
-  const retryStep = useCallback(
-    (stepIndex: number) => {
-      updateStep(stepIndex, "pending");
-      runStep(stepIndex);
-    },
-    [updateStep, runStep]
-  );
+  const recheckOpenClaw = useCallback(async () => {
+    const installIdx = steps.findIndex((s) => s.id === "install-openclaw");
+    openclawCheckedRef.current = false;
+    setOpenclawChecked(false);
+    updateStep(installIdx, "running");
+    try {
+      const status = await openclawCheck();
+      if (status.installed) {
+        setOpenclawInstalled(true);
+        addLog("OpenClaw is now installed!");
+        updateStep(installIdx, "done");
+      } else {
+        openclawCheckedRef.current = true;
+        setOpenclawChecked(true);
+        addLog("OpenClaw still not found. Please install and try again.");
+        updateStep(installIdx, "pending");
+      }
+    } catch (err) {
+      addLog(`Check failed: ${err instanceof Error ? err.message : String(err)}`);
+      updateStep(installIdx, "error");
+    }
+  }, [steps, updateStep, addLog]);
 
   const nextStep = useCallback(() => {
-    const stepId = steps[currentStep].id;
-    if (stepId === "choose-base-model") {
-      updateStep(currentStep, "done");
-    }
     const next = currentStep + 1;
     if (next < steps.length) {
       setCurrentStep(next);
-      // Auto-skip install step if Ollama is already reachable
-      if (steps[next].id === "install-ollama" && ollamaReachable) {
-        setCurrentStep(next + 1);
-      }
     }
-  }, [currentStep, steps, ollamaReachable, updateStep]);
+  }, [currentStep, steps]);
 
   return {
     steps,
@@ -211,14 +236,12 @@ export function useSetup() {
     logs,
     logsEndRef,
     detectedOs,
-    ollamaReachable,
-    selectedBaseModel,
-    setSelectedBaseModel: () => {}, // stub
-    pullProgress,
-    testResponse,
+    openclawInstalled,
+    openclawChecked,
+    apiKeyInput,
+    setApiKeyInput,
     runStep,
-    retryStep,
     nextStep,
-    recheckOllama,
+    recheckOpenClaw,
   };
 }

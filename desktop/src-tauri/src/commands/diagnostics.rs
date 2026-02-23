@@ -3,9 +3,9 @@ use serde::{Deserialize, Serialize};
 use std::time::Instant;
 use sysinfo::{Disks, System};
 
-pub const OLLAMA_BASE: &str = "http://127.0.0.1:11434";
-
 pub const OPENCLAW_BASE: &str = "http://127.0.0.1:18789";
+
+const OPENROUTER_MODELS_URL: &str = "https://openrouter.ai/api/v1/models";
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct DiagnosticCheck {
@@ -42,35 +42,6 @@ pub struct SystemInfo {
     pub cpu_count: usize,
 }
 
-// Internal types for Ollama /api/ps
-#[derive(Debug, Deserialize)]
-struct PsResponse {
-    models: Option<Vec<PsModel>>,
-}
-
-#[derive(Debug, Deserialize)]
-struct PsModel {
-    name: String,
-    #[allow(dead_code)]
-    size: Option<u64>,
-    #[allow(dead_code)]
-    expires_at: Option<String>,
-}
-
-// Internal types for chat response (for inference test)
-#[derive(Debug, Deserialize)]
-struct TestChatResponse {
-    message: Option<TestChatMessage>,
-    done: Option<bool>,
-    eval_count: Option<u64>,
-    eval_duration: Option<u64>,
-}
-
-#[derive(Debug, Deserialize)]
-struct TestChatMessage {
-    content: String,
-}
-
 pub fn check_binary_in_path(name: &str) -> Option<String> {
     // On macOS, GUI apps inherit a minimal PATH that often excludes
     // directories added by the user's shell profile (Homebrew, nvm, cargo,
@@ -101,7 +72,6 @@ pub fn check_binary_in_path(name: &str) -> Option<String> {
             if path.is_empty() {
                 None
             } else {
-                // Take first line in case of multiple results
                 Some(path.lines().next().unwrap_or(&path).to_string())
             }
         }
@@ -121,7 +91,6 @@ pub fn resolve_login_shell_path() -> Option<String> {
     let shell = std::env::var("SHELL").unwrap_or_else(|_| "/bin/zsh".to_string());
     let current = std::env::var("PATH").unwrap_or_default();
 
-    // Try to get the full PATH from the user's login shell.
     if let Ok(output) = std::process::Command::new(&shell)
         .args(["-lc", "echo $PATH"])
         .output()
@@ -129,8 +98,6 @@ pub fn resolve_login_shell_path() -> Option<String> {
         if output.status.success() {
             let shell_path = String::from_utf8_lossy(&output.stdout).trim().to_string();
             if !shell_path.is_empty() {
-                // Merge: start with shell PATH, then append any entries from the
-                // current (GUI) PATH that aren't already present.
                 let mut parts: Vec<&str> = shell_path.split(':').collect();
                 for entry in current.split(':') {
                     if !entry.is_empty() && !parts.contains(&entry) {
@@ -142,7 +109,6 @@ pub fn resolve_login_shell_path() -> Option<String> {
         }
     }
 
-    // Fallback: manually append common install directories.
     let extras = [
         "/usr/local/bin",
         "/opt/homebrew/bin",
@@ -158,7 +124,7 @@ pub fn resolve_login_shell_path() -> Option<String> {
 }
 
 #[tauri::command]
-pub async fn diagnostics_full() -> Result<DiagnosticsReport, String> {
+pub async fn diagnostics_full(api_key: String) -> Result<DiagnosticsReport, String> {
     let client = Client::builder()
         .timeout(std::time::Duration::from_secs(10))
         .build()
@@ -166,306 +132,135 @@ pub async fn diagnostics_full() -> Result<DiagnosticsReport, String> {
 
     let mut checks = Vec::new();
 
-    // 1. Ollama installed
-    let ollama_path = check_binary_in_path("ollama");
+    // 1. OpenRouter API key configured
+    let key_set = !api_key.trim().is_empty();
     checks.push(DiagnosticCheck {
-        id: "ollama-installed".to_string(),
-        name: "Ollama Installed".to_string(),
-        status: if ollama_path.is_some() { "pass" } else { "fail" }.to_string(),
-        message: if let Some(ref p) = ollama_path {
-            format!("Found at {}", p)
+        id: "openrouter-key".to_string(),
+        name: "OpenRouter API Key".to_string(),
+        status: if key_set { "pass" } else { "fail" }.to_string(),
+        message: if key_set {
+            "API key is configured".to_string()
         } else {
-            "Not found in PATH".to_string()
-        },
-        metric: None,
-        detail: ollama_path.clone(),
-        action: if ollama_path.is_none() {
-            Some(DiagnosticAction {
-                label: "Install Ollama".to_string(),
-                command: "install-ollama".to_string(),
-            })
-        } else {
-            None
-        },
-    });
-
-    // 2. Ollama API running
-    let api_reachable = match client.get(OLLAMA_BASE).send().await {
-        Ok(resp) => resp.status().is_success(),
-        Err(_) => false,
-    };
-    checks.push(DiagnosticCheck {
-        id: "ollama-api".to_string(),
-        name: "Ollama API".to_string(),
-        status: if api_reachable { "pass" } else { "fail" }.to_string(),
-        message: if api_reachable {
-            "API is running".to_string()
-        } else {
-            "Connection refused".to_string()
-        },
-        metric: None,
-        detail: Some(format!("{}", OLLAMA_BASE)),
-        action: if !api_reachable {
-            Some(DiagnosticAction {
-                label: "Start Ollama".to_string(),
-                command: "start-ollama".to_string(),
-            })
-        } else {
-            None
-        },
-    });
-
-    // 3 & 4. Model availability (only if API is reachable)
-    let mut has_base_model = false;
-    let mut has_daemon_model = false;
-    let mut models_detail = String::new();
-
-    if api_reachable {
-        if let Ok(resp) = client
-            .get(format!("{}/api/tags", OLLAMA_BASE))
-            .send()
-            .await
-        {
-            if let Ok(text) = resp.text().await {
-                models_detail = text.clone();
-                #[derive(Deserialize)]
-                struct Tags {
-                    models: Option<Vec<TagModel>>,
-                }
-                #[derive(Deserialize)]
-                struct TagModel {
-                    name: String,
-                }
-                if let Ok(tags) = serde_json::from_str::<Tags>(&text) {
-                    if let Some(models) = tags.models {
-                        has_base_model = models.iter().any(|m| {
-                            m.name == "daemon"
-                                || m.name.starts_with("daemon:")
-                        });
-                        has_daemon_model = models
-                            .iter()
-                            .any(|m| m.name == "daemon" || m.name.starts_with("daemon:"));
-                    }
-                }
-            }
-        }
-    }
-
-    checks.push(DiagnosticCheck {
-        id: "base-model".to_string(),
-        name: "Base Model".to_string(),
-        status: if !api_reachable {
-            "fail"
-        } else if has_base_model {
-            "pass"
-        } else {
-            "fail"
-        }
-        .to_string(),
-        message: if !api_reachable {
-            "Cannot check — API offline".to_string()
-        } else if has_base_model {
-            "Base model available".to_string()
-        } else {
-            "Base model not found".to_string()
-        },
-        metric: None,
-        detail: if !models_detail.is_empty() {
-            Some(models_detail.clone())
-        } else {
-            None
-        },
-        action: if api_reachable && !has_base_model {
-            Some(DiagnosticAction {
-                label: "Pull Model".to_string(),
-                command: "pull-base-model".to_string(),
-            })
-        } else {
-            None
-        },
-    });
-
-    checks.push(DiagnosticCheck {
-        id: "daemon-model".to_string(),
-        name: "Daemon Model".to_string(),
-        status: if !api_reachable {
-            "fail"
-        } else if has_daemon_model {
-            "pass"
-        } else {
-            "fail"
-        }
-        .to_string(),
-        message: if !api_reachable {
-            "Cannot check — API offline".to_string()
-        } else if has_daemon_model {
-            "daemon model available".to_string()
-        } else {
-            "daemon model not found".to_string()
+            "No API key — go to Settings to add one".to_string()
         },
         metric: None,
         detail: None,
-        action: if api_reachable && !has_daemon_model {
-            Some(DiagnosticAction {
-                label: "Create Model".to_string(),
-                command: "create-daemon-model".to_string(),
-            })
-        } else {
-            None
-        },
+        action: None,
     });
 
-    // 5. Model loaded in memory
-    let mut loaded_model = None;
-    if api_reachable {
-        if let Ok(resp) = client
-            .get(format!("{}/api/ps", OLLAMA_BASE))
+    // 2. OpenRouter API reachable (also validates the key)
+    let mut openrouter_ok = false;
+    let mut openrouter_latency_ms: Option<u128> = None;
+    let mut openrouter_detail: Option<String> = None;
+
+    if key_set {
+        let start = Instant::now();
+        match client
+            .get(OPENROUTER_MODELS_URL)
+            .header("Authorization", format!("Bearer {}", api_key.trim()))
+            .header("HTTP-Referer", "http://localhost")
             .send()
             .await
         {
-            if let Ok(ps) = resp.json::<PsResponse>().await {
-                if let Some(models) = &ps.models {
-                    if !models.is_empty() {
-                        loaded_model = Some(models[0].name.clone());
-                    }
+            Ok(resp) => {
+                let latency = start.elapsed().as_millis();
+                openrouter_latency_ms = Some(latency);
+                if resp.status().is_success() {
+                    openrouter_ok = true;
+                } else {
+                    let status = resp.status();
+                    let body = resp.text().await.unwrap_or_default();
+                    openrouter_detail = Some(format!("HTTP {}: {}", status, &body[..body.len().min(200)]));
                 }
+            }
+            Err(e) => {
+                openrouter_detail = Some(format!("Connection error: {}", e));
             }
         }
     }
 
     checks.push(DiagnosticCheck {
-        id: "model-loaded".to_string(),
-        name: "Model Loaded".to_string(),
-        status: if !api_reachable {
+        id: "openrouter-api".to_string(),
+        name: "OpenRouter API".to_string(),
+        status: if !key_set {
             "fail"
-        } else if loaded_model.is_some() {
+        } else if openrouter_ok {
+            "pass"
+        } else {
+            "fail"
+        }
+        .to_string(),
+        message: if !key_set {
+            "Cannot check — no API key".to_string()
+        } else if openrouter_ok {
+            format!(
+                "Connected ({}ms)",
+                openrouter_latency_ms.unwrap_or(0)
+            )
+        } else {
+            "API unreachable or key invalid".to_string()
+        },
+        metric: openrouter_latency_ms.map(|ms| format!("{}ms", ms)),
+        detail: openrouter_detail,
+        action: None,
+    });
+
+    // 3. OpenClaw installed
+    let openclaw_path = check_binary_in_path("openclaw");
+    checks.push(DiagnosticCheck {
+        id: "openclaw-installed".to_string(),
+        name: "OpenClaw Installed".to_string(),
+        status: if openclaw_path.is_some() {
             "pass"
         } else {
             "warn"
         }
         .to_string(),
-        message: if !api_reachable {
-            "Cannot check — API offline".to_string()
-        } else if let Some(ref m) = loaded_model {
-            format!("{} loaded in memory", m)
+        message: if let Some(ref p) = openclaw_path {
+            format!("Found at {}", p)
         } else {
-            "No model loaded (normal if idle)".to_string()
+            "Not found — run Setup to install".to_string()
         },
-        metric: loaded_model.clone(),
-        detail: None,
+        metric: None,
+        detail: openclaw_path,
         action: None,
     });
 
-    // 6 & 7. Inference test (only if API reachable and daemon model available)
-    let mut inference_ok = false;
-    let mut tokens_per_second: Option<f64> = None;
-    let mut inference_detail = String::new();
-
-    if api_reachable && has_daemon_model {
-        let start = Instant::now();
-        let test_body = serde_json::json!({
-            "model": "daemon",
-            "messages": [{"role": "user", "content": "Hi"}],
-            "stream": false,
-        });
-
-        match client
-            .post(format!("{}/api/chat", OLLAMA_BASE))
-            .json(&test_body)
-            .send()
-            .await
-        {
-            Ok(resp) => {
-                let elapsed = start.elapsed();
-                if let Ok(chat) = resp.json::<TestChatResponse>().await {
-                    if chat.done.unwrap_or(false) {
-                        inference_ok = true;
-                        inference_detail = format!(
-                            "Response: {}",
-                            chat.message
-                                .map(|m| m.content)
-                                .unwrap_or_default()
-                        );
-
-                        if let (Some(count), Some(duration)) =
-                            (chat.eval_count, chat.eval_duration)
-                        {
-                            if duration > 0 {
-                                tokens_per_second =
-                                    Some(count as f64 / (duration as f64 / 1_000_000_000.0));
-                            }
-                        }
-
-                        inference_detail.push_str(&format!(
-                            "\nLatency: {:.0}ms",
-                            elapsed.as_millis()
-                        ));
-                    }
-                }
-            }
-            Err(e) => {
-                inference_detail = format!("Error: {}", e);
-            }
+    // 4. OpenClaw gateway running
+    let openclaw_gateway = if let Ok(c) = Client::builder()
+        .timeout(std::time::Duration::from_secs(3))
+        .build()
+    {
+        match c.get(OPENCLAW_BASE).send().await {
+            Ok(resp) => resp.status().is_success() || resp.status().as_u16() < 500,
+            Err(_) => false,
         }
-    }
+    } else {
+        false
+    };
 
     checks.push(DiagnosticCheck {
-        id: "inference".to_string(),
-        name: "Inference".to_string(),
-        status: if !api_reachable || !has_daemon_model {
-            "fail"
-        } else if inference_ok {
-            "pass"
+        id: "openclaw-gateway".to_string(),
+        name: "OpenClaw Gateway".to_string(),
+        status: if openclaw_gateway { "pass" } else { "warn" }.to_string(),
+        message: if openclaw_gateway {
+            "Gateway running".to_string()
         } else {
-            "fail"
-        }
-        .to_string(),
-        message: if !api_reachable {
-            "Cannot test — API offline".to_string()
-        } else if !has_daemon_model {
-            "Cannot test — daemon model missing".to_string()
-        } else if inference_ok {
-            "Inference working".to_string()
-        } else {
-            "Inference failed".to_string()
+            "Gateway not running".to_string()
         },
-        metric: tokens_per_second.map(|t| format!("{:.1} tok/s", t)),
-        detail: if !inference_detail.is_empty() {
-            Some(inference_detail)
+        metric: None,
+        detail: Some(OPENCLAW_BASE.to_string()),
+        action: if !openclaw_gateway {
+            Some(DiagnosticAction {
+                label: "Start Gateway".to_string(),
+                command: "start-openclaw-gateway".to_string(),
+            })
         } else {
             None
         },
-        action: None,
     });
 
-    checks.push(DiagnosticCheck {
-        id: "inference-speed".to_string(),
-        name: "Inference Speed".to_string(),
-        status: if let Some(tps) = tokens_per_second {
-            if tps >= 5.0 {
-                "pass"
-            } else {
-                "warn"
-            }
-        } else {
-            "fail"
-        }
-        .to_string(),
-        message: if let Some(tps) = tokens_per_second {
-            if tps >= 5.0 {
-                format!("{:.1} tokens/sec", tps)
-            } else {
-                format!("{:.1} tokens/sec (slow)", tps)
-            }
-        } else {
-            "No data".to_string()
-        },
-        metric: tokens_per_second.map(|t| format!("{:.1} tok/s", t)),
-        detail: None,
-        action: None,
-    });
-
-    // 8 & 9. System info
+    // 5. System RAM
     let mut sys = System::new();
     sys.refresh_memory();
 
@@ -496,6 +291,7 @@ pub async fn diagnostics_full() -> Result<DiagnosticsReport, String> {
         action: None,
     });
 
+    // 6. Disk space
     let disks = Disks::new_with_refreshed_list();
     let root_disk = disks.list().iter().find(|d| {
         let mp = d.mount_point().to_string_lossy();
@@ -529,61 +325,7 @@ pub async fn diagnostics_full() -> Result<DiagnosticsReport, String> {
         action: None,
     });
 
-    // 10. OpenClaw installed
-    let openclaw_path = check_binary_in_path("openclaw");
-    checks.push(DiagnosticCheck {
-        id: "openclaw-installed".to_string(),
-        name: "OpenClaw Installed".to_string(),
-        status: if openclaw_path.is_some() {
-            "pass"
-        } else {
-            "warn"
-        }
-        .to_string(),
-        message: if let Some(ref p) = openclaw_path {
-            format!("Found at {}", p)
-        } else {
-            "Not found in PATH".to_string()
-        },
-        metric: None,
-        detail: openclaw_path,
-        action: None,
-    });
-
-    // 11. OpenClaw gateway
-    let openclaw_gateway = if let Ok(resp) = Client::builder()
-        .timeout(std::time::Duration::from_secs(3))
-        .build()
-        .unwrap_or_default()
-        .get(OPENCLAW_BASE)
-        .send()
-        .await
-    {
-        resp.status().is_success() || resp.status().as_u16() < 500
-    } else {
-        false
-    };
-
-    checks.push(DiagnosticCheck {
-        id: "openclaw-gateway".to_string(),
-        name: "OpenClaw Gateway".to_string(),
-        status: if openclaw_gateway {
-            "pass"
-        } else {
-            "warn"
-        }
-        .to_string(),
-        message: if openclaw_gateway {
-            "Gateway running".to_string()
-        } else {
-            "Gateway not running".to_string()
-        },
-        metric: None,
-        detail: Some(format!("{}", OPENCLAW_BASE)),
-        action: None,
-    });
-
-    // Calculate overall status
+    // Overall status
     let fail_count = checks.iter().filter(|c| c.status == "fail").count();
     let warn_count = checks.iter().filter(|c| c.status == "warn").count();
 

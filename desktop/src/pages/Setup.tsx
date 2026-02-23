@@ -2,13 +2,9 @@ import { useSetup } from "@/hooks/useSetup";
 import { SetupStepper } from "@/components/setup/SetupStepper";
 import { LogDrawer } from "@/components/setup/LogDrawer";
 import { DetectOsStep } from "@/components/setup/steps/DetectOsStep";
-import { CheckOllamaStep } from "@/components/setup/steps/CheckOllamaStep";
-import { InstallOllamaStep } from "@/components/setup/steps/InstallOllamaStep";
-import { ChooseBaseModelStep } from "@/components/setup/steps/ChooseBaseModelStep";
-import { PullModelStep } from "@/components/setup/steps/PullModelStep";
-import { CreateModelStep } from "@/components/setup/steps/CreateModelStep";
-import { TestInferenceStep } from "@/components/setup/steps/TestInferenceStep";
-import { AliasStep } from "@/components/setup/steps/AliasStep";
+import { ConfigureApiKeyStep } from "@/components/setup/steps/ConfigureApiKeyStep";
+import { SetupInstallOpenClawStep } from "@/components/setup/steps/SetupInstallOpenClawStep";
+import { ConfigureOpenClawStep } from "@/components/setup/steps/ConfigureOpenClawStep";
 import { DoneStep } from "@/components/setup/steps/DoneStep";
 
 export default function Setup() {
@@ -19,13 +15,13 @@ export default function Setup() {
     logs,
     logsEndRef,
     detectedOs,
-    ollamaReachable,
-
-    pullProgress,
-    testResponse,
+    openclawInstalled,
+    openclawChecked,
+    apiKeyInput,
+    setApiKeyInput,
     runStep,
     nextStep,
-    recheckOllama,
+    recheckOpenClaw,
   } = useSetup();
 
   const current = steps[currentStep];
@@ -60,60 +56,31 @@ export default function Setup() {
               />
             )}
 
-            {current.id === "check-ollama" && (
-              <CheckOllamaStep
-                ollamaReachable={ollamaReachable}
+            {current.id === "configure-api-key" && (
+              <ConfigureApiKeyStep
+                apiKeyInput={apiKeyInput}
+                onChangeKey={setApiKeyInput}
                 onRun={() => runStep(currentStep)}
                 onNext={nextStep}
                 status={current.status}
               />
             )}
 
-            {current.id === "install-ollama" && (
-              <InstallOllamaStep
-                detectedOs={detectedOs}
-                onRecheck={recheckOllama}
+            {current.id === "install-openclaw" && (
+              <SetupInstallOpenClawStep
+                openclawChecked={openclawChecked}
+                openclawInstalled={openclawInstalled}
+                onRun={() => runStep(currentStep)}
+                onRecheck={recheckOpenClaw}
                 onNext={nextStep}
                 status={current.status}
               />
             )}
 
-            {current.id === "choose-base-model" && (
-              <ChooseBaseModelStep
-                onNext={nextStep}
-                status={current.status}
-              />
-            )}
-
-            {current.id === "pull-model" && (
-              <PullModelStep
-                pullProgress={pullProgress}
+            {current.id === "configure-openclaw" && (
+              <ConfigureOpenClawStep
                 onRun={() => runStep(currentStep)}
                 onNext={nextStep}
-                status={current.status}
-              />
-            )}
-
-            {current.id === "create-model" && (
-              <CreateModelStep
-                onRun={() => runStep(currentStep)}
-                onNext={nextStep}
-                status={current.status}
-              />
-            )}
-
-            {current.id === "test-inference" && (
-              <TestInferenceStep
-                testResponse={testResponse}
-                onRun={() => runStep(currentStep)}
-                status={current.status}
-              />
-            )}
-
-            {current.id === "add-alias" && (
-              <AliasStep
-                onRun={() => runStep(currentStep)}
-                onSkip={nextStep}
                 status={current.status}
               />
             )}

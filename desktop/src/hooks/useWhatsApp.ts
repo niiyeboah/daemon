@@ -11,6 +11,7 @@ import {
   onOpenClawQr,
 } from "@/lib/tauri";
 import { useSettings } from "@/hooks/useSettings";
+import { OPENCLAW_DEFAULT_MODEL } from "@/store/constants";
 
 export interface WhatsAppStep {
   id: string;
@@ -237,8 +238,8 @@ export function useWhatsApp() {
               updateStep(stepIndex, "error");
               break;
             }
-            await openclawConfigureModel("daemon", openrouterApiKey);
-            addLog("Model configured: openrouter/daemon (provider + auth-profiles written)");
+            await openclawConfigureModel(OPENCLAW_DEFAULT_MODEL, openrouterApiKey);
+            addLog(`Model configured: openrouter/${OPENCLAW_DEFAULT_MODEL} (provider + auth-profiles written)`);
             updateStep(stepIndex, "done");
             break;
           }

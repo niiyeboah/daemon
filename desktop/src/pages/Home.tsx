@@ -1,20 +1,50 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Wand2, MessageSquare, Circle, Check, X } from "lucide-react";
+import { Wand2, MessageSquare, Circle, Check, X, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSettings } from "@/hooks/useSettings";
+import { openclawCheck } from "@/lib/tauri";
+import type { OpenClawStatus } from "@/types";
 import { cn } from "@/lib/utils";
 
 export default function Home() {
   const navigate = useNavigate();
   const { openrouterApiKey } = useSettings();
+  const [openclaw, setOpenclaw] = useState<OpenClawStatus | null>(null);
+
+  useEffect(() => {
+    openclawCheck()
+      .then(setOpenclaw)
+      .catch(() => {});
+  }, []);
 
   const checks = [
     {
       label: "OpenRouter API Key",
       ok: !!openrouterApiKey,
-      detail: openrouterApiKey ? "Configured" : "Missing",
+      detail: openrouterApiKey ? "Configured" : "Missing — go to Settings",
+    },
+    {
+      label: "OpenClaw Installed",
+      ok: openclaw?.installed ?? false,
+      detail:
+        openclaw === null
+          ? "Checking…"
+          : openclaw.installed
+            ? "Installed"
+            : "Not found — run Setup",
+    },
+    {
+      label: "OpenClaw Gateway",
+      ok: openclaw?.gateway_running ?? false,
+      detail:
+        openclaw === null
+          ? "Checking…"
+          : openclaw.gateway_running
+            ? "Running"
+            : "Not running",
     },
   ];
 
@@ -25,12 +55,12 @@ export default function Home() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Daemon</h1>
         <p className="text-muted-foreground text-sm mt-1">
-          Your local AI assistant — private, fast, and fully offline.
+          OpenClaw automation & diagnostics — powered by OpenRouter.
         </p>
       </div>
 
       {/* Quick actions */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <button
           onClick={() => navigate("/setup")}
           className="flex items-center gap-3 rounded-xl border p-4 text-left hover:bg-accent transition-colors"
@@ -39,9 +69,9 @@ export default function Home() {
             <Wand2 className="size-5 text-primary" />
           </div>
           <div>
-            <div className="font-medium text-sm">Run Setup</div>
+            <div className="font-medium text-sm">Setup</div>
             <div className="text-xs text-muted-foreground">
-              Install & configure Daemon
+              Configure Daemon
             </div>
           </div>
         </button>
@@ -54,9 +84,24 @@ export default function Home() {
             <MessageSquare className="size-5 text-primary" />
           </div>
           <div>
-            <div className="font-medium text-sm">Open Chat</div>
+            <div className="font-medium text-sm">Chat</div>
             <div className="text-xs text-muted-foreground">
-              Talk to your local AI
+              Ask AI anything
+            </div>
+          </div>
+        </button>
+
+        <button
+          onClick={() => navigate("/whatsapp")}
+          className="flex items-center gap-3 rounded-xl border p-4 text-left hover:bg-accent transition-colors"
+        >
+          <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
+            <Smartphone className="size-5 text-primary" />
+          </div>
+          <div>
+            <div className="font-medium text-sm">WhatsApp</div>
+            <div className="text-xs text-muted-foreground">
+              Connect channel
             </div>
           </div>
         </button>
@@ -107,9 +152,9 @@ export default function Home() {
               variant="outline"
               size="sm"
               className="w-full mt-4"
-              onClick={() => navigate("/settings")}
+              onClick={() => navigate("/setup")}
             >
-              Go to Settings to add key
+              Run Setup to fix issues
             </Button>
           )}
         </CardContent>

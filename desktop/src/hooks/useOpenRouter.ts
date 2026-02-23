@@ -4,7 +4,7 @@ import { load } from "@tauri-apps/plugin-store";
 import { chatMessagesAtom, chatLoadingAtom } from "@/store/atoms";
 import { openrouterChat, onChatToken } from "@/lib/tauri";
 import { useSettings } from "@/hooks/useSettings";
-import { SIMPLE_MODEL, COMPLEX_MODEL, DEFAULT_TASK_COMPLEXITY, DEFAULT_SYSTEM_PROMPT } from "@/store/constants";
+import { QUICK_MODEL, STANDARD_MODEL, COMPLEX_MODEL, DEFAULT_TASK_COMPLEXITY, DEFAULT_SYSTEM_PROMPT } from "@/store/constants";
 import type { ChatMessage, Message } from "@/types";
 
 const CHAT_STORE_PATH = "chat.json";
@@ -55,7 +55,12 @@ export function useOpenRouterChat() {
         return;
       }
 
-      const model = taskComplexity === "complex" ? COMPLEX_MODEL : SIMPLE_MODEL;
+      const model =
+        taskComplexity === "complex"
+          ? COMPLEX_MODEL
+          : taskComplexity === "standard"
+            ? STANDARD_MODEL
+            : QUICK_MODEL;
 
       const userMsg: ChatMessage = {
         id: crypto.randomUUID(),

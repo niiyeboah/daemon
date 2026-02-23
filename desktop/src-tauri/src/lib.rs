@@ -13,10 +13,8 @@ pub fn run() {
         .plugin(tauri_plugin_updater::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
             openrouter::openrouter_chat,
+            openrouter::openrouter_test_key,
             setup::detect_os,
-            setup::setup_check,
-            setup::setup_init,
-            setup::setup_alias,
             diagnostics::diagnostics_full,
             diagnostics::system_info,
             openclaw::openclaw_check,

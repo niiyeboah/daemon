@@ -4,8 +4,6 @@ import type {
   Message,
   ChatResponse,
   ChatTokenEvent,
-  PullProgressEvent,
-  SetupStatus,
   SetupLogEvent,
   DiagnosticsReport,
   SystemInfo,
@@ -26,6 +24,9 @@ export async function openrouterChat(
   return invoke("openrouter_chat", { model, messages, apiKey, stream });
 }
 
+export async function openrouterTestKey(apiKey: string): Promise<void> {
+  return invoke("openrouter_test_key", { apiKey });
+}
 
 // Setup commands
 
@@ -33,22 +34,10 @@ export async function detectOs(): Promise<string> {
   return invoke("detect_os");
 }
 
-export async function setupCheck(): Promise<SetupStatus> {
-  return invoke("setup_check");
-}
-
-export async function setupInit(baseModel?: string): Promise<void> {
-  return invoke("setup_init", { baseModel: baseModel ?? null });
-}
-
-export async function setupAlias(): Promise<void> {
-  return invoke("setup_alias");
-}
-
 // Diagnostics commands
 
-export async function diagnosticsFull(): Promise<DiagnosticsReport> {
-  return invoke("diagnostics_full");
+export async function diagnosticsFull(apiKey: string): Promise<DiagnosticsReport> {
+  return invoke("diagnostics_full", { apiKey });
 }
 
 export async function systemInfo(): Promise<SystemInfo> {
@@ -56,12 +45,6 @@ export async function systemInfo(): Promise<SystemInfo> {
 }
 
 // Event listeners
-
-export function onPullProgress(
-  callback: (event: PullProgressEvent) => void
-): Promise<UnlistenFn> {
-  return listen<PullProgressEvent>("pull-progress", (e) => callback(e.payload));
-}
 
 export function onChatToken(
   callback: (event: ChatTokenEvent) => void

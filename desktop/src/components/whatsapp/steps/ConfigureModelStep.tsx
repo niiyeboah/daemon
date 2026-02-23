@@ -21,8 +21,7 @@ export function ConfigureModelStep({
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        Configuring <code className="rounded bg-muted px-1.5 py-0.5 text-xs">ollama/daemon</code> as
-        the default model for OpenClaw.
+        Configuring OpenRouter as the default model provider for OpenClaw.
       </p>
 
       {status === "running" && (

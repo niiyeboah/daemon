@@ -13,7 +13,7 @@ export function DoneStep() {
         <div>
           <h3 className="font-medium">Setup Complete</h3>
           <p className="text-sm text-muted-foreground">
-            Daemon is installed and ready to go.
+            Daemon is configured and ready to use.
           </p>
         </div>
       </div>
@@ -29,7 +29,7 @@ export function DoneStep() {
           <div>
             <div className="font-medium text-sm">Open Chat</div>
             <div className="text-xs text-muted-foreground">
-              Talk to your local AI
+              Chat with cloud AI
             </div>
           </div>
         </button>

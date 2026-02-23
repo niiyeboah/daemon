@@ -4,6 +4,31 @@ use serde::{Deserialize, Serialize};
 use tauri::{AppHandle, Emitter};
 
 pub const OPENROUTER_BASE: &str = "https://openrouter.ai/api/v1/chat/completions";
+const OPENROUTER_MODELS_URL: &str = "https://openrouter.ai/api/v1/models";
+
+#[tauri::command]
+pub async fn openrouter_test_key(api_key: String) -> Result<(), String> {
+    let client = Client::builder()
+        .timeout(std::time::Duration::from_secs(10))
+        .build()
+        .map_err(|e| e.to_string())?;
+
+    let resp = client
+        .get(OPENROUTER_MODELS_URL)
+        .header("Authorization", format!("Bearer {}", api_key))
+        .header("HTTP-Referer", "http://localhost")
+        .send()
+        .await
+        .map_err(|e| format!("Failed to reach OpenRouter: {}", e))?;
+
+    if resp.status().is_success() {
+        Ok(())
+    } else {
+        let status = resp.status();
+        let body = resp.text().await.unwrap_or_default();
+        Err(format!("HTTP {}: {}", status, body))
+    }
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Message {

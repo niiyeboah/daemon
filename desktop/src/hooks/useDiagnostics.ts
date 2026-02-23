@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import type { DiagnosticsReport, SystemInfo } from "@/types";
-import { diagnosticsFull, systemInfo } from "@/lib/tauri";
+import { diagnosticsFull, systemInfo, openclawGatewayRestart } from "@/lib/tauri";
+import { useSettings } from "@/hooks/useSettings";
 
 const DIAGNOSTICS_POLL_INTERVAL = 10_000; // 10 seconds
 
@@ -11,12 +12,13 @@ export function useDiagnostics() {
   const [countdown, setCountdown] = useState(DIAGNOSTICS_POLL_INTERVAL / 1000);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { openrouterApiKey } = useSettings();
 
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
       const [diagResult, sysResult] = await Promise.all([
-        diagnosticsFull(),
+        diagnosticsFull(openrouterApiKey),
         systemInfo(),
       ]);
       setReport(diagResult);
@@ -27,7 +29,7 @@ export function useDiagnostics() {
       setLoading(false);
       setCountdown(DIAGNOSTICS_POLL_INTERVAL / 1000);
     }
-  }, []);
+  }, [openrouterApiKey]);
 
   // Auto-refresh polling
   useEffect(() => {
@@ -44,16 +46,17 @@ export function useDiagnostics() {
     };
   }, [refresh]);
 
-  // Action handlers
   const handleAction = useCallback(
     async (command: string) => {
       try {
         switch (command) {
+          case "start-openclaw-gateway":
+            await openclawGatewayRestart();
+            break;
           default:
             console.warn("Unknown diagnostic action:", command);
             return;
         }
-        // Refresh after action
         await refresh();
       } catch (err) {
         console.error("Diagnostic action failed:", err);
