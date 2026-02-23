@@ -1,6 +1,6 @@
 {
   "productName": "Daemon",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "identifier": "com.daemon.desktop",
   "build": {
     "frontendDist": "../dist",
