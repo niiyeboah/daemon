@@ -1,15 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import type { StepStatus } from "@/types";
-import { BASE_MODEL } from "@/store/constants";
 import {
   detectOs,
-  ollamaCheck,
-  ollamaPullModel,
-  ollamaChat,
-  setupInit,
-  setupAlias,
-  onPullProgress,
-  onSetupLog,
 } from "@/lib/tauri";
 
 export interface SetupStep {
@@ -90,12 +82,10 @@ export function useSetup() {
   const [logs, setLogs] = useState<string[]>([]);
   const [detectedOs, setDetectedOs] = useState<string | null>(null);
   const [ollamaReachable, setOllamaReachable] = useState(false);
-  const [selectedBaseModel, setSelectedBaseModel] = useState<string>(BASE_MODEL);
-  const [pullProgress, setPullProgress] = useState<PullProgress>({
-    status: "",
-    percent: 0,
-  });
-  const [testResponse, setTestResponse] = useState<string | null>(null);
+  const selectedBaseModel = "daemon"; // stub
+
+  const pullProgress = { status: "", percent: 0 }; // stub
+  const testResponse = null; // stub
   const logsEndRef = useRef<HTMLDivElement>(null);
 
   const addLog = useCallback((line: string) => {
@@ -131,101 +121,43 @@ export function useSetup() {
           }
 
           case "check-ollama": {
-            addLog("Checking Ollama installation...");
-            const status = await ollamaCheck();
-            if (status.api_reachable) {
-              addLog(`Ollama is running (${status.version ?? "unknown version"})`);
-              setOllamaReachable(true);
-              updateStep(stepIndex, "done");
-              // Skip install step since Ollama is already running
-              updateStep(stepIndex + 1, "done");
-            } else {
-              addLog("Ollama API not reachable");
-              setOllamaReachable(false);
-              updateStep(stepIndex, "done");
-            }
+            addLog("Skipping Ollama check (OpenRouter transition)");
+            setOllamaReachable(true);
+            updateStep(stepIndex, "done");
+            updateStep(stepIndex + 1, "done");
             break;
           }
 
           case "install-ollama": {
-            // This step shows instructions — user clicks "Check again"
-            addLog("Waiting for Ollama installation...");
-            updateStep(stepIndex, "running");
+            // Unused
             break;
           }
 
           case "choose-base-model": {
-            // Selection only; Continue is handled by nextStep
             break;
           }
 
           case "pull-model": {
-            addLog(`Pulling ${selectedBaseModel}...`);
-            const unlisten = await onPullProgress((event) => {
-              const percent =
-                event.total && event.total > 0
-                  ? Math.round((event.completed ?? 0) / event.total * 100)
-                  : 0;
-              setPullProgress({ status: event.status, percent });
-              if (event.status !== pullProgress.status) {
-                addLog(`Pull: ${event.status}`);
-              }
-            });
-            try {
-              await ollamaPullModel(selectedBaseModel);
-              addLog("Model pull complete");
-              updateStep(stepIndex, "done");
-            } finally {
-              unlisten();
-            }
+            addLog("Skipping Model Pull (OpenRouter transition)");
+            updateStep(stepIndex, "done");
             break;
           }
 
           case "create-model": {
-            addLog("Creating Daemon model...");
-            const unlisten = await onSetupLog((event) => {
-              addLog(`[${event.stream}] ${event.line}`);
-            });
-            try {
-              await setupInit(selectedBaseModel);
-              addLog("Daemon model created successfully");
-              updateStep(stepIndex, "done");
-            } finally {
-              unlisten();
-            }
+            addLog("Skipping Model Creation (OpenRouter transition)");
+            updateStep(stepIndex, "done");
             break;
           }
 
           case "test-inference": {
-            addLog("Testing inference...");
-            const response = await ollamaChat(
-              "daemon",
-              [{ role: "user", content: "Hello, who are you?" }],
-              false
-            );
-            setTestResponse(response.message.content);
-            addLog(`Response: ${response.message.content.slice(0, 100)}...`);
-            if (response.tokens_per_second) {
-              addLog(
-                `Speed: ${response.tokens_per_second.toFixed(1)} tokens/sec`
-              );
-            }
+            addLog("Skipping test inference...");
             updateStep(stepIndex, "done");
             break;
           }
 
           case "add-alias": {
-            addLog("Adding shell alias...");
-            const unlistenAlias = await onSetupLog((event) => {
-              addLog(`[${event.stream}] ${event.line}`);
-            });
-            try {
-              await setupAlias();
-              addLog("Shell alias added successfully");
-              updateStep(stepIndex, "done");
-            } finally {
-              unlistenAlias();
-            }
+            addLog("Skipping alias creation...");
+            updateStep(stepIndex, "done");
             break;
           }
 
@@ -246,22 +178,8 @@ export function useSetup() {
 
   const recheckOllama = useCallback(async () => {
     const installStepIndex = steps.findIndex((s) => s.id === "install-ollama");
-    updateStep(installStepIndex, "running");
-    try {
-      const status = await ollamaCheck();
-      if (status.api_reachable) {
-        setOllamaReachable(true);
-        addLog("Ollama is now running!");
-        updateStep(installStepIndex, "done");
-      } else {
-        addLog("Ollama still not reachable. Please start Ollama and try again.");
-        updateStep(installStepIndex, "running");
-      }
-    } catch (err) {
-      addLog(`Check failed: ${err instanceof Error ? err.message : String(err)}`);
-      updateStep(installStepIndex, "error");
-    }
-  }, [steps, updateStep, addLog]);
+    updateStep(installStepIndex, "done");
+  }, [steps, updateStep]);
 
   const retryStep = useCallback(
     (stepIndex: number) => {
@@ -295,7 +213,7 @@ export function useSetup() {
     detectedOs,
     ollamaReachable,
     selectedBaseModel,
-    setSelectedBaseModel,
+    setSelectedBaseModel: () => {}, // stub
     pullProgress,
     testResponse,
     runStep,

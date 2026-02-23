@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import type { DiagnosticsReport, SystemInfo } from "@/types";
-import { diagnosticsFull, systemInfo, ollamaPullModel, setupInit } from "@/lib/tauri";
+import { diagnosticsFull, systemInfo } from "@/lib/tauri";
 
 const DIAGNOSTICS_POLL_INTERVAL = 10_000; // 10 seconds
 
@@ -49,12 +49,6 @@ export function useDiagnostics() {
     async (command: string) => {
       try {
         switch (command) {
-          case "pull-base-model":
-            await ollamaPullModel("qwen2.5-coder:7b");
-            break;
-          case "create-daemon-model":
-            await setupInit();
-            break;
           default:
             console.warn("Unknown diagnostic action:", command);
             return;

@@ -20,8 +20,7 @@ export default function Setup() {
     logsEndRef,
     detectedOs,
     ollamaReachable,
-    selectedBaseModel,
-    setSelectedBaseModel,
+
     pullProgress,
     testResponse,
     runStep,
@@ -81,8 +80,6 @@ export default function Setup() {
 
             {current.id === "choose-base-model" && (
               <ChooseBaseModelStep
-                selectedBaseModel={selectedBaseModel}
-                onSelect={setSelectedBaseModel}
                 onNext={nextStep}
                 status={current.status}
               />
@@ -94,7 +91,6 @@ export default function Setup() {
                 onRun={() => runStep(currentStep)}
                 onNext={nextStep}
                 status={current.status}
-                baseModel={selectedBaseModel}
               />
             )}
 

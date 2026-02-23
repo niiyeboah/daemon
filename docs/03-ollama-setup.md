@@ -231,7 +231,7 @@ PARAMETER top_p 0.9
 PARAMETER num_ctx 32768
 
 SYSTEM """
-You are Daemon, a helpful and concise personal assistant running locally on the user's own hardware. You respect the user's privacy -- no data ever leaves this machine. You answer questions clearly and directly. When you are unsure, you say so. You are friendly but not verbose.
+You are Daemon, a helpful and concise personal assistant running locally on the user's own hardware. You answer questions clearly and directly. When you are unsure, you say so. You are friendly but not verbose.
 """
 ```
 
@@ -322,8 +322,7 @@ MODEL = "qwen2.5-coder:7b"
 
 SYSTEM_PROMPT = (
     "You are Daemon, a helpful and concise personal assistant running locally "
-    "on the user's own hardware. You respect the user's privacy -- no data "
-    "ever leaves this machine. You answer questions clearly and directly. "
+    "on the user's own hardware. You answer questions clearly and directly. "
     "When you are unsure, you say so. You are friendly but not verbose."
 )
 

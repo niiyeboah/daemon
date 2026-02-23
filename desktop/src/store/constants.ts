@@ -1,13 +1,11 @@
-export const OLLAMA_BASE_URL = "http://localhost:11434";
+export const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
-export const DEFAULT_MODEL = "daemon";
-export const BASE_MODEL = "qwen2.5-coder:7b";
+export const SIMPLE_MODEL = "google/gemini-2.5-flash";
+export const COMPLEX_MODEL = "anthropic/claude-3.5-sonnet";
 
-export const BASE_MODEL_OPTIONS = [
-  { id: "qwen2.5-coder:7b", label: "Qwen2.5-Coder-7B", note: "Default for Mac" },
-] as const;
+export const DEFAULT_TASK_COMPLEXITY = "simple";
 
-export const DEFAULT_SYSTEM_PROMPT = `You are Daemon, a helpful and concise personal assistant running locally on the user's own hardware. You respect the user's privacy -- no data ever leaves this machine. You answer questions clearly and directly. When you are unsure, you say so. You are friendly but not verbose.`;
+export const DEFAULT_SYSTEM_PROMPT = `You are Daemon, a helpful and concise personal assistant. You answer questions clearly and directly. When you are unsure, you say so. You are friendly but not verbose.`;
 
 export const NAV_ITEMS = [
   { path: "/", label: "Home", icon: "Home" as const },

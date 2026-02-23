@@ -1,28 +1,31 @@
-import { useAtomValue } from "jotai";
 import { Circle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ollamaStatusAtom, selectedModelAtom } from "@/store/atoms";
+import { useSettings } from "@/hooks/useSettings";
 
 export function StatusBar() {
-  const status = useAtomValue(ollamaStatusAtom);
-  const model = useAtomValue(selectedModelAtom);
+  const { openrouterApiKey, taskComplexity } = useSettings();
+
+  const isConfigured = !!openrouterApiKey;
+
+  // We consider "api_reachable" effectively true if the key exists for the sake of the status bar.
+  // Proper validation happens during chat.
 
   return (
     <div className="flex items-center gap-4 border-t px-4 py-1.5 text-xs text-muted-foreground bg-background">
       <div className="flex items-center gap-1.5">
-        <span>Ollama:</span>
+        <span>OpenRouter:</span>
         <Circle
           className={cn(
             "size-2 fill-current",
-            status.api_reachable ? "text-success" : "text-destructive"
+            isConfigured ? "text-success" : "text-destructive"
           )}
         />
-        <span>{status.api_reachable ? "Running" : "Offline"}</span>
+        <span>{isConfigured ? "Configured" : "Offline / Missing Key"}</span>
       </div>
-      {status.api_reachable && (
+      {isConfigured && (
         <div className="flex items-center gap-1.5">
-          <span>Model:</span>
-          <span className="font-medium text-foreground">{model}</span>
+          <span>Task Complexity:</span>
+          <span className="font-medium text-foreground capitalize">{taskComplexity}</span>
         </div>
       )}
     </div>

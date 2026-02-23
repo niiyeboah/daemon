@@ -132,7 +132,7 @@ sudo docker run -d --network=host \\
           You now have a complete, self-hosted personal assistant.
         </p>
         <p className="mt-1 text-muted-foreground">
-          Daemon runs on your hardware, respects your privacy, and can be
+          Daemon runs on your hardware and can be
           extended in any direction you choose.
         </p>
       </div>

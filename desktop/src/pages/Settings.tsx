@@ -4,13 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSettings } from "@/hooks/useSettings";
 import {
-  ollamaListModels,
   openclawGetApiKeys,
   openclawRemoveApiKey,
   openclawSetApiKey,
 } from "@/lib/tauri";
 import { cn } from "@/lib/utils";
-import type { ApiKeysStatus, ModelInfo, Theme } from "@/types";
+import type { ApiKeysStatus, Theme } from "@/types";
 
 const API_KEY_PROVIDERS = [
   {
@@ -39,15 +38,16 @@ const THEME_OPTIONS: { value: Theme; label: string; icon: React.ElementType }[] 
 export default function Settings() {
   const {
     theme,
-    defaultModel,
     systemPrompt,
+    openrouterApiKey,
+    taskComplexity,
     loaded,
     setTheme,
-    setDefaultModel,
     setSystemPrompt,
+    setOpenrouterApiKey,
+    setTaskComplexity,
   } = useSettings();
 
-  const [models, setModels] = useState<ModelInfo[]>([]);
   const [promptDraft, setPromptDraft] = useState(systemPrompt);
   const [apiKeys, setApiKeys] = useState<ApiKeysStatus | null>(null);
   const [apiKeyDrafts, setApiKeyDrafts] = useState<Record<string, string>>({});
@@ -58,12 +58,6 @@ export default function Settings() {
     openclawGetApiKeys()
       .then(setApiKeys)
       .catch(() => setApiKeys(null));
-  }, []);
-
-  useEffect(() => {
-    ollamaListModels()
-      .then(setModels)
-      .catch(() => setModels([]));
   }, []);
 
   useEffect(() => {
@@ -113,30 +107,53 @@ export default function Settings() {
           </CardContent>
         </Card>
 
-        {/* Default Model */}
+        {/* Task Complexity Default */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Default Model</CardTitle>
+            <CardTitle className="text-base">Default Task Complexity</CardTitle>
           </CardHeader>
           <CardContent>
             <select
-              value={defaultModel}
-              onChange={(e) => setDefaultModel(e.target.value)}
+              value={taskComplexity}
+              onChange={(e) => setTaskComplexity(e.target.value as "simple" | "complex")}
               className="w-full rounded-md border bg-background px-3 py-2 text-sm"
             >
-              {models.length > 0 ? (
-                models.map((m) => (
-                  <option key={m.name} value={m.name}>
-                    {m.name}
-                  </option>
-                ))
-              ) : (
-                <option value={defaultModel}>{defaultModel}</option>
-              )}
+              <option value="simple">Simple Task (Gemini 2.5 Flash)</option>
+              <option value="complex">Complex Task (Claude 3.5 Sonnet)</option>
             </select>
             <p className="text-xs text-muted-foreground mt-2">
-              Model used for new chat conversations.
+              Affects which model is used for your requests.
             </p>
+          </CardContent>
+        </Card>
+
+        {/* OpenRouter API Key */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">OpenRouter Settings</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">API Key</label>
+              <input
+                type="password"
+                placeholder="sk-or-v1-..."
+                value={openrouterApiKey}
+                onChange={(e) => setOpenrouterApiKey(e.target.value)}
+                className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+              />
+              <p className="text-xs text-muted-foreground">
+                Required for cloud completions. Get one at{" "}
+                <a
+                  href="https://openrouter.ai/keys"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline"
+                >
+                  openrouter.ai/keys
+                </a>
+              </p>
+            </div>
           </CardContent>
         </Card>
 

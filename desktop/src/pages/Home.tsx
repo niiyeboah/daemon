@@ -1,30 +1,20 @@
 import { useNavigate } from "react-router-dom";
-import { useAtomValue } from "jotai";
+
 import { Wand2, MessageSquare, Circle, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ollamaStatusAtom, modelsAtom } from "@/store/atoms";
+import { useSettings } from "@/hooks/useSettings";
 import { cn } from "@/lib/utils";
 
 export default function Home() {
   const navigate = useNavigate();
-  const status = useAtomValue(ollamaStatusAtom);
-  const models = useAtomValue(modelsAtom);
-
-  const hasDaemonModel = models.some(
-    (m) => m.name === "daemon" || m.name.startsWith("daemon:")
-  );
+  const { openrouterApiKey } = useSettings();
 
   const checks = [
     {
-      label: "Ollama API",
-      ok: status.api_reachable,
-      detail: status.api_reachable ? "Running" : "Offline",
-    },
-    {
-      label: "Daemon model",
-      ok: hasDaemonModel,
-      detail: hasDaemonModel ? "Available" : "Not found",
+      label: "OpenRouter API Key",
+      ok: !!openrouterApiKey,
+      detail: openrouterApiKey ? "Configured" : "Missing",
     },
   ];
 
@@ -117,9 +107,9 @@ export default function Home() {
               variant="outline"
               size="sm"
               className="w-full mt-4"
-              onClick={() => navigate("/setup")}
+              onClick={() => navigate("/settings")}
             >
-              Run Setup to fix issues
+              Go to Settings to add key
             </Button>
           )}
         </CardContent>

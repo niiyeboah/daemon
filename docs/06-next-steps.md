@@ -98,4 +98,4 @@ If you later add an eGPU enclosure or move to a machine with a discrete NVIDIA G
 
 ---
 
-You now have a complete, self-hosted personal assistant. Daemon runs on your hardware, respects your privacy, and can be extended in any direction you choose. Enjoy building.
+You now have a complete, self-hosted personal assistant. Daemon runs on your hardware and can be extended in any direction you choose. Enjoy building.

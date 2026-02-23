@@ -1,8 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import type {
-  OllamaStatus,
-  ModelInfo,
   Message,
   ChatResponse,
   ChatTokenEvent,
@@ -11,38 +9,23 @@ import type {
   SetupLogEvent,
   DiagnosticsReport,
   SystemInfo,
-  RunningModel,
   OpenClawStatus,
   OpenClawLogEvent,
   OpenClawQrEvent,
   ApiKeysStatus,
 } from "@/types";
 
-// Ollama commands
+// OpenRouter commands
 
-export async function ollamaCheck(): Promise<OllamaStatus> {
-  return invoke("ollama_check");
-}
-
-export async function ollamaListModels(): Promise<ModelInfo[]> {
-  return invoke("ollama_list_models");
-}
-
-export async function ollamaPullModel(model: string): Promise<void> {
-  return invoke("ollama_pull_model", { model });
-}
-
-export async function ollamaChat(
+export async function openrouterChat(
   model: string,
   messages: Message[],
+  apiKey: string,
   stream: boolean
 ): Promise<ChatResponse> {
-  return invoke("ollama_chat", { model, messages, stream });
+  return invoke("openrouter_chat", { model, messages, apiKey, stream });
 }
 
-export async function ollamaRunningModels(): Promise<RunningModel[]> {
-  return invoke("ollama_running_models");
-}
 
 // Setup commands
 

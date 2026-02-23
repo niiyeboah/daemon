@@ -1,8 +1,8 @@
 mod commands;
 
 use commands::diagnostics;
-use commands::ollama;
 use commands::openclaw;
+use commands::openrouter;
 use commands::setup;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -12,11 +12,7 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
-            ollama::ollama_check,
-            ollama::ollama_list_models,
-            ollama::ollama_pull_model,
-            ollama::ollama_chat,
-            ollama::ollama_running_models,
+            openrouter::openrouter_chat,
             setup::detect_os,
             setup::setup_check,
             setup::setup_init,

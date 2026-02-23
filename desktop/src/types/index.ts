@@ -1,15 +1,3 @@
-export interface OllamaStatus {
-  installed: boolean;
-  api_reachable: boolean;
-  version: string | null;
-}
-
-export interface ModelInfo {
-  name: string;
-  size: number;
-  modified_at: string;
-}
-
 export interface Message {
   role: "user" | "assistant" | "system";
   content: string;
@@ -94,12 +82,6 @@ export interface SystemInfo {
   cpu_count: number;
 }
 
-export interface RunningModel {
-  name: string;
-  size: number | null;
-  expires_at: string | null;
-}
-
 // OpenClaw types
 
 export interface OpenClawStatus {
@@ -132,8 +114,11 @@ export interface ApiKeysStatus {
 
 export type Theme = "light" | "dark" | "system";
 
+export type TaskComplexity = "simple" | "complex";
+
 export interface AppSettings {
   theme: Theme;
-  defaultModel: string;
   systemPrompt: string;
+  openrouterApiKey: string;
+  taskComplexity: TaskComplexity;
 }

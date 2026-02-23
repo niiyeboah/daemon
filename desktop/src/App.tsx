@@ -7,19 +7,13 @@ import Chat from "@/pages/Chat";
 import Diagnostics from "@/pages/Diagnostics";
 import Settings from "@/pages/Settings";
 import WhatsApp from "@/pages/WhatsApp";
-import { useOllamaStatus, useOllamaModels } from "@/hooks/useOllama";
 
-function StatusPoller() {
-  useOllamaStatus();
-  useOllamaModels();
-  return null;
-}
 
 function App() {
   return (
     <JotaiProvider>
       <BrowserRouter>
-        <StatusPoller />
+
         <Routes>
           <Route element={<AppShell />}>
             <Route path="/" element={<Home />} />

@@ -1,20 +1,22 @@
 import { useState, useCallback, useEffect } from "react";
 import { load } from "@tauri-apps/plugin-store";
-import type { Theme } from "@/types";
-import { DEFAULT_MODEL, DEFAULT_SYSTEM_PROMPT } from "@/store/constants";
+import type { Theme, TaskComplexity } from "@/types";
+import { DEFAULT_TASK_COMPLEXITY, DEFAULT_SYSTEM_PROMPT } from "@/store/constants";
 
 const STORE_PATH = "settings.json";
 
 interface SettingsState {
   theme: Theme;
-  defaultModel: string;
   systemPrompt: string;
+  openrouterApiKey: string;
+  taskComplexity: TaskComplexity;
 }
 
 const DEFAULTS: SettingsState = {
   theme: "system",
-  defaultModel: DEFAULT_MODEL,
   systemPrompt: DEFAULT_SYSTEM_PROMPT,
+  openrouterApiKey: "",
+  taskComplexity: DEFAULT_TASK_COMPLEXITY as TaskComplexity,
 };
 
 export function useSettings() {
@@ -27,13 +29,15 @@ export function useSettings() {
       try {
         const store = await load(STORE_PATH, { defaults: {}, autoSave: true });
         const theme = await store.get<Theme>("theme");
-        const defaultModel = await store.get<string>("defaultModel");
         const systemPrompt = await store.get<string>("systemPrompt");
+        const openrouterApiKey = await store.get<string>("openrouterApiKey");
+        const taskComplexity = await store.get<TaskComplexity>("taskComplexity");
 
         setSettings({
           theme: theme ?? DEFAULTS.theme,
-          defaultModel: defaultModel ?? DEFAULTS.defaultModel,
           systemPrompt: systemPrompt ?? DEFAULTS.systemPrompt,
+          openrouterApiKey: openrouterApiKey ?? DEFAULTS.openrouterApiKey,
+          taskComplexity: taskComplexity ?? DEFAULTS.taskComplexity,
         });
       } catch (err) {
         console.error("Failed to load settings:", err);
@@ -67,13 +71,18 @@ export function useSettings() {
     [updateSetting]
   );
 
-  const setDefaultModel = useCallback(
-    (model: string) => updateSetting("defaultModel", model),
+  const setSystemPrompt = useCallback(
+    (prompt: string) => updateSetting("systemPrompt", prompt),
     [updateSetting]
   );
 
-  const setSystemPrompt = useCallback(
-    (prompt: string) => updateSetting("systemPrompt", prompt),
+  const setOpenrouterApiKey = useCallback(
+    (key: string) => updateSetting("openrouterApiKey", key),
+    [updateSetting]
+  );
+
+  const setTaskComplexity = useCallback(
+    (complexity: TaskComplexity) => updateSetting("taskComplexity", complexity),
     [updateSetting]
   );
 
@@ -81,8 +90,9 @@ export function useSettings() {
     ...settings,
     loaded,
     setTheme,
-    setDefaultModel,
     setSystemPrompt,
+    setOpenrouterApiKey,
+    setTaskComplexity,
   };
 }
 

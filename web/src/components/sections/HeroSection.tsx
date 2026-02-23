@@ -26,9 +26,8 @@ export function HeroSection() {
         Daemon Setup Guide
       </h1>
       <p className="mt-4 text-lg text-muted-foreground">
-        Daemon is a local, privacy-first personal assistant bot that runs
-        entirely on your own hardware. No cloud APIs, no subscriptions, no
-        data leaving your network.
+        Daemon is a personal assistant bot that runs entirely on your own
+        hardware while leveraging powerful, scalable open cloud APIs.
       </p>
       <p className="mt-2 text-muted-foreground">
         This guide walks you through every step — from unboxing the hardware to
