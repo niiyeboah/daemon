@@ -327,7 +327,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout main
           git pull origin main
-          git merge "$BRANCH" -m "chore(desktop): merge $BRANCH into main"
+          git merge "origin/$BRANCH" -m "chore(desktop): merge $BRANCH into main"
           git push origin main
 
   trigger-web-deploy:
