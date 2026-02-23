@@ -73,22 +73,11 @@ struct TestChatMessage {
 
 pub fn check_binary_in_path(name: &str) -> Option<String> {
     // On macOS, GUI apps inherit a minimal PATH that often excludes
-    // /usr/local/bin, /opt/homebrew/bin, etc. Augment PATH so `which`
-    // can find binaries installed by Homebrew / Ollama installer.
+    // directories added by the user's shell profile (Homebrew, nvm, cargo,
+    // openclaw, etc.). Resolve the full login-shell PATH so `which` can
+    // find binaries the same way a terminal would.
     let extended_path = if cfg!(target_os = "macos") {
-        let current = std::env::var("PATH").unwrap_or_default();
-        let extras = [
-            "/usr/local/bin",
-            "/opt/homebrew/bin",
-            "/opt/homebrew/sbin",
-        ];
-        let mut parts: Vec<&str> = current.split(':').collect();
-        for extra in &extras {
-            if !parts.contains(extra) {
-                parts.push(extra);
-            }
-        }
-        Some(parts.join(":"))
+        resolve_login_shell_path()
     } else {
         None
     };
@@ -118,6 +107,54 @@ pub fn check_binary_in_path(name: &str) -> Option<String> {
         }
         _ => None,
     }
+}
+
+/// Resolve the full PATH from the user's default login shell.
+///
+/// macOS GUI apps get a minimal PATH (/usr/bin:/bin:/usr/sbin:/sbin).
+/// By spawning a login shell (`$SHELL -lc 'echo $PATH'`) we pick up
+/// everything the user has configured in .zshrc, .bash_profile, etc.
+/// (nvm, Homebrew, cargo, ~/.openclaw/bin, and so on).
+///
+/// Falls back to appending well-known directories if the shell approach fails.
+pub fn resolve_login_shell_path() -> Option<String> {
+    let shell = std::env::var("SHELL").unwrap_or_else(|_| "/bin/zsh".to_string());
+    let current = std::env::var("PATH").unwrap_or_default();
+
+    // Try to get the full PATH from the user's login shell.
+    if let Ok(output) = std::process::Command::new(&shell)
+        .args(["-lc", "echo $PATH"])
+        .output()
+    {
+        if output.status.success() {
+            let shell_path = String::from_utf8_lossy(&output.stdout).trim().to_string();
+            if !shell_path.is_empty() {
+                // Merge: start with shell PATH, then append any entries from the
+                // current (GUI) PATH that aren't already present.
+                let mut parts: Vec<&str> = shell_path.split(':').collect();
+                for entry in current.split(':') {
+                    if !entry.is_empty() && !parts.contains(&entry) {
+                        parts.push(entry);
+                    }
+                }
+                return Some(parts.join(":"));
+            }
+        }
+    }
+
+    // Fallback: manually append common install directories.
+    let extras = [
+        "/usr/local/bin",
+        "/opt/homebrew/bin",
+        "/opt/homebrew/sbin",
+    ];
+    let mut parts: Vec<&str> = current.split(':').collect();
+    for extra in &extras {
+        if !parts.contains(extra) {
+            parts.push(extra);
+        }
+    }
+    Some(parts.join(":"))
 }
 
 #[tauri::command]

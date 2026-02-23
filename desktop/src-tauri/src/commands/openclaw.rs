@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use tauri::{AppHandle, Emitter};
 
-use super::diagnostics::{check_binary_in_path, OPENCLAW_BASE};
+use super::diagnostics::{check_binary_in_path, resolve_login_shell_path, OPENCLAW_BASE};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct OpenClawStatus {
@@ -158,10 +158,20 @@ async fn spawn_and_stream(
     use tokio::io::{AsyncBufReadExt, BufReader};
     use tokio::process::Command;
 
-    let mut child = Command::new(program)
-        .args(args)
+    let mut cmd = Command::new(program);
+    cmd.args(args)
         .stdout(std::process::Stdio::piped())
-        .stderr(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped());
+
+    // On macOS, GUI apps get a minimal PATH. Use the login shell PATH so we
+    // can find binaries like openclaw, ollama, etc.
+    if cfg!(target_os = "macos") {
+        if let Some(ref path) = resolve_login_shell_path() {
+            cmd.env("PATH", path);
+        }
+    }
+
+    let mut child = cmd
         .spawn()
         .map_err(|e| format!("Failed to spawn {} {:?}: {}", program, args, e))?;
 
@@ -310,10 +320,18 @@ pub async fn openclaw_connect_whatsapp(app: AppHandle) -> Result<(), String> {
         );
     }
 
-    let mut child = Command::new("openclaw")
-        .args(["channels", "login", "--channel", "whatsapp"])
+    let mut cmd = Command::new("openclaw");
+    cmd.args(["channels", "login", "--channel", "whatsapp"])
         .stdout(std::process::Stdio::piped())
-        .stderr(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped());
+
+    if cfg!(target_os = "macos") {
+        if let Some(ref path) = resolve_login_shell_path() {
+            cmd.env("PATH", path);
+        }
+    }
+
+    let mut child = cmd
         .spawn()
         .map_err(|e| format!("Failed to spawn openclaw channels login: {}", e))?;
 
@@ -432,8 +450,16 @@ pub async fn openclaw_connect_whatsapp(app: AppHandle) -> Result<(), String> {
 /// its own error messages, creating an infinite feedback loop.
 async fn configure_whatsapp_self_chat() -> Result<(), String> {
     // Get the linked phone number
-    let output = tokio::process::Command::new("openclaw")
-        .args(["directory", "self", "--channel", "whatsapp", "--json"])
+    let mut cmd = tokio::process::Command::new("openclaw");
+    cmd.args(["directory", "self", "--channel", "whatsapp", "--json"]);
+
+    if cfg!(target_os = "macos") {
+        if let Some(ref path) = resolve_login_shell_path() {
+            cmd.env("PATH", path);
+        }
+    }
+
+    let output = cmd
         .output()
         .await
         .map_err(|e| format!("Failed to run directory self: {}", e))?;
