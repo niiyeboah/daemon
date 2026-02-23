@@ -16,6 +16,7 @@ export interface SetupStep {
   label: string;
   description: string;
   status: StepStatus;
+  optional?: boolean;
 }
 
 const INITIAL_STEPS: SetupStep[] = [
