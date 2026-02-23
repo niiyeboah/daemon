@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::time::Instant;
 use sysinfo::{Disks, System};
 
-use super::ollama::OLLAMA_BASE;
+pub const OLLAMA_BASE: &str = "http://127.0.0.1:11434";
 
 pub const OPENCLAW_BASE: &str = "http://127.0.0.1:18789";
 

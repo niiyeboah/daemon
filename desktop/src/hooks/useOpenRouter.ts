@@ -4,7 +4,7 @@ import { load } from "@tauri-apps/plugin-store";
 import { chatMessagesAtom, chatLoadingAtom } from "@/store/atoms";
 import { openrouterChat, onChatToken } from "@/lib/tauri";
 import { useSettings } from "@/hooks/useSettings";
-import { SIMPLE_MODEL, COMPLEX_MODEL, DEFAULT_TASK_COMPLEXITY } from "@/store/constants";
+import { SIMPLE_MODEL, COMPLEX_MODEL, DEFAULT_TASK_COMPLEXITY, DEFAULT_SYSTEM_PROMPT } from "@/store/constants";
 import type { ChatMessage, Message } from "@/types";
 
 const CHAT_STORE_PATH = "chat.json";
@@ -93,10 +93,15 @@ export function useOpenRouterChat() {
       });
 
       try {
-        // Build message history for API
-        const apiMessages: Message[] = messages
-          .concat(userMsg)
-          .map((m) => ({ role: m.role, content: m.content }));
+        // Build message history for API (System Prompt + Last 15 messages)
+        const chatContext = messages.slice(-15);
+        const apiMessages: Message[] = [
+          { role: "system", content: DEFAULT_SYSTEM_PROMPT },
+          ...chatContext.concat(userMsg).map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
+        ];
 
         const response = await openrouterChat(model, apiMessages, openrouterApiKey, true);
 

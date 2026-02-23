@@ -10,6 +10,7 @@ import {
   onOpenClawLog,
   onOpenClawQr,
 } from "@/lib/tauri";
+import { useSettings } from "@/hooks/useSettings";
 
 export interface WhatsAppStep {
   id: string;
@@ -79,6 +80,7 @@ export function useWhatsApp() {
   const [gatewayRunning, setGatewayRunning] = useState(false);
   const [qrData, setQrData] = useState<string | null>(null);
   const logsEndRef = useRef<HTMLDivElement>(null);
+  const { openrouterApiKey } = useSettings();
 
   const addLog = useCallback((line: string) => {
     setLogs((prev) => [...prev, line]);
@@ -230,8 +232,13 @@ export function useWhatsApp() {
 
           case "configure-model": {
             addLog("Configuring Daemon as default model...");
-            await openclawConfigureModel("daemon");
-            addLog("Model configured: ollama/daemon (provider + auth-profiles written)");
+            if (!openrouterApiKey) {
+              addLog("Error: OpenRouter API key is missing. Please configure it in Settings first.");
+              updateStep(stepIndex, "error");
+              break;
+            }
+            await openclawConfigureModel("daemon", openrouterApiKey);
+            addLog("Model configured: openrouter/daemon (provider + auth-profiles written)");
             updateStep(stepIndex, "done");
             break;
           }
@@ -277,7 +284,7 @@ export function useWhatsApp() {
         updateStep(stepIndex, "error");
       }
     },
-    [steps, updateStep, addLog, openclawInstalled, gatewayRunning]
+    [steps, updateStep, addLog, openclawInstalled, gatewayRunning, openrouterApiKey]
   );
 
   const recheckOpenClaw = useCallback(async () => {

@@ -93,8 +93,8 @@ export async function openclawConnectWhatsapp(): Promise<void> {
   return invoke("openclaw_connect_whatsapp");
 }
 
-export async function openclawConfigureModel(model: string): Promise<void> {
-  return invoke("openclaw_configure_model", { model });
+export async function openclawConfigureModel(model: string, apiKey: string): Promise<void> {
+  return invoke("openclaw_configure_model", { model, apiKey });
 }
 
 export async function openclawGatewayRestart(): Promise<void> {

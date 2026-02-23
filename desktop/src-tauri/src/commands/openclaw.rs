@@ -525,7 +525,7 @@ async fn configure_whatsapp_self_chat() -> Result<(), String> {
 }
 
 #[tauri::command]
-pub async fn openclaw_configure_model(model: String) -> Result<(), String> {
+pub async fn openclaw_configure_model(model: String, api_key: String) -> Result<(), String> {
     let config_path = openclaw_config_path();
 
     // Ensure parent directory exists
@@ -559,9 +559,9 @@ pub async fn openclaw_configure_model(model: String) -> Result<(), String> {
     obj.remove("contextWindow");
     obj.remove("maxTokens");
 
-    // Register Ollama as a provider with explicit model definition so OpenClaw
-    // doesn't fall back to Anthropic. Uses openai-completions API which Ollama supports.
-    let model_ref = format!("ollama/{}", model);
+    // Register OpenRouter as a provider with explicit model definition.
+    // OpenRouter uses standard openai-completions API.
+    let model_ref = format!("openrouter/{}", model);
     let models_section = obj
         .entry("models")
         .or_insert_with(|| serde_json::json!({}))
@@ -574,14 +574,14 @@ pub async fn openclaw_configure_model(model: String) -> Result<(), String> {
         .as_object_mut()
         .ok_or("models.providers must be an object")?;
     providers.insert(
-        "ollama".to_string(),
+        "openrouter".to_string(),
         serde_json::json!({
-            "baseUrl": "http://127.0.0.1:11434/v1",
-            "apiKey": "ollama",
+            "baseUrl": "https://openrouter.ai/api/v1",
+            "apiKey": "openrouter",
             "api": "openai-completions",
             "models": [{
                 "id": model,
-                "name": "Daemon",
+                "name": "Daemon (OpenRouter)",
                 "reasoning": false,
                 "input": ["text"],
                 "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
@@ -591,7 +591,7 @@ pub async fn openclaw_configure_model(model: String) -> Result<(), String> {
         }),
     );
 
-    // Set Ollama model as the default under agents.defaults
+    // Set OpenRouter model as the default under agents.defaults
     let agents = obj
         .entry("agents")
         .or_insert_with(|| serde_json::json!({}))
@@ -612,8 +612,7 @@ pub async fn openclaw_configure_model(model: String) -> Result<(), String> {
     std::fs::write(&config_path, content)
         .map_err(|e| format!("Failed to write config: {}", e))?;
 
-    // Write auth-profiles.json for the Ollama provider so OpenClaw doesn't
-    // error with "No API key found for provider". Ollama doesn't validate keys.
+    // Write auth-profiles.json for the OpenRouter provider so OpenClaw authenticates correctly.
     let agent_dir = dirs::home_dir()
         .unwrap_or_else(|| PathBuf::from("~"))
         .join(".openclaw")
@@ -634,11 +633,11 @@ pub async fn openclaw_configure_model(model: String) -> Result<(), String> {
     };
     let auth_obj = auth.as_object_mut().ok_or("Auth profiles must be a JSON object")?;
     auth_obj.insert(
-        "ollama:local".to_string(),
+        "openrouter:local".to_string(),
         serde_json::json!({
-            "provider": "ollama",
+            "provider": "openrouter",
             "mode": "api_key",
-            "key": "ollama"
+            "key": api_key.trim()
         }),
     );
     let auth_content = serde_json::to_string_pretty(&auth)
