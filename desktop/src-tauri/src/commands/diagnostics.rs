@@ -71,15 +71,39 @@ struct TestChatMessage {
     content: String,
 }
 
-fn check_binary_in_path(name: &str) -> Option<String> {
+pub fn check_binary_in_path(name: &str) -> Option<String> {
+    // On macOS, GUI apps inherit a minimal PATH that often excludes
+    // /usr/local/bin, /opt/homebrew/bin, etc. Augment PATH so `which`
+    // can find binaries installed by Homebrew / Ollama installer.
+    let extended_path = if cfg!(target_os = "macos") {
+        let current = std::env::var("PATH").unwrap_or_default();
+        let extras = [
+            "/usr/local/bin",
+            "/opt/homebrew/bin",
+            "/opt/homebrew/sbin",
+        ];
+        let mut parts: Vec<&str> = current.split(':').collect();
+        for extra in &extras {
+            if !parts.contains(extra) {
+                parts.push(extra);
+            }
+        }
+        Some(parts.join(":"))
+    } else {
+        None
+    };
+
     let cmd = if cfg!(target_os = "windows") {
         std::process::Command::new("where")
             .arg(name)
             .output()
     } else {
-        std::process::Command::new("which")
-            .arg(name)
-            .output()
+        let mut c = std::process::Command::new("which");
+        c.arg(name);
+        if let Some(ref p) = extended_path {
+            c.env("PATH", p);
+        }
+        c.output()
     };
 
     match cmd {

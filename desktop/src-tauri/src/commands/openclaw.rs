@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use tauri::{AppHandle, Emitter};
 
-use super::diagnostics::OPENCLAW_BASE;
+use super::diagnostics::{check_binary_in_path, OPENCLAW_BASE};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct OpenClawStatus {
@@ -24,27 +24,7 @@ pub struct OpenClawQrEvent {
 }
 
 fn find_openclaw() -> Option<String> {
-    let cmd = if cfg!(target_os = "windows") {
-        std::process::Command::new("where")
-            .arg("openclaw")
-            .output()
-    } else {
-        std::process::Command::new("which")
-            .arg("openclaw")
-            .output()
-    };
-
-    match cmd {
-        Ok(output) if output.status.success() => {
-            let path = String::from_utf8_lossy(&output.stdout).trim().to_string();
-            if path.is_empty() {
-                None
-            } else {
-                Some(path.lines().next().unwrap_or(&path).to_string())
-            }
-        }
-        _ => None,
-    }
+    check_binary_in_path("openclaw")
 }
 
 fn openclaw_config_path() -> PathBuf {
