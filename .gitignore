@@ -35,3 +35,6 @@ desktop/src-tauri/target/
 # AI Agents
 .cursor
 .claude
+.agent
+.agents
+skills

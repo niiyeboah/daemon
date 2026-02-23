@@ -1,9 +1,4 @@
 
-
-interface ConnectionStatusProps {
-  onReconnect: () => void;
-}
-
-export function ConnectionStatus(_props: ConnectionStatusProps) {
+export function ConnectionStatus() {
   return null;
 }
