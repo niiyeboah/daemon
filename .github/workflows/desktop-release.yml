@@ -28,6 +28,7 @@ jobs:
       tag: ${{ steps.bump.outputs.tag }}
       version: ${{ steps.bump.outputs.version }}
       branch: ${{ steps.bump.outputs.branch }}
+      skip_to_merge: ${{ steps.bump.outputs.skip_to_merge }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -56,7 +57,16 @@ jobs:
             --jq "[.[] | select(.tag_name == \"$TAG\")]" 2>/dev/null || echo "[]")
           PUBLISHED=$(echo "$RELEASE_JSON" | jq '[.[] | select(.draft == false)] | length')
           if [ "$PUBLISHED" -gt 0 ]; then
-            echo "::error::A published release for $TAG already exists. Merge the release branch into main (or delete the existing release) before running this workflow again."
+            # Check if this is a retry (release branch still exists = merge hasn't happened)
+            if git ls-remote --exit-code --heads origin "$BRANCH" &>/dev/null; then
+              echo "Published release for $TAG exists but release branch $BRANCH hasn't been merged. Skipping to merge."
+              echo "tag=$TAG" >> $GITHUB_OUTPUT
+              echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+              echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+              echo "skip_to_merge=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+            echo "::error::A published release for $TAG already exists and has been merged. Bump the version before running this workflow again."
             exit 1
           fi
           # Clean up orphaned draft releases from previous failed runs
@@ -67,6 +77,7 @@ jobs:
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+          echo "skip_to_merge=false" >> $GITHUB_OUTPUT
           jq --arg v "$NEW_VERSION" '.version = $v' desktop/src-tauri/tauri.conf.json > desktop/src-tauri/tauri.conf.json.tmp && mv desktop/src-tauri/tauri.conf.json.tmp desktop/src-tauri/tauri.conf.json
           jq --arg v "$NEW_VERSION" '.version = $v' desktop/package.json > desktop/package.json.tmp && mv desktop/package.json.tmp desktop/package.json
           git config user.name "github-actions[bot]"
@@ -80,6 +91,7 @@ jobs:
 
   lint:
     needs: bump-version
+    if: ${{ needs.bump-version.outputs.skip_to_merge != 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -107,6 +119,7 @@ jobs:
 
   create-release:
     needs: bump-version
+    if: ${{ needs.bump-version.outputs.skip_to_merge != 'true' }}
     runs-on: ubuntu-latest
     outputs:
       release_id: ${{ steps.create-release.outputs.release_id }}
@@ -311,6 +324,14 @@ jobs:
 
   merge-to-main:
     needs: [publish-release, bump-version]
+    # Run if bump-version succeeded AND either publish-release succeeded (normal)
+    # or we're retrying after a prior publish (skip_to_merge). This uses always()
+    # so the job isn't auto-skipped when publish-release is skipped in retry mode.
+    if: >-
+      ${{ always()
+        && needs.bump-version.result == 'success'
+        && (needs.publish-release.result == 'success' || needs.bump-version.outputs.skip_to_merge == 'true')
+      }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -329,9 +350,11 @@ jobs:
           git pull origin main
           git merge "origin/$BRANCH" -m "chore(desktop): merge $BRANCH into main"
           git push origin main
+          git push origin --delete "$BRANCH" || true
 
   trigger-web-deploy:
     needs: [merge-to-main, bump-version]
+    if: ${{ always() && needs.merge-to-main.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Trigger web deploy
