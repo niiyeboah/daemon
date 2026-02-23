@@ -8,7 +8,7 @@ import { HeroSection } from '@/components/sections/HeroSection'
 import { HardwareSection } from '@/components/sections/HardwareSection'
 import { OsSetupSection } from '@/components/sections/OsSetupSection'
 import { PostInstallSection } from '@/components/sections/PostInstallSection'
-import { OllamaSection } from '@/components/sections/OllamaSection'
+import { OpenRouterSection } from '@/components/sections/OpenRouterSection'
 import { SecuritySection } from '@/components/sections/SecuritySection'
 import { TroubleshootingSection } from '@/components/sections/TroubleshootingSection'
 import { NextStepsSection } from '@/components/sections/NextStepsSection'
@@ -68,7 +68,7 @@ function App() {
             <HardwareSection />
             <OsSetupSection />
             <PostInstallSection />
-            <OllamaSection />
+            <OpenRouterSection />
             <SecuritySection />
             <TroubleshootingSection />
             <OpenClawSection />

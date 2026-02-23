@@ -10,24 +10,6 @@ export function OsSetupSection() {
 
       {/* macOS */}
       <OsFilter os="macos">
-        <p className="mt-2 text-muted-foreground">
-          On macOS, the setup is straightforward since Ollama has a native
-          installer.
-        </p>
-
-        <h3 className="mt-6 text-xl font-semibold">Install Ollama</h3>
-        <p className="mt-2 text-muted-foreground">
-          Download from{' '}
-          <a href="https://ollama.com" className="underline" target="_blank" rel="noopener noreferrer">ollama.com</a>{' '}
-          or install via Homebrew:
-        </p>
-        <CodeBlock language="bash" code="brew install ollama" />
-        <CodeBlock language="bash" code="ollama --version" />
-
-        <h3 className="mt-6 text-xl font-semibold">Pull the Base Model</h3>
-        <CodeBlock language="bash" code="ollama pull qwen2.5-coder:7b" />
-        <CodeBlock language="bash" code="ollama list" />
-
         <h3 className="mt-6 text-xl font-semibold">Install Go</h3>
         <p className="mt-2 text-muted-foreground">Install Go 1.21+ via Homebrew or from go.dev:</p>
         <CodeBlock language="bash" code="brew install go" />
@@ -48,24 +30,6 @@ export function OsSetupSection() {
           The Beelink S13 Pro comes preloaded with <strong>Windows</strong>, so
           this is the simplest path. You need Windows 10 or 11 (64-bit).
         </p>
-
-        <h3 className="mt-6 text-xl font-semibold">Install Ollama for Windows</h3>
-        <ol className="mt-3 list-decimal space-y-2 pl-6 text-muted-foreground">
-          <li>
-            Go to <a href="https://ollama.com" className="underline" target="_blank" rel="noopener noreferrer">ollama.com</a> and
-            download the Windows installer.
-          </li>
-          <li>Run the installer. Ollama will be added to your PATH.</li>
-          <li>Open PowerShell and verify:</li>
-        </ol>
-        <CodeBlock language="powershell" code="ollama --version" />
-
-        <h3 className="mt-6 text-xl font-semibold">Pull the Base Model</h3>
-        <CodeBlock language="powershell" code="ollama pull qwen2.5-coder:7b" />
-        <p className="text-sm text-muted-foreground">
-          Downloads about 1 GB. Confirm with:
-        </p>
-        <CodeBlock language="powershell" code="ollama list" />
 
         <h3 className="mt-6 text-xl font-semibold">Install Go</h3>
         <p className="mt-2 text-muted-foreground">
@@ -156,7 +120,7 @@ export function OsSetupSection() {
           For the daemon-setup CLI, download{' '}
           <a href={CLI_BUILD_URLS.linuxAmd64} className="underline" target="_blank" rel="noopener noreferrer">daemon-setup-linux-amd64</a>{' '}
           or see <a href={GITHUB_RELEASES_LATEST_URL} className="underline" target="_blank" rel="noopener noreferrer">GitHub Releases</a>.
-          Or build from source in the Ollama section.
+          Or build from source.
         </p>
       </OsFilter>
     </section>

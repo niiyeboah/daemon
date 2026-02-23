@@ -13,19 +13,15 @@ export function SecuritySection() {
 
       <OsFilter os="windows">
         <InfoBox variant="note">
-          Windows Firewall is enabled by default. Ollama only listens on
-          localhost, so no additional firewall configuration is typically
-          needed. If you expose Ollama to your LAN, add a Windows Firewall
-          rule to allow port 11434 from your local subnet only.
+          Windows Firewall is enabled by default. If you expose Daemon as a
+          server to your LAN, add a Windows Firewall rule to allow traffic.
         </InfoBox>
       </OsFilter>
 
       <OsFilter os="macos">
         <InfoBox variant="note">
           macOS has a built-in firewall (System Settings &gt; Network &gt; Firewall).
-          Ollama only listens on localhost by default. If you expose it to
-          your LAN, ensure your firewall permits port 11434 from your local
-          subnet only.
+          If you expose Daemon to your LAN, ensure your firewall permits access.
         </InfoBox>
       </OsFilter>
 
@@ -39,15 +35,7 @@ export function SecuritySection() {
         <h4 className="mt-4 text-lg font-medium">Allow SSH</h4>
         <CodeBlock language="bash" code="sudo ufw allow ssh" />
 
-        <h4 className="mt-4 text-lg font-medium">Allow Ollama (LAN Only)</h4>
-        <InfoBox variant="note">
-          Only needed if you bound Ollama to 0.0.0.0. Replace the subnet
-          with your actual LAN range.
-        </InfoBox>
-        <CodeBlock
-          language="bash"
-          code="sudo ufw allow from 192.168.1.0/24 to any port 11434 proto tcp"
-        />
+
 
         <h4 className="mt-4 text-lg font-medium">Enable</h4>
         <CodeBlock language="bash" code="sudo ufw enable" />

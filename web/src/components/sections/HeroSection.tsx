@@ -6,10 +6,10 @@ import { DESKTOP_DOWNLOAD_URLS } from '@/store/constants'
 import { osAtom } from '@/store/atoms'
 
 const stack = [
-  { layer: 'Hardware', component: 'M4 Mac Mini (local) or Beelink S13 Pro (cloud API option)' },
+  { layer: 'Hardware', component: 'M4 Mac Mini or Beelink S13 Pro' },
   { layer: 'Operating System', component: 'macOS, Windows (Beelink preloaded), or Ubuntu Desktop 24.04 LTS' },
-  { layer: 'Inference Runtime', component: 'Ollama' },
-  { layer: 'Language Model', component: 'Qwen2.5-Coder-7B' },
+  { layer: 'Inference Engine', component: 'Cloud APIs (OpenRouter)' },
+  { layer: 'Language Models', component: 'Gemini 2.5 Flash, Claude 3.5 Sonnet, etc.' },
 ]
 
 export function HeroSection() {
@@ -134,10 +134,10 @@ export function HeroSection() {
       <h2 className="mt-8 text-2xl font-semibold">What You Get</h2>
       <ul className="mt-3 list-disc space-y-2 pl-6 text-muted-foreground">
         <li>A Windows or Ubuntu machine running 24/7 on low-power hardware.</li>
-        <li>Qwen2.5-Coder-7B served locally by Ollama on port 11434.</li>
+        <li>Seamless connection to top-tier cloud models like Gemini 2.5 Flash and Claude 3.5 Sonnet.</li>
         <li>
-          A personal assistant named <strong>Daemon</strong> reachable from the
-          terminal or via HTTP API from any device on your LAN.
+          A personal assistant named <strong>Daemon</strong> reachable via the
+          Daemon Desktop app from any device.
         </li>
       </ul>
     </section>

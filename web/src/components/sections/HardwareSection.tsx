@@ -2,10 +2,9 @@ import { Card, CardContent } from '@/components/ui/card'
 import { InfoBox } from '@/components/shared/InfoBox'
 
 const m4Specs = [
-  { requirement: 'CPU / GPU', value: 'Apple M4 (10-core CPU, 10-core GPU)', note: 'Metal acceleration for Ollama' },
-  { requirement: 'RAM', value: '16 GB unified memory', note: '7B model fits comfortably' },
-  { requirement: 'Storage', value: '256 GB SSD', note: 'Enough for OS and models' },
-  { requirement: 'Recommended model', value: 'qwen2.5-coder:7b', note: 'ollama pull qwen2.5-coder:7b' },
+  { requirement: 'CPU / GPU', value: 'Apple M4 (10-core CPU, 10-core GPU)', note: 'Fast processing and gateway routing' },
+  { requirement: 'RAM', value: '16 GB unified memory', note: 'Plenty for OS and apps' },
+  { requirement: 'Storage', value: '256 GB SSD', note: 'Enough for OS' },
 ]
 
 const beelinkSpecs = [
@@ -81,8 +80,7 @@ export function HardwareSection() {
 
       <h3 className="mt-6 text-xl font-semibold">Why the M4 Mac Mini fits (local route)</h3>
       <ul className="mt-3 list-disc space-y-2 pl-6 text-muted-foreground">
-        <li><strong>Right-sized for 7B.</strong> Qwen2.5-Coder-7B uses ~4–6 GB RAM; 16 GB leaves room for the OS.</li>
-        <li><strong>Metal acceleration.</strong> Ollama uses Apple Metal for much faster inference.</li>
+        <li><strong>Right-sized specs.</strong> 16GB provides plenty of room for heavy desktop workloads.</li>
         <li><strong>Low power, always-on.</strong> Efficient for a 24/7 personal assistant.</li>
         <li><strong>Small footprint.</strong> Fits on a desk or shelf.</li>
       </ul>
@@ -100,7 +98,7 @@ export function HardwareSection() {
         <li>Connect Ethernet or Wi-Fi, display, and keyboard.</li>
         <li>Complete macOS setup.</li>
         <li>
-          Install Ollama and pull <code className="rounded bg-muted px-1.5 py-0.5 text-xs">qwen2.5-coder:7b</code>.
+          Setup your API keys as in OpenRouter Setup.
         </li>
       </ol>
       <p className="mt-4 text-sm text-muted-foreground">

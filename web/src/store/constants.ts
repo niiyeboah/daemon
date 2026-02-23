@@ -31,7 +31,7 @@ export const SECTIONS: SectionMeta[] = [
   { id: 'hardware', title: 'Hardware' },
   { id: 'os-setup', title: 'OS Setup' },
   { id: 'post-install', title: 'Post-Install' },
-  { id: 'ollama', title: 'Ollama + Qwen' },
+  { id: 'openrouter', title: 'OpenRouter Setup' },
   { id: 'security', title: 'Security' },
   { id: 'troubleshooting', title: 'Troubleshooting' },
   { id: 'openclaw', title: 'OpenClaw & Automation' },

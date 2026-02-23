@@ -24,35 +24,23 @@ const ideas = [
   {
     title: 'Web UI',
     description:
-      'Expose Daemon through a browser. Open WebUI is a self-hosted ChatGPT-style interface for Ollama.',
+      'Expose Daemon through a browser. Open WebUI is a self-hosted ChatGPT-style interface that supports OpenRouter.',
     link: 'https://github.com/open-webui/open-webui',
   },
   {
     title: 'Scheduled Tasks',
     description:
-      'Use cron jobs or Home Assistant to call the Ollama API on a schedule for summaries, briefings, or automations.',
+      'Use cron jobs or Home Assistant to call cloud APIs on a schedule for summaries, briefings, or automations.',
   },
   {
     title: 'Multiple Models',
     description:
-      'Ollama can host several models. Browse the Ollama library to find alternatives for your hardware and use case.',
-  },
-  {
-    title: 'RAG (Retrieval-Augmented Generation)',
-    description:
-      'Give Daemon access to your documents. Use LangChain or LlamaIndex with ChromaDB for local embeddings.',
-  },
-  {
-    title: 'GPU Acceleration',
-    description:
-      'Add an eGPU or upgrade to a machine with NVIDIA GPU. Ollama auto-detects CUDA for dramatically faster inference.',
+      'OpenRouter gives you access to a massive library of models. Browse OpenRouter to find alternatives for your use case.',
   },
 ]
 
 const links = [
-  { name: 'Ollama', url: 'https://ollama.com/' },
-  { name: 'Ollama GitHub', url: 'https://github.com/ollama/ollama' },
-  { name: 'Qwen2.5-Coder Model', url: 'https://ollama.com/library/qwen2.5-coder' },
+  { name: 'OpenRouter', url: 'https://openrouter.ai/' },
   { name: 'Open WebUI', url: 'https://github.com/open-webui/open-webui' },
   { name: 'Whisper.cpp', url: 'https://github.com/ggerganov/whisper.cpp' },
   { name: 'Piper TTS', url: 'https://github.com/rhasspy/piper' },
@@ -101,7 +89,8 @@ export function NextStepsSection() {
         language="bash"
         code={`sudo apt install -y docker.io
 sudo docker run -d --network=host \\
-  -e OLLAMA_BASE_URL=http://localhost:11434 \\
+  -e OPENAI_API_BASE_URL=https://openrouter.ai/api/v1 \\
+  -e OPENAI_API_KEY=your_openrouter_key \\
   -v open-webui:/app/backend/data \\
   --name open-webui --restart always \\
   ghcr.io/open-webui/open-webui:main`}

@@ -4,7 +4,7 @@ const OPENCLAW_DOC_URL = 'https://github.com/niiyeboah/daemon/blob/main/docs/07-
 const OPENCLAW_SETUP_URL = 'https://docs.openclaw.ai/setup'
 const OPENCLAW_GETTING_STARTED_URL = 'https://docs.openclaw.ai/start/getting-started'
 const OPENCLAW_CHANNELS_URL = 'https://docs.openclaw.ai/channels'
-const OPENCLAW_OLLAMA_PROVIDER_URL = 'https://docs.openclaw.ai/providers/ollama'
+
 
 export function OpenClawSection() {
   return (
@@ -17,7 +17,7 @@ export function OpenClawSection() {
 
       <h3 className="mt-8 text-xl font-semibold">Daemon as a personal employee</h3>
       <p className="mt-2 text-muted-foreground">
-        Daemon is the brain — your local LLM. OpenClaw is the layer that gives
+        Daemon is the brain — your cloud API router. OpenClaw is the layer that gives
         it &quot;hands&quot;: messaging apps (Telegram, Discord, Slack),
         automation skills from ClawHub, and scheduled jobs. Together they can
         act on your behalf: respond on your channels, run workflows, and execute
@@ -52,30 +52,22 @@ openclaw onboard --install-daemon`}
         .
       </p>
 
-      <h3 className="mt-8 text-xl font-semibold">Connect local Ollama (Daemon)</h3>
+      <h3 className="mt-8 text-xl font-semibold">Connect Daemon (OpenRouter API)</h3>
       <p className="mt-2 text-sm text-muted-foreground">
-        So that OpenClaw uses your existing Daemon (Ollama), set{' '}
-        <code className="rounded bg-muted px-1.5 py-0.5">OLLAMA_API_KEY</code> (any value works).
-        Set the default model to <code className="rounded bg-muted px-1.5 py-0.5">ollama/daemon</code> or{' '}
-        <code className="rounded bg-muted px-1.5 py-0.5">ollama/qwen2.5-coder:7b</code> in{' '}
-        <code className="rounded bg-muted px-1.5 py-0.5">~/.openclaw/openclaw.json</code>, then restart the gateway.
-        On low-power hardware (e.g. N100), we recommend <strong>cloud API keys</strong> (Gemini, OpenAI, Claude) instead of local inference — see the full guide.
+        Set your OpenRouter API key so OpenClaw can communicate with your preferred models.
+        In <code className="rounded bg-muted px-1.5 py-0.5">~/.openclaw/openclaw.json</code>,
+        configure the Default Provider for OpenRouter.
       </p>
       <CodeBlock
         language="bash"
-        code={`export OLLAMA_API_KEY="ollama-local"
+        code={`export OPENROUTER_API_KEY="sk-or-v1-..."
 # Restart gateway and verify
-openclaw gateway restart
-openclaw models list`}
+openclaw gateway restart`}
       />
       <p className="mt-2 text-sm text-muted-foreground">
-        For setting the default model and explicit config (if your model does not appear), see the{' '}
+        For more detailed instructions, see the{' '}
         <a href={OPENCLAW_DOC_URL} target="_blank" rel="noopener noreferrer" className="underline">
           full guide
-        </a>
-        {' '}and the{' '}
-        <a href={OPENCLAW_OLLAMA_PROVIDER_URL} target="_blank" rel="noopener noreferrer" className="underline">
-          OpenClaw Ollama provider docs
         </a>
         .
       </p>
@@ -143,16 +135,7 @@ openclaw models list`}
             OpenClaw Channels
           </a>
         </li>
-        <li>
-          <a
-            href={OPENCLAW_OLLAMA_PROVIDER_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm underline"
-          >
-            OpenClaw Ollama provider
-          </a>
-        </li>
+
       </ul>
     </section>
   )
