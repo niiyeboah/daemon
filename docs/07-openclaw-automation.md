@@ -1,13 +1,13 @@
 # 7 -- OpenClaw & Automation
 
-Once Daemon is running (Ollama and the CLI — see [Ollama + Qwen2.5-Coder-7B](03-ollama-setup.md)), you can add **OpenClaw** to give it channels, skills, and schedules. Think of Daemon as the brain — your local LLM — and OpenClaw as the layer that gives it "hands": messaging apps, automation skills, and scheduled jobs. Together they can act like a **personal employee** that works on your behalf.
+Once Daemon is running (see [OpenRouter API Accounts](03-openrouter-setup.md)), you can add **OpenClaw** to give it channels, skills, and schedules. Think of Daemon as the brain — your cloud LLM router — and OpenClaw as the layer that gives it "hands": messaging apps, automation skills, and scheduled jobs. Together they can act like a **personal employee** that works on your behalf.
 
 ---
 
 ## Prerequisites
 
 - **Node.js 22 or newer** — OpenClaw runs on Node. Check with `node --version`.
-- **Daemon (Ollama) already running** — Optional if you prefer to use OpenClaw with a cloud AI provider; for a fully local setup, keep [Ollama](03-ollama-setup.md) and your Daemon model running so OpenClaw can use it (if your OpenClaw version supports a local Ollama backend; see OpenClaw docs).
+- **Daemon (OpenRouter API) already configured** — see [OpenRouter Setup](03-openrouter-setup.md) to ensure your API keys are ready.
 - **A messaging account** — e.g. Telegram, Discord, or Slack, for connecting a channel so you can talk to your assistant from your phone or desktop.
 
 ---
@@ -184,7 +184,7 @@ Use the model `id` that matches `ollama list` (e.g. `daemon`, `qwen2.5-coder:7b`
 | OpenClaw Getting Started | <https://docs.openclaw.ai/start/getting-started> |
 | OpenClaw Channels | <https://docs.openclaw.ai/channels> |
 | OpenClaw Ollama provider | <https://docs.openclaw.ai/providers/ollama> |
-| Ollama + Qwen2.5-Coder-7B (this repo) | [03-ollama-setup.md](03-ollama-setup.md) |
+| OpenRouter API Accounts (this repo) | [03-openrouter-setup.md](03-openrouter-setup.md) |
 
 ---
 

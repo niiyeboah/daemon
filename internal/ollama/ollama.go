@@ -83,7 +83,7 @@ func Check(out io.Writer, skipAPI bool, baseModel, customModel string) error {
 	path, err := ollamaPath()
 	if err != nil {
 		fmt.Fprintf(out, "Ollama not found in PATH.\n")
-		fmt.Fprintf(out, "Install from https://ollama.com or see docs/03-ollama-setup.md\n")
+		fmt.Fprintf(out, "Configure OpenRouter or see docs/03-openrouter-setup.md\n")
 		return err
 	}
 	fmt.Fprintf(out, "Ollama found: %s\n", path)

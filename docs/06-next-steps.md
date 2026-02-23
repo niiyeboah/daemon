@@ -43,7 +43,7 @@ sudo docker run -d --network=host -e OLLAMA_BASE_URL=http://localhost:11434 \
 
   Then open `http://192.168.1.100:8080` from any device on your LAN.
 
-- **Custom Flask/FastAPI app** -- Build a minimal chat page tailored to your needs. The Python script from [Option B](03-ollama-setup.md#option-b----python-api-script) is a good starting point; add a `/chat` HTTP endpoint and a simple HTML frontend.
+- **Custom Flask/FastAPI app** -- Build a minimal chat page tailored to your needs. The Python script from [Option B](03-openrouter-setup.md#using-the-python-cli-script) is a good starting point; add a `/chat` HTTP endpoint and a simple HTML frontend.
 
 ---
 
