@@ -159,16 +159,10 @@ jobs:
         include:
           - os: macos-latest
             target: aarch64-apple-darwin
-            sidecar_goos: darwin
-            sidecar_goarch: arm64
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            sidecar_goos: linux
-            sidecar_goarch: amd64
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            sidecar_goos: windows
-            sidecar_goarch: amd64
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -192,35 +186,12 @@ jobs:
         with:
           workspaces: desktop/src-tauri -> target
 
-      - name: Set up Go
-        uses: actions/setup-go@v6
-        with:
-          go-version: '1.25'
-
-      - name: Cache Go modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/go/pkg/mod
-            ~/.cache/go-build
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
           cache-dependency-path: desktop/package-lock.json
-
-      - name: Build Go sidecar
-        env:
-          GOOS: ${{ matrix.sidecar_goos }}
-          GOARCH: ${{ matrix.sidecar_goarch }}
-        run: |
-          mkdir -p desktop/src-tauri/bin
-          go build -o desktop/src-tauri/bin/daemon-setup-${{ matrix.target }}${{ matrix.os == 'windows-latest' && '.exe' || '' }} ./cmd/daemon-setup
 
       - name: Install frontend dependencies
         run: npm ci
